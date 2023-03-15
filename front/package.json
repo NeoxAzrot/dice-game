@@ -11,6 +11,7 @@
     "nuxt": "^3.3.1"
   },
   "dependencies": {
+    "@nuxtjs/google-fonts": "^3.0.0",
     "@pinia/nuxt": "^0.4.7",
     "pinia": "^2.0.33",
     "sass": "^1.59.3"
