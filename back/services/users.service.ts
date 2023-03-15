@@ -5,21 +5,13 @@ import { database } from '../firebase';
 export const createUserService = async ({ username }: UserTypes.Create.Props) => {
   const createdAt = new Date().toISOString();
 
-  const user = await database
-    .collection('users')
-    .add({
-      username,
-      createdAt,
-      updatedAt: createdAt,
-    })
-    .then((docRef) => {
-      return { id: docRef.id };
-    })
-    .catch((error) => {
-      return { message: 'Cannot create user', error };
-    });
+  const user = await database.collection('users').add({
+    username,
+    createdAt,
+    updatedAt: createdAt,
+  });
 
-  return user;
+  return user.id;
 };
 
 export const getUserByUsernameService = async ({ username }: UserTypes.GetByUsername.Props) => {
@@ -31,8 +23,6 @@ export const getUserByUsernameService = async ({ username }: UserTypes.GetByUser
   } else {
     userId = user.docs[0].id;
   }
-
-  if (userId === null) return { error: 'User not found' };
 
   return { id: userId };
 };

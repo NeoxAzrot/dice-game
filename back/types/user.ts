@@ -9,19 +9,11 @@ export namespace UserTypes {
     export interface Props {
       username: string;
     }
-
-    // export interface Response {
-    //   id: string;
-    // }
   }
 
   export namespace GetByUsername {
     export interface Props {
       username: string;
     }
-
-    // export interface Response {
-    //   id: string;
-    // }
   }
 }

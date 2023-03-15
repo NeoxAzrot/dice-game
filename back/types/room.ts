@@ -9,9 +9,5 @@ export namespace RoomTypes {
     export interface Props {
       userId: string;
     }
-
-    // export interface Response {
-    //   id: string;
-    // }
   }
 }

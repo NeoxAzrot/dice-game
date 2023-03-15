@@ -10,15 +10,6 @@ export const createRoomService = async ({ userId }: RoomTypes.Create.Props) => {
     updatedAt: createdAt,
     players: [userId],
   });
-  // .then((docRef) => {
-  //   return {
-  //     message: `New room created with id ${docRef.id}`,
-  //     id: docRef.id,
-  //   };
-  // })
-  // .catch((error) => {
-  //   return { message: 'Cannot create room', error };
-  // });
 
   return {
     id: room.id,
