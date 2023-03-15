@@ -10,4 +10,11 @@ export namespace RoomTypes {
       userId: string;
     }
   }
+
+  export namespace Join {
+    export interface Props {
+      roomId: string;
+      userId: string;
+    }
+  }
 }

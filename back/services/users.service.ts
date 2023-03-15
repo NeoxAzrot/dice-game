@@ -11,7 +11,7 @@ export const createUserService = async ({ username }: UserTypes.Create.Props) =>
     updatedAt: createdAt,
   });
 
-  return user.id;
+  return user;
 };
 
 export const getUserByUsernameService = async (username: string) => {
@@ -19,7 +19,8 @@ export const getUserByUsernameService = async (username: string) => {
   let userId = null;
 
   if (user.empty) {
-    userId = await createUserService({ username });
+    const createUser = await createUserService({ username });
+    userId = createUser.id;
   } else {
     userId = user.docs[0].id;
   }
