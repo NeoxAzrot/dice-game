@@ -1,21 +1,18 @@
 export default function useRoom() {
   const { API_ENDPOINT: endpoint } = useRuntimeConfig().public
+  const { username, roomID } = useStore()
 
-  const join = (ID: string) => {
-    const currentUser: Ref<string | null> = ref(null)
-
-    return $fetch(endpoint + `/room/${ID}/join`, {
+  const join = () => {
+    return $fetch(endpoint + `/room/${roomID}/join`, {
       method: 'POST',
-      body: JSON.stringify({ user: currentUser })
+      body: JSON.stringify({ user: username })
     })
   }
 
   const create = () => {
-    const currentUser: Ref<string | null> = ref(null)
-
     return $fetch(endpoint + '/room/create', {
       method: 'POST',
-      body: JSON.stringify({ user: currentUser })
+      body: JSON.stringify({ user: username })
     })
   }
 
@@ -25,7 +22,7 @@ export default function useRoom() {
 
     return $fetch(endpoint + `/room/${currentRoom}/launch`, {
       method: 'POST',
-      body: JSON.stringify({ player: 'youPlayerID' })
+      body: JSON.stringify({ user: username })
     })
   }
 

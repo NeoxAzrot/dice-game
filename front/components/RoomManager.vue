@@ -4,7 +4,8 @@
       <button v-if="selection === 'join'" @click="selection = 'create'">Create</button>
       <button v-if="selection === 'create'" @click="selection = 'join'">Join</button>
     </div>
-    <form v-if="selection === 'join'">
+
+    <form v-if="selection === 'join'" @submit="handleJoin">
       <div>
         <label for="username">Username</label>
         <input type="text" id="username" name="username" v-model="username">
@@ -15,7 +16,8 @@
       </div>
       <input type="submit" value="Join">
     </form>
-    <form v-else>
+
+    <form v-else @submit="handleCreate">
       <div>
         <label for="username">Username</label>
         <input type="text" id="username" name="username" v-model="username">
@@ -28,4 +30,14 @@
 <script setup lang="ts">
 const { username, roomID } = useStore();
 const selection: Ref<'join' | 'create'> = ref('join')
+
+const handleJoin = (e: Event) => {
+  e.preventDefault()
+  useRoom().join()
+}
+
+const handleCreate = (e: Event) => {
+  e.preventDefault()
+  useRoom().create() // TODO -> Ajouter l'ID de la room retournée au store
+}
 </script>
