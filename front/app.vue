@@ -5,5 +5,5 @@
 </template>
 
 <script setup lang="ts">
-useRoom()
+console.log(useRoom())
 </script>
