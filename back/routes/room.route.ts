@@ -6,7 +6,7 @@ import {
   getRoomById,
   getRooms,
   updateRoomById,
-} from '../controllers/rooms.controller';
+} from '../controllers/room.controller';
 
 export const router = express.Router();
 

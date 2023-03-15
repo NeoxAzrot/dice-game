@@ -2,8 +2,9 @@ import bodyParser from 'body-parser';
 import cors, { CorsOptions } from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
+import 'firebase';
 
-import { router as roomRouter } from './routes/rooms.route.js';
+import { router as roomRouter } from './routes/room.route';
 
 const app = express();
 

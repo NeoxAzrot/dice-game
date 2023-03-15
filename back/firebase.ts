@@ -1,4 +1,4 @@
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 import firebase, { ServiceAccount } from 'firebase-admin';
 
 dotenv.config();
@@ -13,4 +13,6 @@ firebase.initializeApp({
   credential: firebase.credential.cert(firebaseConfig),
 });
 
-export default firebase.firestore();
+export const database = firebase.firestore();
+
+export default database;
