@@ -15,9 +15,7 @@
     "@pinia/nuxt": "^0.4.7",
     "firebase": "^9.17.2",
     "pinia": "^2.0.33",
-    "sass": "^1.59.3"
-  },
-  "overrides": {
-    "vue": "latest"
+    "sass": "^1.59.3",
+    "uniqolor": "^1.1.0"
   }
 }
