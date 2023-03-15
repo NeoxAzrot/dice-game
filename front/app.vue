@@ -5,5 +5,7 @@
 </template>
 
 <script setup lang="ts">
-console.log(useRoom())
+import useStore from '@/store/main'
+const { roomID } = useStore()
+console.log(roomID)
 </script>
