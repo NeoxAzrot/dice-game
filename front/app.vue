@@ -1,13 +1,12 @@
 <template>
   <div class="layout">
     <RoomManager />
-    {{ JSON.stringify(game) }}
   </div>
 </template>
 
 <script setup lang="ts">
-const game = useGame()
-useFirebase().listen('rooms', 'test', 'game')
+// const game = useGame()
+// useFirebase().listen('rooms', 'test', 'game')
 </script>
 
 <style lang="scss">
