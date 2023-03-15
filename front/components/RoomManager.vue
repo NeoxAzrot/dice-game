@@ -35,7 +35,8 @@ const requestedRoom = ref('')
 
 const handleJoin = (e: Event) => {
   e.preventDefault()
-  useRoom().join(requestedRoom.value)
+  // useRoom().join(requestedRoom.value)
+  // navigateTo(`/${requestedRoom.value}`)
 }
 
 const handleCreate = (e: Event) => {
