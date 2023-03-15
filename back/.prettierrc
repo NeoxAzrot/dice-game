@@ -8,6 +8,7 @@
   "importOrder": [
     "^controllers/(.*)$",
     "^routes/(.*)$",
+    "^services/(.*)$",
     "^types/(.*)$",
     "^utils/(.*)$",
     "^[./]"

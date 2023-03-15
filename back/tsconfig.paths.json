@@ -4,6 +4,7 @@
     "paths": {
       "controllers": ["controllers"],
       "routes": ["routes"],
+      "services": ["services"],
       "types": ["types"],
       "utils": ["utils"]
     }
