@@ -1,12 +1,16 @@
 <template>
     <div>
         <button @click="open = true">Open Modal</button>
-        <Teleport to="body">
+        <transition>
             <div v-if="open" class="modal">
-                <p>Hello from the modal!</p>
-                <button @click="open = false">Close</button>
+                <div>
+                    <h3>Meld Values</h3>
+                </div>
+                <ul>
+                    <li v-for="rule of rules">{{ rule }}<span>{{  }}</span></li>
+                </ul>
             </div>
-        </Teleport>
+        </transition>
     </div>
 </template>
 
