@@ -1,9 +1,16 @@
-button {
+button,
+.btn,
+input[type="submit"] {
   border: none;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   background-color: var(--color--second);
   color: white;
-  padding: 0.5rem 1.5rem;
+  padding: 1rem 3rem;
   font-weight: 500;
   cursor: pointer;
+  min-width: 10rem;
+  border-radius: var(--radius--main);
+  width: fit-content;
+  text-transform: uppercase;
+  font-weight: 600;
 }
