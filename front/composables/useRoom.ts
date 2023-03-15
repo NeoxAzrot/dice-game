@@ -14,8 +14,8 @@ export default function useRoom() {
     })
   }
 
-  const create = () => {
-    return $fetch(endpoint + '/rooms/create', {
+  const create: () => Promise<any> = () => {
+    return $fetch(endpoint + '/rooms', {
       method: 'POST',
       body: JSON.stringify({ username: username })
     })

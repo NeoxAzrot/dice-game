@@ -4,7 +4,7 @@
       <div class="room__header">
         <p>N°{{ roomID }}</p>
         <div class="room__header__players">
-          <p v-for="player, index in room.players">P{{ index + 1 }}: {{ player.id }}</p>
+          <p v-for="player, index in room.players">P{{ index + 1 }}: {{ player }}</p>
         </div>
       </div>
       <div class="layout__container">
@@ -24,12 +24,14 @@ const { room } = useRoom()
 
 const listener: Ref<any> = ref(null)
 
-if(roomID.length > 2) {
-  console.log(await useRoom().verify(roomID))
-  listener.value = useFirebase().listen('rooms', roomID, 'room')
-} else {
-  navigateTo('/')
-}
+onMounted(async () => {
+  if(roomID.length > 2) {
+    console.log(await useRoom().verify(roomID))
+    listener.value = useFirebase().listen('rooms', roomID, 'room')
+  } else {
+    navigateTo('/')
+  }
+})
 </script>
 
 <style lang="scss">

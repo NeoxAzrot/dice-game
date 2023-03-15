@@ -28,20 +28,30 @@
 </template>
 
 <script setup lang="ts">
-const { username } = useStore();
+const { username, roomID } = useStore();
 const selection: Ref<'join' | 'create'> = ref('join')
 
 const requestedRoom = ref('')
 
 const handleJoin = (e: Event) => {
   e.preventDefault()
-  // useRoom().join(requestedRoom.value)
-  // navigateTo(`/${requestedRoom.value}`)
+  useRoom().join(requestedRoom.value)
+  .then(() => {
+    navigateTo(`/${requestedRoom.value}`)
+  }).catch((err) => {
+    console.error(err)
+  })
 }
 
 const handleCreate = (e: Event) => {
   e.preventDefault()
-  useRoom().create() // TODO -> Ajouter l'ID de la room retournée au store
+  useRoom().create()
+  .then(({ data }) => {
+    roomID.value = data.id
+    window.location.href = `${useRuntimeConfig().APP_URL}/${data.id}`
+  }).catch((err) => {
+    console.error(err)
+  })
 }
 </script>
 

@@ -6,11 +6,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-// const listener = useFirebase().listen('rooms', 'test', 'game')
-// listener.unsubscribe()
-</script>
-
 <style lang="scss">
 .home {
   display: flex;
