@@ -6,11 +6,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-// const listener = useFirebase().listen('rooms', 'test', 'game')
-// listener.unsubscribe()
-</script>
-
 <style lang="scss">
 .home {
   display: flex;
@@ -19,6 +14,6 @@
   align-items: center;
   height: 100vh;
   width: 100vw;
-  background-color: #f5f5f5;
+  background-color: var(--color--body);
 }
 </style>

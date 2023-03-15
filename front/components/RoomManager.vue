@@ -1,16 +1,16 @@
 <template>
   <div class="room-manager">
-    <div class="room-manager__buttons">
-      <button :class="selection === 'join' && 'selected'" @click="selection = 'join'">Join</button>
-      <button :class="selection === 'create' && 'selected'" @click="selection = 'create'">Create</button>
+    <div class="room-manager__selector">
+      <p :class="selection === 'join' && 'selected'" @click="selection = 'join'">Join</p>
+      <p :class="selection === 'create' && 'selected'" @click="selection = 'create'">Create</p>
     </div>
 
     <form v-if="selection === 'join'" @submit="handleJoin">
-      <div class="room-manager__field">
+      <div class="room-manager__field input">
         <label for="username">Username</label>
         <input type="text" id="username" name="username" v-model="username">
       </div>
-      <div class="room-manager__field">
+      <div class="room-manager__field input">
         <label for="room">Room</label>
         <input type="text" id="room" name="room" v-model="requestedRoom">
       </div>
@@ -18,7 +18,7 @@
     </form>
 
     <form v-else @submit="handleCreate">
-      <div class="room-manager__field">
+      <div class="room-manager__field input">
         <label for="username">Username</label>
         <input type="text" id="username" name="username" v-model="username">
       </div>
@@ -28,37 +28,56 @@
 </template>
 
 <script setup lang="ts">
-const { username } = useStore();
+const { username, roomID } = useStore();
 const selection: Ref<'join' | 'create'> = ref('join')
 
 const requestedRoom = ref('')
 
 const handleJoin = (e: Event) => {
   e.preventDefault()
-  // useRoom().join(requestedRoom.value)
-  // navigateTo(`/${requestedRoom.value}`)
+  useRoom().join(requestedRoom.value)
+  .then(() => {
+    navigateTo(`/${requestedRoom.value}`)
+  }).catch((err) => {
+    console.error(err)
+  })
 }
 
 const handleCreate = (e: Event) => {
   e.preventDefault()
-  useRoom().create() // TODO -> Ajouter l'ID de la room retournée au store
+  useRoom().create()
+  .then(({ data }) => {
+    roomID.value = data.id
+    window.location.href = `${useRuntimeConfig().APP_URL}/${data.id}`
+  }).catch((err) => {
+    console.error(err)
+  })
 }
 </script>
 
 <style lang="scss">
 .room-manager {
-  &__buttons {
+  width: 100%;
+  max-width: 40rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+
+  &__selector {
     display: flex;
     gap: 1rem;
     margin-bottom: 2rem;
 
-    button {
+    p {
       pointer-events: all;
+      cursor: pointer;
       opacity: 0.5;
       transition: opacity 0.3s ease-in-out;
+      padding-bottom: 0.5rem;
 
       &.selected {
         pointer-events: none;
+        border-bottom: 2px solid var(--color--second);
         opacity: 1;
       }
     }
@@ -68,12 +87,11 @@ const handleCreate = (e: Event) => {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-  }
+    width: 100%;
 
-  &__field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
+    input[type="submit"] {
+      margin-top: 1rem;
+    }
   }
 }
 </style>

@@ -1,11 +1,9 @@
 <template>
   <div>
-    <RoomViewer />
+    <p>{{ number }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  layout: 'room',
-})
+const { number } = defineProps(['number']);
 </script>

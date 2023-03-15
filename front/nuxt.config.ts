@@ -1,6 +1,7 @@
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {
+      APP_URL: process.env.APP_URL,
       API_ENDPOINT: process.env.API_ENDPOINT,
       FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
       FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
@@ -13,5 +14,10 @@ export default defineNuxtConfig({
   css: [
     "@/styles/main.scss"
   ],
-  modules: ['@pinia/nuxt', '@nuxtjs/google-fonts']
+  modules: ['@pinia/nuxt', '@nuxtjs/google-fonts'],
+  googleFonts: {
+    families: {
+      Poppins: true,
+    }
+  }
 })
