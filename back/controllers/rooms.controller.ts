@@ -4,6 +4,7 @@ import {
   createRoomService,
   deleteRoomByIdService,
   getRoomByIdService,
+  getRoomsService,
   joinRoomService,
 } from 'services/rooms.service';
 import { getUserByUsernameService } from 'services/users.service';
@@ -67,7 +68,20 @@ export const joinRoom = async (req: Request, res: Response) => {
 };
 
 export const getRooms = async (req: Request, res: Response) => {
-  return res.status(200).json({ success: true });
+  const rooms = await getRoomsService();
+
+  if (rooms.empty) {
+    return res.status(400).json({ success: false, message: 'No rooms found' });
+  }
+
+  return res.status(200).json({
+    success: true,
+    data: {
+      rooms: rooms.docs.map((room) => ({
+        id: room.id,
+      })),
+    },
+  });
 };
 
 export const getRoomById = async (req: Request, res: Response) => {

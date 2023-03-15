@@ -9,7 +9,9 @@ export const playRoundService = async () => {
 };
 
 export const getGamesService = async () => {
-  return null;
+  const games = await database.collection('games').get();
+
+  return games;
 };
 
 export const getGameByIdService = async (id: string) => {

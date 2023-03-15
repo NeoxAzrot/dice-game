@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { getGameByIdService } from 'services/games.service';
+import { getGameByIdService, getGamesService } from 'services/games.service';
 
 export const createGame = async (req: Request, res: Response) => {
   const createdAt = new Date().toISOString();
@@ -15,7 +15,20 @@ export const playRound = async (req: Request, res: Response) => {
 };
 
 export const getGames = async (req: Request, res: Response) => {
-  return res.status(200).json({ succes: true });
+  const games = await getGamesService();
+
+  if (games.empty) {
+    return res.status(400).json({ success: false, message: 'No games found' });
+  }
+
+  return res.status(200).json({
+    success: true,
+    data: {
+      games: games.docs.map((game) => ({
+        id: game.id,
+      })),
+    },
+  });
 };
 
 export const getGameById = async (req: Request, res: Response) => {

@@ -70,7 +70,9 @@ export const joinRoomService = async ({ roomId, userId }: RoomTypes.Join.Props) 
 };
 
 export const getRoomsService = async () => {
-  return null;
+  const rooms = await database.collection('rooms').get();
+
+  return rooms;
 };
 
 export const getRoomByIdService = async (id: string) => {
