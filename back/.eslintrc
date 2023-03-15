@@ -1,0 +1,46 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": ["./tsconfig.json"]
+  },
+  "env": {
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "airbnb-typescript/base",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended",
+    "prettier"
+  ],
+  "plugins": ["@typescript-eslint", "import"],
+  "rules": {
+    "@typescript-eslint/no-namespace": "off",
+    "linebreak-style": "off",
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "ts": "never"
+      }
+    ],
+    "unused-imports/no-unused-vars": [
+      "off",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
+    ]
+  }
+}

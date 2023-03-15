@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "database": ["database"],
+      "graphql": ["graphql"],
+      "types": ["types"]
+    }
+  }
+}

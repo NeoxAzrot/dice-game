@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowSyntheticDefaultImports": true,
+    "incremental": true,
+    "outDir": "build"
+  },
+  "exclude": ["node_modules"],
+  "include": ["**/*.ts"],
+  "extends": "./tsconfig.paths.json"
+}
