@@ -10,14 +10,14 @@ export default function useRoom() {
   const join = (ID: string) => {
     return $fetch(endpoint + `/rooms/${ID}/join`, {
       method: 'POST',
-      body: JSON.stringify({ username: username })
+      body: JSON.stringify({ username: username.value })
     })
   }
 
   const create: () => Promise<any> = () => {
     return $fetch(endpoint + '/rooms', {
       method: 'POST',
-      body: JSON.stringify({ username: username })
+      body: JSON.stringify({ username: username.value })
     })
   }
 

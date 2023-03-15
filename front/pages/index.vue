@@ -14,6 +14,6 @@
   align-items: center;
   height: 100vh;
   width: 100vw;
-  background-color: var(--color--body);
+  background-color: #f5f5f5;
 }
 </style>
