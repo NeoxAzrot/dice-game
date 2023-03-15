@@ -14,7 +14,7 @@ export const createUserService = async ({ username }: UserTypes.Create.Props) =>
   return user.id;
 };
 
-export const getUserByUsernameService = async ({ username }: UserTypes.GetByUsername.Props) => {
+export const getUserByUsernameService = async (username: string) => {
   const user = await database.collection('users').where('username', '==', username).get();
   let userId = null;
 

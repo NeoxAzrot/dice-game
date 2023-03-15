@@ -16,14 +16,20 @@ export const createRoomService = async ({ userId }: RoomTypes.Create.Props) => {
   };
 };
 
-export const joinRoomService = () => {
+export const joinRoomService = async () => {
   return null;
 };
 
-export const getRoomsService = () => {
+export const getRoomsService = async () => {
   return null;
 };
 
-export const deleteRoomByIdService = () => {
+export const getRoomByIdService = async (id: string) => {
+  const room = await database.collection('rooms').doc(id).get();
+
+  return room;
+};
+
+export const deleteRoomByIdService = async () => {
   return null;
 };

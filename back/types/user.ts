@@ -10,10 +10,4 @@ export namespace UserTypes {
       username: string;
     }
   }
-
-  export namespace GetByUsername {
-    export interface Props {
-      username: string;
-    }
-  }
 }
