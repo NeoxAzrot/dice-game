@@ -1,8 +1,8 @@
 <template>
   <div class="room-manager">
     <div class="room-manager__buttons">
-      <button v-if="selection === 'join'" @click="selection = 'create'">Create</button>
-      <button v-if="selection === 'create'" @click="selection = 'join'">Join</button>
+      <button :class="selection === 'join' && 'selected'" @click="selection = 'create'">Create</button>
+      <button :class="selection === 'create' && 'selected'" @click="selection = 'join'">Join</button>
     </div>
 
     <form v-if="selection === 'join'" @submit="handleJoin">
@@ -44,6 +44,23 @@ const handleCreate = (e: Event) => {
 
 <style lang="scss">
 .room-manager {
+  &__buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+    button {
+      pointer-events: none;
+      opacity: 0.5;
+      transition: opacity 0.3s ease-in-out;
+
+      &.selected {
+        pointer-events: all;
+        opacity: 1;
+      }
+    }
+  }
+
   form {
     display: flex;
     flex-direction: column;

@@ -1,3 +1,9 @@
-export default function useGame() {
-  const { API_ENDPOINT: endpoint } = useRuntimeConfig().public
+import useGameStore from '~~/store/game';
+import { storeToRefs } from 'pinia'
+
+const useGame = () => {
+  const store = storeToRefs(useGameStore());
+  return store
 }
+
+export default useGame;
