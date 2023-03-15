@@ -5,8 +5,8 @@
 </template>
 
 <script setup lang="ts">
-// const game = useGame()
-// useFirebase().listen('rooms', 'test', 'game')
+// const listener = useFirebase().listen('rooms', 'test', 'game')
+// listener.unsubscribe()
 </script>
 
 <style lang="scss">
