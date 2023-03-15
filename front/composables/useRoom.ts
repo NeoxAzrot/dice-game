@@ -1,10 +1,10 @@
 export default function useRoom() {
   const { API_ENDPOINT: endpoint } = useRuntimeConfig().public
 
-  const join = () => {
+  const join = (ID: string) => {
     return $fetch(endpoint + '/room/join', {
       method: 'POST',
-      body: JSON.stringify({ name: 'test' })
+      body: JSON.stringify({ roomID: ID })
     })
   }
 
@@ -15,5 +15,15 @@ export default function useRoom() {
     })
   }
 
-  return { join, create }
+  const newLaunch = () => {
+    const currentRoom: Ref<string | null> = ref(null)
+    if (!currentRoom) throw new Error('No room selected')
+
+    return $fetch(endpoint + `/room/${currentRoom}/launch`, {
+      method: 'POST',
+      body: JSON.stringify({ player: 'youPlayerID' })
+    })
+  }
+
+  return { join, create, newLaunch }
 } 
