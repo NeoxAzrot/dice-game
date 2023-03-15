@@ -11,4 +11,4 @@ import uniqolor from 'uniqolor';
 const { player } = defineProps(['player']);
 
 const colorName: Ref<{ color: string, isLight: boolean }> = ref(uniqolor(player.username));
-</script>
+</script> 
