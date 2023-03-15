@@ -58,7 +58,6 @@ const handleCreate = (e: Event) => {
 <style lang="scss">
 .room-manager {
   width: 100%;
-  max-width: 40rem;
   display: flex;
   flex-direction: column;
   gap: 3rem;
@@ -74,6 +73,7 @@ const handleCreate = (e: Event) => {
       opacity: 0.5;
       transition: opacity 0.3s ease-in-out;
       padding-bottom: 0.5rem;
+      color: var(--color--second);
 
       &.selected {
         pointer-events: none;
