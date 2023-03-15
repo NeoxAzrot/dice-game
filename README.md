@@ -16,3 +16,11 @@
   - POST /rooms/:roomId/games/:gameId/play - roll or hold a dice
 
   - Get /games - get all games - OPTIONAL
+
+## Todo
+
+### Back
+
+- [ ] Add response types on async function
+- [ ] Add tests
+- [ ] Add then + catch on async function (for error handling) with types

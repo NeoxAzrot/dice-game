@@ -4,7 +4,8 @@ import dotenv from 'dotenv';
 import express from 'express';
 import 'firebase';
 
-import { router as roomRouter } from './routes/room.route';
+import { router as gamesRouter } from 'routes/games.route';
+import { router as roomsRouter } from 'routes/rooms.route';
 
 const app = express();
 
@@ -30,7 +31,8 @@ app.get('/', (req, res) => {
   res.send('Home page !');
 });
 
-app.use('/room', roomRouter);
+app.use('/rooms', roomsRouter);
+app.use('/games', gamesRouter);
 
 app.listen(PORT, () => {
   console.log(`\n🚀 Connecting on port\u001b[1;34m http://localhost:${PORT} \u001b[0m\n`);
