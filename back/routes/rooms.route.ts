@@ -1,17 +1,14 @@
 import express from 'express';
+
 import {
   createRoom,
-  getRooms,
-  getRoomById,
-  updateRoomById,
   deleteRoomById,
-} from '../controllers/rooms.controller.js';
+  getRoomById,
+  getRooms,
+  updateRoomById,
+} from '../controllers/rooms.controller';
 
 export const router = express.Router();
 
 router.route('/').get(getRooms).post(createRoom);
-router
-  .route('/:id')
-  .get(getRoomById)
-  .put(updateRoomById)
-  .delete(deleteRoomById);
+router.route('/:id').get(getRoomById).put(updateRoomById).delete(deleteRoomById);

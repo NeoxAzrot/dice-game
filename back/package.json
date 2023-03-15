@@ -12,16 +12,14 @@
     "typecheck": "tsc --pretty --noEmit",
     "lint": "eslint . --ext .ts,.js",
     "lint:fix": "eslint . --ext .ts,.js --fix",
-    "format": "prettier --write .",
-    "prepare": "husky install"
+    "format": "prettier --write ."
   },
   "dependencies": {
-    "apollo-server-core": "^3.6.7",
-    "apollo-server-express": "^3.6.7",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
-    "express": "^4.17.3"
+    "express": "^4.17.3",
+    "firebase-admin": "^11.5.0"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",
@@ -38,7 +36,6 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "husky": "^7.0.4",
     "lint-staged": "^12.3.7",
     "nodemon": "^2.0.15",
     "prettier": "^2.6.2",
@@ -46,16 +43,11 @@
     "ts-node": "^10.7.0",
     "typescript": "^4.6.3"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "npm run typecheck"
-    }
-  },
   "lint-staged": {
     "*.@(ts|tsx)": [
       "npm run lint",
-      "npm run format"
+      "npm run format",
+      "npm run typecheck"
     ]
   },
   "engines": {

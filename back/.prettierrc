@@ -5,7 +5,13 @@
   "tabWidth": 2,
   "useTabs": false,
   "semi": true,
-  "importOrder": ["^database/(.*)$", "^graphql/(.*)$", "^types/(.*)$", "^[./]"],
+  "importOrder": [
+    "^controllers/(.*)$",
+    "^routes/(.*)$",
+    "^types/(.*)$",
+    "^utils/(.*)$",
+    "^[./]"
+  ],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true
 }
