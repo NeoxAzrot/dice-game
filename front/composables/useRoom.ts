@@ -1,18 +1,18 @@
 export default function useRoom() {
   const { API_ENDPOINT: endpoint } = useRuntimeConfig().public
-  const { username, roomID } = useStore()
+  const { username } = useStore()
 
-  const join = () => {
-    return $fetch(endpoint + `/room/${roomID}/join`, {
+  const join = (ID: string) => {
+    return $fetch(endpoint + `/room/${ID}/join`, {
       method: 'POST',
-      body: JSON.stringify({ user: username })
+      body: JSON.stringify({ username: username })
     })
   }
 
   const create = () => {
     return $fetch(endpoint + '/room/create', {
       method: 'POST',
-      body: JSON.stringify({ user: username })
+      body: JSON.stringify({ username: username })
     })
   }
 

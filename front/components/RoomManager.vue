@@ -1,8 +1,8 @@
 <template>
   <div class="room-manager">
     <div class="room-manager__buttons">
-      <button :class="selection === 'join' && 'selected'" @click="selection = 'create'">Create</button>
-      <button :class="selection === 'create' && 'selected'" @click="selection = 'join'">Join</button>
+      <button :class="selection === 'join' && 'selected'" @click="selection = 'join'">Join</button>
+      <button :class="selection === 'create' && 'selected'" @click="selection = 'create'">Create</button>
     </div>
 
     <form v-if="selection === 'join'" @submit="handleJoin">
@@ -12,7 +12,7 @@
       </div>
       <div class="room-manager__field">
         <label for="room">Room</label>
-        <input type="text" id="room" name="room" v-model="roomID">
+        <input type="text" id="room" name="room" v-model="requestedRoom">
       </div>
       <input type="submit" value="Join">
     </form>
@@ -28,12 +28,14 @@
 </template>
 
 <script setup lang="ts">
-const { username, roomID } = useStore();
+const { username } = useStore();
 const selection: Ref<'join' | 'create'> = ref('join')
+
+const requestedRoom = ref('')
 
 const handleJoin = (e: Event) => {
   e.preventDefault()
-  useRoom().join()
+  useRoom().join(requestedRoom.value)
 }
 
 const handleCreate = (e: Event) => {
@@ -50,12 +52,12 @@ const handleCreate = (e: Event) => {
     margin-bottom: 2rem;
 
     button {
-      pointer-events: none;
+      pointer-events: all;
       opacity: 0.5;
       transition: opacity 0.3s ease-in-out;
 
       &.selected {
-        pointer-events: all;
+        pointer-events: none;
         opacity: 1;
       }
     }
