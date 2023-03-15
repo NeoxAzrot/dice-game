@@ -5,7 +5,7 @@ export default function useRoom() {
   const { API_ENDPOINT: endpoint } = useRuntimeConfig().public
   const { username } = useStore()
 
-  const { room } = storeToRefs(useRoomStore());
+  const { room, users } = storeToRefs(useRoomStore());
 
   const join = (ID: string) => {
     return $fetch(endpoint + `/rooms/${ID}/join`, {
@@ -27,5 +27,16 @@ export default function useRoom() {
     })
   }
 
-  return { room, join, create, verify }
+  const fetchNames = async () => {
+    const usernames: string[] = []
+    for (const player of room.value.players) {
+      const { data }: any = await $fetch(endpoint + `/users/${player}/`, {
+        method: 'GET',
+      })
+      usernames.push(data.username)
+    }
+    users.value = usernames
+    return usernames
+  }
+  return { room, users, join, create, verify, fetchNames }
 } 

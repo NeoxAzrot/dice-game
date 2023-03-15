@@ -37,7 +37,7 @@ const handleJoin = (e: Event) => {
   e.preventDefault()
   useRoom().join(requestedRoom.value)
   .then(() => {
-    navigateTo(`/${requestedRoom.value}`)
+    window.location.href = `${useRuntimeConfig().APP_URL}/${requestedRoom.value}`
   }).catch((err) => {
     console.error(err)
   })

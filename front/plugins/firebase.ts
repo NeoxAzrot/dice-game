@@ -17,10 +17,15 @@ export default defineNuxtPlugin(() => {
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  const listen = (collection: string, document: string, type: 'room' | 'game') => {
-    const unsubscribe = onSnapshot(doc(db, collection, document), (req: any) => {
+  const listen = async (collection: string, document: string, type: 'room' | 'game') => {
+    let firstTime = false
+    const unsubscribe = onSnapshot(doc(db, collection, document), async (req: any) => {
       if (type === 'room') useRoom().room.value = req.data();
       if (type === 'game') useGame().value = req.data();
+      if (!firstTime) {
+        await useRoom().fetchNames()
+        firstTime = true
+      }
     });
 
     return { unsubscribe }

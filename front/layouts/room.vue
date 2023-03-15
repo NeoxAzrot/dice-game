@@ -1,12 +1,7 @@
 <template>
   <div class="layout room">
-    <div v-if="room">
-      <div class="room__header">
-        <p>N°{{ roomID }}</p>
-        <div class="room__header__players">
-          <p v-for="player, index in room.players">P{{ index + 1 }}: {{ player }}</p>
-        </div>
-      </div>
+    <div v-if="room && users">
+      <RoomHeader />
       <div class="layout__container">
         <NuxtPage/>
       </div>
@@ -20,34 +15,13 @@
 <script setup lang="ts">
 const roomID = useRoute().params.room as string
 
-const { room } = useRoom()
+const { room, users } = useRoom()
 
 const listener: Ref<any> = ref(null)
 
 onMounted(async () => {
-  if(roomID.length > 2) {
-    console.log(await useRoom().verify(roomID))
-    listener.value = useFirebase().listen('rooms', roomID, 'room')
-  } else {
-    navigateTo('/')
-  }
+  useRoom().verify(roomID)
+  .then(async (): Promise<any> => listener.value = await useFirebase().listen('rooms', roomID, 'room'))
+  .catch((): any => navigateTo('/'))
 })
 </script>
-
-<style lang="scss">
-.room {
-  &__header {
-    width: 100%;
-    padding: 1rem 3rem;
-    background-color: var(--color-primary);
-    display: flex;
-    align-items: center;
-    gap: 4rem;
-
-    &__players {
-      display: flex;
-      gap: 2rem;
-    }
-  }
-}
-</style>
