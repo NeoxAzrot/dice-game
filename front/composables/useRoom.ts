@@ -1,30 +1,25 @@
+import { storeToRefs } from "pinia";
+import useRoomStore from "~~/store/room";
+
 export default function useRoom() {
   const { API_ENDPOINT: endpoint } = useRuntimeConfig().public
-  const { username, roomID } = useStore()
+  const { username } = useStore()
 
-  const join = () => {
-    return $fetch(endpoint + `/room/${roomID}/join`, {
+  const { room } = storeToRefs(useRoomStore());
+
+  const join = (ID: string) => {
+    return $fetch(endpoint + `/room/${ID}/join`, {
       method: 'POST',
-      body: JSON.stringify({ user: username })
+      body: JSON.stringify({ username: username })
     })
   }
 
   const create = () => {
     return $fetch(endpoint + '/room/create', {
       method: 'POST',
-      body: JSON.stringify({ user: username })
+      body: JSON.stringify({ username: username })
     })
   }
 
-  const newLaunch = () => {
-    const currentRoom: Ref<string | null> = ref(null)
-    if (!currentRoom) throw new Error('No room selected')
-
-    return $fetch(endpoint + `/room/${currentRoom}/launch`, {
-      method: 'POST',
-      body: JSON.stringify({ user: username })
-    })
-  }
-
-  return { join, create, newLaunch }
+  return { room, join, create }
 } 
