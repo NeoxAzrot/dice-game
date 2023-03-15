@@ -8,18 +8,24 @@ export default function useRoom() {
   const { room } = storeToRefs(useRoomStore());
 
   const join = (ID: string) => {
-    return $fetch(endpoint + `/room/${ID}/join`, {
+    return $fetch(endpoint + `/rooms/${ID}/join`, {
       method: 'POST',
       body: JSON.stringify({ username: username })
     })
   }
 
   const create = () => {
-    return $fetch(endpoint + '/room/create', {
+    return $fetch(endpoint + '/rooms/create', {
       method: 'POST',
       body: JSON.stringify({ username: username })
     })
   }
 
-  return { room, join, create }
+  const verify = (ID: string) => {
+    return $fetch(endpoint + `/rooms/${ID}`, {
+      method: 'GET',
+    })
+  }
+
+  return { room, join, create, verify }
 } 
