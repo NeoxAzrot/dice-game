@@ -27,3 +27,9 @@ export const getUserByUsernameService = async (username: string) => {
 
   return { id: userId };
 };
+
+export const getUserByIdService = async (id: string) => {
+  const user = await database.collection('users').doc(id).get();
+
+  return user;
+};

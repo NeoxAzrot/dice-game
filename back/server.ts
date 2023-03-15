@@ -6,6 +6,7 @@ import 'firebase';
 
 import { router as gamesRouter } from 'routes/games.route';
 import { router as roomsRouter } from 'routes/rooms.route';
+import { router as usersRouter } from 'routes/users.route';
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.get('/', (req, res) => {
 
 app.use('/rooms', roomsRouter);
 app.use('/games', gamesRouter);
+app.use('/users', usersRouter);
 
 app.listen(PORT, () => {
   console.log(`\n🚀 Connecting on port\u001b[1;34m http://localhost:${PORT} \u001b[0m\n`);
