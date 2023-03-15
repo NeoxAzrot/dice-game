@@ -28,5 +28,12 @@ export const getGameById = async (req: Request, res: Response) => {
     return res.status(400).json({ message: 'Game not found' });
   }
 
-  return res.status(200).json({ message: `Get game #${id}`, data: game.data() });
+  return res.status(200).json({
+    message: `Get game #${id}`,
+    data: {
+      data: {
+        id: game.id,
+      },
+    },
+  });
 };

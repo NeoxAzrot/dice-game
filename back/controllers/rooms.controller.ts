@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 
-import { createRoomService, getRoomByIdService } from 'services/rooms.service';
+import {
+  createRoomService,
+  deleteRoomByIdService,
+  getRoomByIdService,
+} from 'services/rooms.service';
 import { getUserByUsernameService } from 'services/users.service';
 
 export const createRoom = async (req: Request, res: Response) => {
@@ -50,11 +54,21 @@ export const getRoomById = async (req: Request, res: Response) => {
     return res.status(400).json({ message: 'Room not found' });
   }
 
-  return res.status(200).json({ message: `Get room #${id}`, data: room.data() });
+  return res.status(200).json({
+    message: `Get room #${id}`,
+    data: {
+      id: room.id,
+    },
+  });
 };
 
 export const deleteRoomById = async (req: Request, res: Response) => {
   const id = req.params.id;
+  const room = await deleteRoomByIdService(id);
+
+  if (!room.exists) {
+    return res.status(400).json({ message: 'Room not found' });
+  }
 
   return res.status(200).json({ message: `Delete room #${id}` });
 };

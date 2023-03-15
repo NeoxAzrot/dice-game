@@ -30,6 +30,12 @@ export const getRoomByIdService = async (id: string) => {
   return room;
 };
 
-export const deleteRoomByIdService = async () => {
-  return null;
+export const deleteRoomByIdService = async (id: string) => {
+  const room = await getRoomByIdService(id);
+
+  if (room.exists) {
+    await database.collection('rooms').doc(id).delete();
+  }
+
+  return room;
 };
