@@ -1,6 +1,11 @@
+import { storeToRefs } from "pinia";
+import useRoomStore from "~~/store/room";
+
 export default function useRoom() {
   const { API_ENDPOINT: endpoint } = useRuntimeConfig().public
   const { username } = useStore()
+
+  const { room } = storeToRefs(useRoomStore());
 
   const join = (ID: string) => {
     return $fetch(endpoint + `/room/${ID}/join`, {
@@ -16,5 +21,5 @@ export default function useRoom() {
     })
   }
 
-  return { join, create }
+  return { room, join, create }
 } 
