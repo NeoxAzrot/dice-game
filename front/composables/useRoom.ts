@@ -16,15 +16,5 @@ export default function useRoom() {
     })
   }
 
-  const newLaunch = () => {
-    const currentRoom: Ref<string | null> = ref(null)
-    if (!currentRoom) throw new Error('No room selected')
-
-    return $fetch(endpoint + `/room/${currentRoom}/launch`, {
-      method: 'POST',
-      body: JSON.stringify({ user: username })
-    })
-  }
-
-  return { join, create, newLaunch }
+  return { join, create }
 } 
