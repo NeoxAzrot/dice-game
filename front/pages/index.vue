@@ -1,6 +1,8 @@
 <template>
-  <div class="layout">
-    <RoomManager />
+  <div class="layout home">
+    <div class="layout__container">
+      <RoomManager />
+    </div>
   </div>
 </template>
 
@@ -10,7 +12,7 @@
 </script>
 
 <style lang="scss">
-.layout {
+.home {
   display: flex;
   flex-direction: column;
   justify-content: center;

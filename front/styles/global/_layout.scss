@@ -1,3 +1,9 @@
 .layout {
   font-size: var(--font--text);
+  min-height: 100vh;
+  min-width: 100vw;
+
+  &__container {
+    padding: 1rem;
+  }
 }
