@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
 
-const useStore = defineStore('main', () => {
+const useMainStore = defineStore('main', () => {
   const username: Ref<string | undefined> = ref(undefined)
-  const roomID: Ref<string | undefined> = ref('edsqdqs')
+  const roomID: Ref<string | undefined> = ref(undefined)
 
   return { username, roomID }
 })
 
-export default useStore
+export default useMainStore

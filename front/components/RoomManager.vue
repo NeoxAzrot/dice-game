@@ -1,0 +1,31 @@
+<template>
+  <div>
+    <div>
+      <button v-if="selection === 'join'" @click="selection = 'create'">Create</button>
+      <button v-if="selection === 'create'" @click="selection = 'join'">Join</button>
+    </div>
+    <form v-if="selection === 'join'">
+      <div>
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" v-model="username">
+      </div>
+      <div>
+        <label for="room">Room</label>
+        <input type="text" id="room" name="room" v-model="roomID">
+      </div>
+      <input type="submit" value="Join">
+    </form>
+    <form v-else>
+      <div>
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" v-model="username">
+      </div>
+      <input type="submit" value="Create">
+    </form>
+  </div>
+</template>
+
+<script setup lang="ts">
+const { username, roomID } = useStore();
+const selection: Ref<'join' | 'create'> = ref('join')
+</script>

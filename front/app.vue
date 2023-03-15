@@ -1,11 +1,12 @@
 <template>
   <div>
     <h1>Init</h1>
+    {{ username }}
+    {{ roomID }}
+    <RoomManager />
   </div>
 </template>
 
 <script setup lang="ts">
-import useStore from '@/store/main'
-const { roomID } = useStore()
-console.log(roomID)
+const { roomID, username } = useStore()
 </script>
