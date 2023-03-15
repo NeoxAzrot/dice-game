@@ -1,6 +1,8 @@
-import getRandomId from '../utils/generateRandomId.js';
+import { NextFunction, Request, Response } from 'express';
 
-export const createRoom = (req, res, next) => {
+import getRandomId from '../utils/generateRandomId';
+
+export const createRoom = (req: Request, res: Response, next: NextFunction) => {
   const { value, user } = req.body;
   const id = getRandomId();
   const createdAt = new Date().toISOString();
@@ -14,23 +16,23 @@ export const createRoom = (req, res, next) => {
   }
 };
 
-export const getRooms = (req, res, next) => {
+export const getRooms = (req: Request, res: Response, next: NextFunction) => {
   res.status(200).json({ message: 'Get all rooms' });
 };
 
-export const getRoomById = (req, res, next) => {
+export const getRoomById = (req: Request, res: Response, next: NextFunction) => {
   const roomId = req.params.id;
 
   res.status(200).json({ message: `Get room #${roomId}` });
 };
 
-export const updateRoomById = (req, res, next) => {
+export const updateRoomById = (req: Request, res: Response, next: NextFunction) => {
   const roomId = req.params.id;
 
   res.status(200).json({ message: `Update room #${roomId}` });
 };
 
-export const deleteRoomById = (req, res, next) => {
+export const deleteRoomById = (req: Request, res: Response, next: NextFunction) => {
   const roomId = req.params.id;
 
   res.status(200).json({ message: `Delete room #${roomId}` });

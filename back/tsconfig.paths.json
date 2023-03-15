@@ -2,9 +2,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "database": ["database"],
-      "graphql": ["graphql"],
-      "types": ["types"]
+      "controllers": ["controllers"],
+      "routes": ["routes"],
+      "types": ["types"],
+      "utils": ["utils"]
     }
   }
 }
