@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="room__header__actions">
-        <button @click="handleCreateGame" class="btn--secondary createRoom" :class="disableCreateButton && 'disabled'">Start a new game</button>
+        <button @click="handleCreateGame" class="btn--secondary createRoom" :class="(isInGame && isEnoughPlayer) && 'disabled'">Start a new game</button>
         <button @click="handleLeave" class="btn--secondary">Leave room</button>
       </div>
     </div>
@@ -24,7 +24,8 @@ const { room } = useRoom()
 
 const currentUserID = useCookie('dice-game-user-id')
 
-const disableCreateButton = computed(() => room.value?.games ? room.value?.games.length > 0 : false)
+const isInGame = computed(() => room.value?.games ? room.value?.games.length > 0 : false)
+const isEnoughPlayer = computed(() => room.value ? room.value.players.length >= 2 : false)
 
 const handleLeave = async () => {
   await useRoom().leave()
