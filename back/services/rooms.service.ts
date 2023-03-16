@@ -110,12 +110,17 @@ export const removeUserFromRoomService = async ({
   const room = await getRoomByIdService(roomId);
 
   if (room.exists) {
-    await database
+    const newRoom = await database
       .collection('rooms')
       .doc(roomId)
       .update({
         players: room.data()?.players.filter((player: { id: string }) => player.id !== userId),
-      });
+      })
+      .then(() => getRoomByIdService(roomId));
+
+    if (newRoom.data()?.players.length === 0) {
+      await deleteRoomByIdService(roomId);
+    }
   }
 
   return room;
