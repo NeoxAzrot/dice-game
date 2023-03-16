@@ -8,6 +8,8 @@ import {
   MIN_DICE_VALUE,
   MIN_PLAYERS,
 } from 'utils/constants';
+import { Numbers } from 'utils/numbers';
+import { Players } from 'utils/players';
 
 import { database } from '../firebase';
 import { getRoomByIdService } from './rooms.service';
@@ -64,7 +66,7 @@ export const rollDicesService = async (dices: number) => {
   const newDices = [];
 
   for (let i = 0; i < dices; i++) {
-    newDices.push(Math.floor(Math.random() * MAX_DICE_VALUE) + MIN_DICE_VALUE);
+    newDices.push(Numbers.getRandom(MIN_DICE_VALUE, MAX_DICE_VALUE));
   }
 
   return newDices;
@@ -110,6 +112,8 @@ export const playRoundService = async ({
       },
     ];
 
+    // TODO: check all combinations
+
     const newGame = await database
       .collection('games')
       .doc(gameId)
@@ -136,9 +140,53 @@ export const playRoundService = async ({
       };
     }
 
+    const isDiceInvalid = dicesKept.some((dice: number) => {
+      return dice < MIN_DICE_VALUE || dice > MAX_DICE_VALUE;
+    });
+
+    if (isDiceInvalid) {
+      return {
+        success: false,
+        message: 'Invalid dice value',
+      };
+    }
+
+    // TODO: check if dices are valid (in game.dices) or in combinations (BETTER)
+
+    const nextPlayer = Players.getNext({
+      players: game.data()?.players,
+      actualPlayerId: userId,
+    });
+
+    const newGame = await database
+      .collection('games')
+      .doc(gameId)
+      .update({
+        updatedAt,
+        players: game.data()?.players.map((player: GlobalTypes.Player) => {
+          if (player.id === userId) {
+            return {
+              ...player,
+              score: player.score + 1, // TODO: add points to player score and displayScore
+              displayScore: player.displayScore + 1, // TODO: add points to player score and displayScore
+            };
+          }
+
+          return player;
+        }),
+        state: {
+          ...game.data()?.state,
+          rolls: 0,
+          turn: nextPlayer.id,
+        },
+        dices: [],
+        combinations: [],
+      })
+      .then(() => getGameByIdService(gameId));
+
     return {
       success: true,
-      data: game.data(),
+      data: newGame.data(), // TODO: send only necessary data
     };
   } else {
     return {
@@ -206,7 +254,8 @@ export const changePlayerReadyStatusService = async ({
         updatedAt,
         state: {
           gameStatus: GAME_STATUS.PLAYING,
-          turn: newGame.data()?.players[0].id,
+          turn: newGame.data()?.players[Numbers.getRandom(0, newGame.data()?.players.length - 1)]
+            .id,
         },
       })
       .then(() => getGameByIdService(gameId));
