@@ -5,6 +5,7 @@ import {
   createGameService,
   getGameByIdService,
   getGamesService,
+  playRoundService,
 } from 'services/games.service';
 
 export const createGame = async (req: Request, res: Response) => {
@@ -26,9 +27,15 @@ export const createGame = async (req: Request, res: Response) => {
 
 export const playRound = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { move, userId } = req.body;
+  const { move, userId, dicesKept } = req.body;
 
-  return res.status(200).json({ succes: true });
+  const game = await playRoundService({ gameId: id, move, userId, dicesKept });
+
+  if (!game.success) {
+    return res.status(400).json({ success: game.success, message: game.message });
+  }
+
+  return res.status(200).json({ succes: true, data: game.data });
 };
 
 export const getGames = async (req: Request, res: Response) => {
