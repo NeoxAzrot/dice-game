@@ -7,20 +7,14 @@ export namespace RoomTypes {
 
   export namespace Create {
     export interface Props {
-      user: {
-        id: string;
-        username: string;
-      };
+      user: GlobalTypes.Player;
     }
   }
 
   export namespace Join {
     export interface Props {
       roomId: string;
-      user: {
-        id: string;
-        username: string;
-      };
+      user: GlobalTypes.Player;
     }
   }
 

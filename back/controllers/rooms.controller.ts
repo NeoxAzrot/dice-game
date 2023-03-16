@@ -47,7 +47,7 @@ export const createRoom = async (req: Request, res: Response) => {
 };
 
 export const joinRoom = async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const { id } = req.params;
   const { username } = req.body;
 
   if (!username) {
@@ -106,7 +106,7 @@ export const getRooms = async (req: Request, res: Response) => {
 };
 
 export const getRoomById = async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const { id } = req.params;
   const room = await getRoomByIdService(id);
 
   if (!room.exists) {
