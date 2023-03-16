@@ -36,8 +36,8 @@ const requestedRoom = ref('')
 const handleJoin = (e: Event) => {
   e.preventDefault()
   useRoom().join(requestedRoom.value)
-  .then(() => {
-    window.location.href = `${useRuntimeConfig().APP_URL}/${requestedRoom.value}`
+  .then(({ data }) => {
+    window.location.href = `${useRuntimeConfig().APP_URL}/${data.room.id}`
   }).catch((err) => {
     console.error(err)
   })
@@ -47,8 +47,8 @@ const handleCreate = (e: Event) => {
   e.preventDefault()
   useRoom().create()
   .then(({ data }) => {
-    roomID.value = data.id
-    window.location.href = `${useRuntimeConfig().APP_URL}/${data.id}`
+    roomID.value = data.room.id
+    window.location.href = `${useRuntimeConfig().APP_URL}/${data.room.id}`
   }).catch((err) => {
     console.error(err)
   })

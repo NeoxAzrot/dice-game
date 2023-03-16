@@ -1,9 +1,9 @@
 <template>
-  <div class="room__header" v-if="users">
+  <div class="room__header" v-if="room.players">
     <div class="room__header__top">
       <p>N°{{ roomID }}</p>
       <div class="room__header__top__players">
-        <p v-for="p, index in room.players"><span>P{{ index + 1 }}</span> {{ users[index] }}</p>
+        <p v-for="p, index in room.players"><span>P{{ index + 1 }}</span> {{ p.username }}</p>
       </div>
       <button class="btn--secondary">Start a new game</button>
     </div>
@@ -13,7 +13,7 @@
 <script setup lang="ts">
 const roomID = useRoute().params.room as string
 
-const { room, users } = useRoom()
+const { room } = useRoom()
 </script>
 
 <style lang="scss">

@@ -7,7 +7,7 @@ export default function useRoom() {
 
   const { room, users } = storeToRefs(useRoomStore());
 
-  const join = (ID: string) => {
+  const join: (ID: string) => Promise<any> = (ID: string) => {
     return $fetch(endpoint + `/rooms/${ID}/join`, {
       method: 'POST',
       body: JSON.stringify({ username: username.value })
