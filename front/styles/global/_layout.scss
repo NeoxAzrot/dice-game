@@ -1,6 +1,7 @@
 .layout {
   font-size: var(--font--text);
   font-family: var(--font-family--main);
+  background-color: var(--color--body);
   min-height: 100vh;
 
   &__container {

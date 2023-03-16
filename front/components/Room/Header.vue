@@ -64,10 +64,6 @@ const handleLeave = async () => {
       margin: 0 0 0 auto;
       display: flex;
       gap: 1rem;
-
-      button {
-
-      }
     }
   }
 }
