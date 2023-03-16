@@ -7,6 +7,7 @@ type Room = {
     id: string,
     username: string
   }[],
+  games: string[],
 }
 
 const useRoomStore = defineStore('room', () => {

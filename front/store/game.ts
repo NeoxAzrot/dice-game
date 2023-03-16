@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 
 const useGameStore = defineStore('game', () => {
-  const game: Ref<Object | undefined> = ref('dsq')
+  const game: Ref<any | undefined> = ref(undefined)
 
   return { game }
 })

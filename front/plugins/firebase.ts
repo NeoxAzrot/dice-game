@@ -20,14 +20,16 @@ export default defineNuxtPlugin(() => {
     let firstTime = true
 
     const unsubscribe = onSnapshot(doc(db, collection, document), async (req: any) => {
-      if (type === 'room') useRoom().room.value = req.data();
-      if (type === 'game') useGame().value = req.data();
-      if (firstTime) {
-        if (!req.data().players.some((player: any) => player.id === useCookie('dice-game-user-id').value)) {
-          navigateTo('/')
+      if (type === 'room') {
+        useRoom().room.value = req.data()
+        if (firstTime) {
+          if (!req.data().players.some((player: any) => player.id === useCookie('dice-game-user-id').value)) {
+            navigateTo('/')
+          }
+          firstTime = false
         }
-        firstTime = false
-      }
+      };
+      if (type === 'game') useGame().game.value = req.data();
     });
 
     return { unsubscribe }

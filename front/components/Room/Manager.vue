@@ -1,28 +1,38 @@
 <template>
   <div class="room-manager">
     <div class="room-manager__selector">
-      <p :class="selection === 'join' && 'selected'" @click="selection = 'join'">Join</p>
-      <p :class="selection === 'create' && 'selected'" @click="selection = 'create'">Create</p>
+      <p
+        :class="selection === 'join' && 'selected'"
+        @click="selection = 'join'"
+      >
+        Join
+      </p>
+      <p
+        :class="selection === 'create' && 'selected'"
+        @click="selection = 'create'"
+      >
+        Create
+      </p>
     </div>
 
     <form v-if="selection === 'join'" @submit="handleJoin">
       <div class="room-manager__field input">
         <label for="username">Username</label>
-        <input type="text" id="username" name="username" v-model="username">
+        <input type="text" id="username" name="username" v-model="username" />
       </div>
       <div class="room-manager__field input">
         <label for="room">Room</label>
-        <input type="text" id="room" name="room" v-model="requestedRoom">
+        <input type="text" id="room" name="room" v-model="requestedRoom" />
       </div>
-      <input type="submit" value="Join">
+      <input type="submit" value="Join" />
     </form>
 
     <form v-else @submit="handleCreate">
       <div class="room-manager__field input">
         <label for="username">Username</label>
-        <input type="text" id="username" name="username" v-model="username">
+        <input type="text" id="username" name="username" v-model="username" />
       </div>
-      <input type="submit" value="Create">
+      <input type="submit" value="Create" />
     </form>
     <p class="room-manager__error" v-if="error">{{ error }}</p>
   </div>
@@ -30,13 +40,13 @@
 
 <script setup lang="ts">
 const { username, roomID } = useStore();
-const selection: Ref<'join' | 'create'> = ref('join')
+const selection: Ref<'join' | 'create'> = ref('join');
 
-const requestedRoom = ref(useRoute().query.room as string || '')
+const requestedRoom = ref((useRoute().query.room as string) || '');
 
-const cookie = useCookie('dice-game-user-id')
+const cookie = useCookie('dice-game-user-id');
 
-const error = ref('')
+const error = ref('');
 
 const handleJoin = (e: Event) => {
   e.preventDefault()
@@ -45,7 +55,7 @@ const handleJoin = (e: Event) => {
     cookie.value = data.user.id
     window.location.href = `${useRuntimeConfig().APP_URL}/${data.room.id}`
   }).catch((err) => {
-    error.value = err.message
+    error.value = err.response._data.message
   })
 }
 
@@ -57,8 +67,7 @@ const handleCreate = (e: Event) => {
     roomID.value = data.room.id
     window.location.href = `${useRuntimeConfig().APP_URL}/${data.room.id}`
   }).catch((err) => {
-    console.log(err.response)
-    error.value = err.response.message
+    error.value = err.response._data.message
   })
 }
 </script>
@@ -97,7 +106,7 @@ const handleCreate = (e: Event) => {
     gap: 1rem;
     width: 100%;
 
-    input[type="submit"] {
+    input[type='submit'] {
       margin-top: 1rem;
     }
   }
