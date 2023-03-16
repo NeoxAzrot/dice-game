@@ -24,6 +24,7 @@
       </div>
       <input type="submit" value="Create">
     </form>
+    <p class="room-manager__error" v-if="error">{{ error }}</p>
   </div>
 </template>
 
@@ -35,6 +36,8 @@ const requestedRoom = ref(useRoute().query.room as string || '')
 
 const cookie = useCookie('dice-game-user-id')
 
+const error = ref('')
+
 const handleJoin = (e: Event) => {
   e.preventDefault()
   useRoom().join(requestedRoom.value)
@@ -42,7 +45,7 @@ const handleJoin = (e: Event) => {
     cookie.value = data.user.id
     window.location.href = `${useRuntimeConfig().APP_URL}/${data.room.id}`
   }).catch((err) => {
-    console.error(err)
+    error.value = 'Cannot join this room'
   })
 }
 
@@ -54,7 +57,7 @@ const handleCreate = (e: Event) => {
     roomID.value = data.room.id
     window.location.href = `${useRuntimeConfig().APP_URL}/${data.room.id}`
   }).catch((err) => {
-    console.error(err)
+    error.value = 'Cannot create room'
   })
 }
 </script>
@@ -96,6 +99,12 @@ const handleCreate = (e: Event) => {
     input[type="submit"] {
       margin-top: 1rem;
     }
+  }
+
+  &__error {
+    color: #ff0000;
+    font-size: 1.4rem;
+    letter-spacing: normal;
   }
 }
 </style>

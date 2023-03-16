@@ -1,6 +1,6 @@
 <template>
   <div>
-    <RoomViewer />
+    <RoomWaiter />
   </div>
 </template>
 
