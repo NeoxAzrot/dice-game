@@ -32,7 +32,7 @@ onBeforeMount(async () => {
 
 onMounted(() => {  
   window.addEventListener('beforeunload', () => {
-    useRoom().abandon()
+    useRoom().leave()
   })
 })
 </script>

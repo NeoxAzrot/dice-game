@@ -28,15 +28,9 @@ export default function useRoom() {
   }
 
   const leave = () => {
-    return $fetch(endpoint + `/rooms/${useRoute().params.room}`, {
-      method: 'DELETE',
-    })
-  }
-
-  const abandon = () => {
     return $fetch(endpoint + `/rooms/${useRoute().params.room}/users/${useCookie('dice-game-user-id').value}`, {
       method: 'PUT',
     })
   }
-  return { room, users, join, create, verify, leave, abandon }
+  return { room, users, join, create, verify, leave }
 } 
