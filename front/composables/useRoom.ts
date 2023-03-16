@@ -17,7 +17,7 @@ export default function useRoom() {
   const { API_ENDPOINT: endpoint } = useRuntimeConfig().public
   const { username } = useStore()
 
-  const { room, users } = storeToRefs(useRoomStore());
+  const { room } = storeToRefs(useRoomStore());
 
   const join: (ID: string) => Promise<JoinOrCreateRoom> = (ID: string) => {
     return $fetch(endpoint + `/rooms/${ID}/join`, {
@@ -44,5 +44,5 @@ export default function useRoom() {
       method: 'PUT',
     })
   }
-  return { room, users, join, create, verify, leave }
+  return { room, join, create, verify, leave }
 } 

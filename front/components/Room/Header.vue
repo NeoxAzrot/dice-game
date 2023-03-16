@@ -1,5 +1,5 @@
 <template>
-  <div class="room__header" v-if="room.players">
+  <div class="room__header" v-if="room">
     <div class="room__header__top">
       <p>N°{{ roomID }}</p>
       <div class="room__header__top__players">
