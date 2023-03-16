@@ -77,11 +77,13 @@ export const joinRoom = async (req: Request, res: Response) => {
 
   return res.status(200).json({
     success: true,
-    room: {
-      id: room.data.id,
-    },
-    user: {
-      id: user.id,
+    data: {
+      room: {
+        id: room.data.id,
+      },
+      user: {
+        id: user.id,
+      },
     },
   });
 };
