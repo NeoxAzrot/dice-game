@@ -1,6 +1,8 @@
 import { GameTypes } from 'types/game';
 import { GlobalTypes } from 'types/global';
 
+import { MIN_PLAYERS } from 'utils/constants';
+
 import { database } from '../firebase';
 import { getRoomByIdService } from './rooms.service';
 
@@ -64,6 +66,14 @@ export const changePlayerReadyStatusService = async ({
   if (!players) {
     return {
       success: false,
+      message: 'Cannot change player ready status',
+    };
+  }
+
+  if (players.length < MIN_PLAYERS) {
+    return {
+      success: false,
+      message: 'Minimum 2 players required',
     };
   }
 
