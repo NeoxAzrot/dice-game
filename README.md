@@ -8,23 +8,6 @@ Le backend renvoie un tableau de 5 dés avec un nombre aléatoire entre 1 et 6 e
 
 Le front affiche les dés et permet de les relancer ou les bloquer.
 
-## Routes
-
-- Rooms
-
-  - [x] POST /rooms - create a new room
-  - [x] POST /rooms/:id/join - join a room
-  - [x] DELETE /rooms/:id - delete a room
-
-  - [ ] GET /rooms - get all rooms - OPTIONAL
-
-- Games
-
-  - [ ] POST /rooms/:roomId/games - create a new game
-  - [ ] POST /rooms/:roomId/games/:gameId/play - roll or hold a dice
-
-  - [ ] Get /games - get all games - OPTIONAL
-
 ## Todo
 
 ### Back

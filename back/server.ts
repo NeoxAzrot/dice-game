@@ -28,10 +28,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors(corsOptions));
 
-app.get('/', (req, res) => {
-  res.send('Home page !');
-});
-
 app.use('/rooms', roomsRouter);
 app.use('/games', gamesRouter);
 app.use('/users', usersRouter);

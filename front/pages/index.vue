@@ -15,8 +15,7 @@
   align-items: center;
   height: 100vh;
   width: 100vw;
-  background-color: #f5f5f5;
-
+  background-color: var(--color--body);
 }
 
 .layout {

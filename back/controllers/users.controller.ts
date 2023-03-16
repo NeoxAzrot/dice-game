@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { getUserByIdService } from 'services/users.service';
 
 export const getUserById = async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const { id } = req.params;
   const user = await getUserByIdService(id);
 
   if (!user.exists) {

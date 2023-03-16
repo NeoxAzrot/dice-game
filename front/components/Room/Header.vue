@@ -1,52 +1,90 @@
 <template>
-  <div class="room__header" v-if="users">
-    <div class="room__header__top">
-      <p>N°{{ roomID }}</p>
-      <div class="room__header__top__players">
-        <p v-for="p, index in room.players"><span>P{{ index + 1 }}</span> {{ users[index] }}</p>
+  <div class="room__header" v-if="room">
+    <div class="room__header__container">
+      <div>
+        <label>Room</label>
+        <RoomCopyLink />
       </div>
-      <button class="btn--secondary">Start a new game</button>
+      <div>
+        <label>Players</label>
+        <div class="room__header__players">
+          <p :class="currentUserID === p.id && 'current'" v-for="p in room.players">{{ p.username }}</p>
+        </div>
+      </div>
+      <div class="room__header__actions">
+        <button @click="handleCreateGame" class="btn--secondary createRoom" :class="(isInGame && isEnoughPlayer) && 'disabled'">Start a new game</button>
+        <button @click="handleLeave" class="btn--secondary">Leave room</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const roomID = useRoute().params.room as string
+const { room } = useRoom()
 
-const { room, users } = useRoom()
+const currentUserID = useCookie('dice-game-user-id')
+
+const isInGame = computed(() => room.value?.games ? room.value?.games.length > 0 : false)
+const isEnoughPlayer = computed(() => room.value ? room.value.players.length >= 2 : false)
+
+const handleLeave = async () => {
+  await useRoom().leave()
+  navigateTo('/')
+}
+
+const handleCreateGame = async() => {  
+  useGame().create().then((r) => {
+    console.log(r.data.id)
+  })
+}
+
 </script>
 
 <style lang="scss">
 .room {
   &__header {
-    width: 100;
-    max-width: 30rem;
-    padding: 1rem;
+    width: 100%;
     color: white;
-    height: 100vh;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background-color: var(--color--second);
+    display: flex;
 
-    &__top {
-      border-radius: 0.2rem;
-      background-color: var(--color--second);
+    &__container {
+      margin: auto;
       width: 100%;
       height: 100%;
       padding: 2rem;
-      display: flex;
-      flex-direction: column;
+      display: inline-flex;
       gap: 4rem;
+      max-width: 120rem;
 
-      &__players {
-        display: flex;
-        gap: 2rem;
-
-        span {
-          font-size: 0.9rem;
+      > div {
+        label {
+          font-size: 1.2rem;
           font-weight: 600;
+          margin-bottom: 0.5rem;
         }
       }
 
-      button {
-        margin: auto 0 0 0;
+    }
+    
+    &__players {
+      display: flex;
+      gap: 2rem;
+    }
+
+    &__actions {
+      margin: 0 0 0 auto;
+      display: flex;
+      gap: 1rem;
+
+      .createRoom {
+        &.disabled {
+          cursor: not-allowed;
+          opacity: 0.5;
+        }
       }
     }
   }

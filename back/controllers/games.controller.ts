@@ -1,17 +1,41 @@
 import { Request, Response } from 'express';
 
-import { getGameByIdService, getGamesService } from 'services/games.service';
+import {
+  changePlayerReadyStatusService,
+  createGameService,
+  getGameByIdService,
+  getGamesService,
+  playRoundService,
+} from 'services/games.service';
 
 export const createGame = async (req: Request, res: Response) => {
-  const createdAt = new Date().toISOString();
+  const { roomId } = req.body;
 
-  return res.status(200).json({ succes: true });
+  const game = await createGameService(roomId);
+
+  if (!game.id) {
+    return res.status(400).json({ success: false, message: 'Cannot create game' });
+  }
+
+  return res.status(200).json({
+    success: true,
+    data: {
+      id: game.id,
+    },
+  });
 };
 
 export const playRound = async (req: Request, res: Response) => {
-  const gameId = req.params.id;
+  const { id } = req.params;
+  const { move, userId, dicesKept } = req.body;
 
-  return res.status(200).json({ succes: true });
+  const game = await playRoundService({ gameId: id, move, userId, dicesKept });
+
+  if (!game.success) {
+    return res.status(400).json({ success: game.success, message: game.message });
+  }
+
+  return res.status(200).json({ success: true, data: game.data });
 };
 
 export const getGames = async (req: Request, res: Response) => {
@@ -32,7 +56,7 @@ export const getGames = async (req: Request, res: Response) => {
 };
 
 export const getGameById = async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const { id } = req.params;
   const game = await getGameByIdService(id);
 
   if (!game.exists) {
@@ -40,11 +64,22 @@ export const getGameById = async (req: Request, res: Response) => {
   }
 
   return res.status(200).json({
-    succes: true,
+    success: true,
     data: {
-      data: {
-        id: game.id,
-      },
+      id: game.id,
     },
   });
+};
+
+export const changePlayerReadyStatus = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { userId } = req.body;
+
+  const game = await changePlayerReadyStatusService({ gameId: id, userId });
+
+  if (!game.success) {
+    return res.status(400).json({ success: game.success, message: game.message });
+  }
+
+  return res.status(200).json({ success: true, data: game.data });
 };

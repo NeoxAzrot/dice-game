@@ -1,10 +1,19 @@
 import { defineStore } from 'pinia'
 
-const useRoomStore = defineStore('room', () => {
-  const room: Ref<any | undefined> = ref(undefined)
-  const users: Ref<string[] | undefined> = ref(undefined)
+type Room = {
+  createdAt: string,
+  updatedAt: string,
+  players: {
+    id: string,
+    username: string
+  }[],
+  games: string[],
+}
 
-  return { room, users }
+const useRoomStore = defineStore('room', () => {
+  const room: Ref<Room | undefined> = ref(undefined)
+
+  return { room }
 })
 
 export default useRoomStore

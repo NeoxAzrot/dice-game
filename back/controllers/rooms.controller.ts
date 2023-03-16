@@ -2,10 +2,10 @@ import { Request, Response } from 'express';
 
 import {
   createRoomService,
-  deleteRoomByIdService,
   getRoomByIdService,
   getRoomsService,
   joinRoomService,
+  removeUserFromRoomService,
 } from 'services/rooms.service';
 import { getUserByUsernameService } from 'services/users.service';
 
@@ -22,7 +22,12 @@ export const createRoom = async (req: Request, res: Response) => {
     return res.status(400).json({ success: false, message: 'User not found' });
   }
 
-  const room = await createRoomService({ userId: user.id });
+  const room = await createRoomService({
+    user: {
+      id: user.id,
+      username,
+    },
+  });
 
   if (!room.id) {
     return res.status(400).json({ success: false, message: 'Cannot create room' });
@@ -31,13 +36,18 @@ export const createRoom = async (req: Request, res: Response) => {
   return res.status(200).json({
     success: true,
     data: {
-      id: room.id,
+      room: {
+        id: room.id,
+      },
+      user: {
+        id: user.id,
+      },
     },
   });
 };
 
 export const joinRoom = async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const { id } = req.params;
   const { username } = req.body;
 
   if (!username) {
@@ -50,7 +60,13 @@ export const joinRoom = async (req: Request, res: Response) => {
     return res.status(400).json({ success: false, message: 'User not found' });
   }
 
-  const room = await joinRoomService({ roomId: id, userId: user.id });
+  const room = await joinRoomService({
+    roomId: id,
+    user: {
+      id: user.id,
+      username,
+    },
+  });
 
   if (!room.success) {
     return res.status(400).json({
@@ -62,7 +78,12 @@ export const joinRoom = async (req: Request, res: Response) => {
   return res.status(200).json({
     success: true,
     data: {
-      id: room.data.id,
+      room: {
+        id: room.data.id,
+      },
+      user: {
+        id: user.id,
+      },
     },
   });
 };
@@ -85,7 +106,7 @@ export const getRooms = async (req: Request, res: Response) => {
 };
 
 export const getRoomById = async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const { id } = req.params;
   const room = await getRoomByIdService(id);
 
   if (!room.exists) {
@@ -96,13 +117,19 @@ export const getRoomById = async (req: Request, res: Response) => {
     success: true,
     data: {
       id: room.id,
+      players: room.data()?.players,
     },
   });
 };
 
-export const deleteRoomById = async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const room = await deleteRoomByIdService(id);
+export const removeUserFromRoom = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { userId } = req.body;
+
+  const room = await removeUserFromRoomService({
+    roomId: id,
+    userId,
+  });
 
   if (!room.exists) {
     return res.status(400).json({ success: false, message: 'Room not found' });

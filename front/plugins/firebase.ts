@@ -5,7 +5,6 @@ export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig()
 
   const firebaseConfig = {
-    // remplace les valeurs par config.VARIABLE
     apiKey: config.FIREBASE_API_KEY,
     authDomain: config.FIREBASE_AUTH_DOMAIN,
     projectId: config.FIREBASE_PROJECT_ID,
@@ -18,14 +17,19 @@ export default defineNuxtPlugin(() => {
   const db = getFirestore(app);
 
   const listen = async (collection: string, document: string, type: 'room' | 'game') => {
-    let firstTime = false
+    let firstTime = true
+
     const unsubscribe = onSnapshot(doc(db, collection, document), async (req: any) => {
-      if (type === 'room') useRoom().room.value = req.data();
-      if (type === 'game') useGame().value = req.data();
-      if (!firstTime) {
-        await useRoom().fetchNames()
-        firstTime = true
-      }
+      if (type === 'room') {
+        useRoom().room.value = req.data()
+        if (firstTime) {
+          if (!req.data().players.some((player: any) => player.id === useCookie('dice-game-user-id').value)) {
+            navigateTo('/')
+          }
+          firstTime = false
+        }
+      };
+      if (type === 'game') useGame().game.value = req.data();
     });
 
     return { unsubscribe }
