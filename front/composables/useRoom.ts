@@ -40,8 +40,9 @@ export default function useRoom() {
   }
 
   const leave = () => {
-    return $fetch(endpoint + `/rooms/${useRoute().params.room}/users/${useCookie('dice-game-user-id').value}`, {
-      method: 'PUT',
+    return $fetch(endpoint + `/rooms/${useRoute().params.room}`, {
+      method: 'DELETE',
+      body: JSON.stringify({ userId: useCookie('dice-game-user-id').value })
     })
   }
   return { room, join, create, verify, leave }
