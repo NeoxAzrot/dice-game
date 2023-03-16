@@ -19,12 +19,12 @@ const roomID = useRoute().params.room as string
 
 const { room } = useRoom()
 
-const listener: Ref<{ unsubscribe: Unsubscribe } | null> = ref(null)
+const roomListener: Ref<{ unsubscribe: Unsubscribe } | null> = ref(null)
 
 onBeforeMount(async () => {
   useRoom().verify(roomID)
   .then(async (): Promise<void> => {
-    listener.value = await useFirebase().listen('rooms', roomID, 'room')
+    roomListener.value = await useFirebase().listen('rooms', roomID, 'room')
   })
   .catch((): any => navigateTo('/'))
 })

@@ -3,6 +3,7 @@ import useRoomStore from "~~/store/room";
 
 interface JoinOrCreateRoom {
   success: boolean;
+  message?: string;
   data: {
     room: {
       id: string;

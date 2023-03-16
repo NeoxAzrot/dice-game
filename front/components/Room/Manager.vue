@@ -45,7 +45,7 @@ const handleJoin = (e: Event) => {
     cookie.value = data.user.id
     window.location.href = `${useRuntimeConfig().APP_URL}/${data.room.id}`
   }).catch((err) => {
-    error.value = 'Cannot join this room'
+    error.value = err.message
   })
 }
 
@@ -57,7 +57,8 @@ const handleCreate = (e: Event) => {
     roomID.value = data.room.id
     window.location.href = `${useRuntimeConfig().APP_URL}/${data.room.id}`
   }).catch((err) => {
-    error.value = 'Cannot create room'
+    console.log(err.response)
+    error.value = err.response.message
   })
 }
 </script>
