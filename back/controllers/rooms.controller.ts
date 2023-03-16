@@ -123,9 +123,11 @@ export const getRoomById = async (req: Request, res: Response) => {
 };
 
 export const removeUserFromRoom = async (req: Request, res: Response) => {
-  const { roomId, userId } = req.params;
+  const { id } = req.params;
+  const { userId } = req.body;
+
   const room = await removeUserFromRoomService({
-    roomId,
+    roomId: id,
     userId,
   });
 

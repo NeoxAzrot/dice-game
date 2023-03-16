@@ -1,9 +1,14 @@
 import { Request, Response } from 'express';
 
-import { createGameService, getGameByIdService, getGamesService } from 'services/games.service';
+import {
+  changePlayerReadyStatusService,
+  createGameService,
+  getGameByIdService,
+  getGamesService,
+} from 'services/games.service';
 
 export const createGame = async (req: Request, res: Response) => {
-  const { roomId } = req.params;
+  const { roomId } = req.body;
 
   const game = await createGameService(roomId);
 
@@ -21,6 +26,7 @@ export const createGame = async (req: Request, res: Response) => {
 
 export const playRound = async (req: Request, res: Response) => {
   const { id } = req.params;
+  const { move, userId } = req.body;
 
   return res.status(200).json({ succes: true });
 };
@@ -56,4 +62,17 @@ export const getGameById = async (req: Request, res: Response) => {
       id: game.id,
     },
   });
+};
+
+export const changePlayerReadyStatus = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { userId } = req.body;
+
+  const game = await changePlayerReadyStatusService({ gameId: id, userId });
+
+  if (!game.success) {
+    return res.status(400).json({ success: false, message: 'Cannot change player ready status' });
+  }
+
+  return res.status(200).json({ succes: true });
 };
