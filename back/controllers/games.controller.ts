@@ -74,5 +74,5 @@ export const changePlayerReadyStatus = async (req: Request, res: Response) => {
     return res.status(400).json({ success: game.success, message: game.message });
   }
 
-  return res.status(200).json({ succes: true });
+  return res.status(200).json({ succes: true, data: game.data });
 };

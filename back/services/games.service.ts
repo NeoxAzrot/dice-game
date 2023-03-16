@@ -1,7 +1,7 @@
 import { GameTypes } from 'types/game';
 import { GlobalTypes } from 'types/global';
 
-import { MAX_PLAYERS, MIN_PLAYERS } from 'utils/constants';
+import { MIN_PLAYERS } from 'utils/constants';
 
 import { database } from '../firebase';
 import { getRoomByIdService } from './rooms.service';
