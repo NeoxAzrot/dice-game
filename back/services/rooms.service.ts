@@ -102,3 +102,21 @@ export const deleteRoomByIdService = async (id: string) => {
 
   return room;
 };
+
+export const removeUserFromRoomService = async ({
+  roomId,
+  userId,
+}: RoomTypes.RemoveUserFromRoom.Props) => {
+  const room = await getRoomByIdService(roomId);
+
+  if (room.exists) {
+    await database
+      .collection('rooms')
+      .doc(roomId)
+      .update({
+        players: room.data()?.players.filter((player: { id: string }) => player.id !== userId),
+      });
+  }
+
+  return room;
+};

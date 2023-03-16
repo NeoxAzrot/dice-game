@@ -23,4 +23,11 @@ export namespace RoomTypes {
       };
     }
   }
+
+  export namespace RemoveUserFromRoom {
+    export interface Props {
+      roomId: string;
+      userId: string;
+    }
+  }
 }
