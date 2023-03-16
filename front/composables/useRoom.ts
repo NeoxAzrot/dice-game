@@ -44,5 +44,5 @@ export default function useRoom() {
       method: 'PUT',
     })
   }
-  return { room, users, join, create, verify, leave }
+  return { room, join, create, verify, leave }
 } 
