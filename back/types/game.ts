@@ -20,13 +20,4 @@ export namespace GameTypes {
       dicesKept?: number[];
     }
   }
-
-  export namespace Move {
-    export interface Props {
-      gameId: string;
-      dicesKept: number[];
-      updatedAt: string;
-      game: FirebaseFirestore.DocumentData;
-    }
-  }
 }

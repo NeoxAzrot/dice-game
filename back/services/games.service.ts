@@ -63,59 +63,6 @@ export const rollDicesService = async (dices: number) => {
   return newDices;
 };
 
-export const rollMoveService = async ({
-  gameId,
-  dicesKept,
-  updatedAt,
-  game,
-}: GameTypes.Move.Props) => {
-  const dices = await rollDicesService(MAX_DICE - dicesKept.length);
-  const combinations = [
-    {
-      name: '1',
-      value: 1,
-    },
-  ];
-
-  const newGame = await database
-    .collection('games')
-    .doc(gameId)
-    .update({
-      updatedAt,
-      state: {
-        ...game.data()?.state,
-        rolls: game.data()?.state.rolls + 1,
-      },
-      dices,
-      combinations,
-    })
-    .then(() => getGameByIdService(gameId));
-
-  return {
-    success: true,
-    data: newGame.data(), // TODO: send only necessary data
-  };
-};
-
-export const holdMoveService = async ({
-  gameId,
-  dicesKept,
-  updatedAt,
-  game,
-}: GameTypes.Move.Props) => {
-  if (dicesKept.length === 0) {
-    return {
-      success: false,
-      message: 'Dices cannot be empty when holding',
-    };
-  }
-
-  return {
-    success: true,
-    data: game.data(),
-  };
-};
-
 export const playRoundService = async ({
   gameId,
   move,
@@ -148,23 +95,44 @@ export const playRoundService = async ({
   }
 
   if (move === 'roll') {
-    const response = await rollMoveService({
-      gameId,
-      dicesKept,
-      updatedAt,
-      game,
-    });
+    const dices = await rollDicesService(MAX_DICE - dicesKept.length);
+    const combinations = [
+      {
+        name: '1',
+        value: 1,
+      },
+    ];
 
-    return response;
+    const newGame = await database
+      .collection('games')
+      .doc(gameId)
+      .update({
+        updatedAt,
+        state: {
+          ...game.data()?.state,
+          rolls: game.data()?.state.rolls + 1,
+        },
+        dices,
+        combinations,
+      })
+      .then(() => getGameByIdService(gameId));
+
+    return {
+      success: true,
+      data: newGame.data(), // TODO: send only necessary data
+    };
   } else if (move === 'hold') {
-    const response = await holdMoveService({
-      gameId,
-      dicesKept,
-      updatedAt,
-      game,
-    });
+    if (dicesKept.length === 0) {
+      return {
+        success: false,
+        message: 'Dices cannot be empty when holding',
+      };
+    }
 
-    return response;
+    return {
+      success: true,
+      data: game.data(),
+    };
   } else {
     return {
       success: false,
