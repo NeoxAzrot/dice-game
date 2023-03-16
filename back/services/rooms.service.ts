@@ -1,3 +1,4 @@
+import { GlobalTypes } from 'types/global';
 import { RoomTypes } from 'types/room';
 
 import { MAX_PLAYERS } from 'utils/constants';
@@ -17,6 +18,9 @@ export const createRoomService = async ({ user }: RoomTypes.Create.Props) => {
         username,
       },
     ],
+    state: {
+      isPlaying: false,
+    },
   });
 
   return room;
@@ -24,10 +28,19 @@ export const createRoomService = async ({ user }: RoomTypes.Create.Props) => {
 
 export const joinRoomService = async ({ roomId, user }: RoomTypes.Join.Props) => {
   const updatedAt = new Date().toISOString();
-
   const room = await database.collection('rooms').doc(roomId).get();
 
   if (room.exists) {
+    if (room.data()?.state.isPlaying) {
+      return {
+        success: false,
+        message: 'Cannot join room, game is already in progress',
+        data: {
+          id: room.id,
+        },
+      };
+    }
+
     const players = room.data()?.players;
 
     if (players.length < MAX_PLAYERS) {
@@ -107,6 +120,7 @@ export const removeUserFromRoomService = async ({
   roomId,
   userId,
 }: RoomTypes.RemoveUserFromRoom.Props) => {
+  const updatedAt = new Date().toISOString();
   const room = await getRoomByIdService(roomId);
 
   if (room.exists) {
@@ -114,7 +128,8 @@ export const removeUserFromRoomService = async ({
       .collection('rooms')
       .doc(roomId)
       .update({
-        players: room.data()?.players.filter((player: { id: string }) => player.id !== userId),
+        players: room.data()?.players.filter((player: GlobalTypes.Player) => player.id !== userId),
+        updatedAt,
       })
       .then(() => getRoomByIdService(roomId));
 
