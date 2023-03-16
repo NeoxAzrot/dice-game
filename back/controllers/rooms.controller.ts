@@ -13,8 +13,7 @@ export const createRoom = async (req: Request, res: Response) => {
   const { username } = req.body;
 
   if (!username) {
-    res.statusMessage = 'Missing username';
-    return res.status(400).end();
+    return res.status(400).json({ success: false, message: 'Missing username' });
   }
 
   const user = await getUserByUsernameService(username);
