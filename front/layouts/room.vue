@@ -19,8 +19,6 @@ const { room } = useRoom()
 
 const listener: Ref<any> = ref(null)
 
-const userID = useCookie('dice-game-user-id')
-
 onBeforeMount(async () => {
   useRoom().verify(roomID)
   .then(async (): Promise<any> => {
