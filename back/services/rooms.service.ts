@@ -21,6 +21,7 @@ export const createRoomService = async ({ user }: RoomTypes.Create.Props) => {
     state: {
       isPlaying: false,
     },
+    gameId: null,
   });
 
   return room;
