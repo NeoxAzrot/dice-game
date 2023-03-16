@@ -2,7 +2,7 @@
   <div class="copy-link">
     <p @click="handleClick" class="copy-link__text">{{ APP_URL }}/{{ roomID }}</p>
     <div class="copy-link__popup" :class="copied && 'visible'">
-      <p>Copied</p>
+      <p>{{ popupText }}</p>
     </div>
   </div>
 </template>
@@ -12,13 +12,18 @@ const { APP_URL } = useRuntimeConfig().public
 const roomID = useRoute().params.room;
 
 const copied = ref(false)
+const popupText = ref('click to copy')
 
 const handleClick = () => {
   copied.value = true
+  popupText.value = 'copied'
   navigator.clipboard.writeText(`${APP_URL}/${roomID}`)
   setTimeout(() => {
     copied.value = false
   }, 1000)
+  setTimeout(() => {
+    popupText.value = 'click to copy'
+  }, 1200)
 }
 </script>
 
@@ -30,21 +35,29 @@ const handleClick = () => {
     cursor: pointer;
   }
 
+  &:hover {
+    div {
+      opacity: 1;
+      pointer-events: all;
+    }
+  }
+
   &__popup {
     width: fit-content;
     height: fit-content;
     position: absolute;
-    left: 102%;
-    top: 0;
-    bottom: 0;
+    bottom: 102%;
+    left: 0;
+    right: 0;
     margin: auto;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease-in-out;
+    transition: opacity 0.2s ease-in-out;
     padding: 0.5rem 2rem;
-    background-color: #23DC3D;
     border-radius: 0.3rem;
     color: white;
+    font-size: 1.2rem;
+    font-weight: 700;
 
     &.visible {
       opacity: 1;
