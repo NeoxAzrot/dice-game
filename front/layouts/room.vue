@@ -1,11 +1,10 @@
 <template>
   <div class="layout room">
+    <GlobalGradients/>
     <div class="room__container" v-if="room && room.players">
       <RoomHeader />
-      <p v-if="game">{{ game.state.gameStatus }}</p>
-      <div class="layout__container">
-        <NuxtPage/>
-      </div>
+      <RoomFooter />
+      <NuxtPage/>
     </div>
     <div class="room__loader" v-else>
       <p class="room__loader__title">Loading room...</p>
@@ -58,6 +57,7 @@ watch(
   &__container {
     display: flex;
     height: 100%;
+    max-width: 800px;
   }
 
   &__loader {

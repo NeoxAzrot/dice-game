@@ -10,9 +10,15 @@
   --color--third: #8082ff;
   --color--button: #181819;
 
+  --container--max-width: 120rem;
+
   --radius--main: 0.3rem;
 
   --box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.4);
 
   --base-padding: 10px 20px;
+
+  --gradient--main : linear-gradient(131deg, rgb(82, 84, 255) 0%, rgba(135,137,255,1) 100%);
+
+  --gradient--shapes: radial-gradient(rgba(82, 85, 255, 0.2), rgba(82, 85, 255, 0) 50%);
 }

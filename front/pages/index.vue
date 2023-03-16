@@ -1,5 +1,6 @@
 <template>
   <div class="layout home">
+    <GlobalGradients/>
     <div class="layout__container">
       <h1>Enter the game</h1>
       <RoomManager />

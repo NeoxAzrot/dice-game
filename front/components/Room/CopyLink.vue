@@ -1,6 +1,6 @@
 <template>
   <div class="copy-link">
-    <p @click="handleClick" class="copy-link__text">{{ APP_URL }}/{{ roomID }}</p>
+    <p @click="handleClick" class="copy-link__text">{{ roomID }}</p>
     <div class="copy-link__popup" :class="copied && 'visible'">
       <p>{{ popupText }}</p>
     </div>
