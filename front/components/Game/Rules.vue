@@ -37,6 +37,7 @@ const rules = {
     padding: 5px 20px;
     border-radius: var(--radius--main);
     box-shadow: var(--box-shadow);
+    border: 2px solid var(--color--second);
 
     .rule_modal--header {
       padding: 10px 20px;

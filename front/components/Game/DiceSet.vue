@@ -1,13 +1,24 @@
 <template>
   <div class="set_container">
-    <GameDice v-for="(dice, index) in dices" @click="emits('stockDice', index)" :number="dice" />
+    <GameDice v-for="(dice, index) in dices" @click="stockDice(dice, index)" :dice="dice" />
   </div>
 </template>
 
 <script setup lang="ts">
+interface Dice {
+  value: number,
+  allowed: boolean
+}
+
 const { dices } = defineProps(['dices']);
 
 const emits = defineEmits(['stockDice']);
+
+const stockDice = (dice: Dice, index: number) => {
+  if (!dice.allowed) return;
+
+  emits('stockDice', index);
+}
 </script>
 
 <style lang="scss">
