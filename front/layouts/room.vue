@@ -1,6 +1,6 @@
 <template>
   <div class="layout room">
-    <div class="room__container" v-if="room && users">
+    <div class="room__container" v-if="room && room.players">
       <RoomHeader />
       <div class="layout__container">
         <NuxtPage/>
@@ -15,7 +15,7 @@
 <script setup lang="ts">
 const roomID = useRoute().params.room as string
 
-const { room, users } = useRoom()
+const { room } = useRoom()
 
 const listener: Ref<any> = ref(null)
 
