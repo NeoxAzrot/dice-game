@@ -3,9 +3,12 @@
     <div class="room__header__top">
       <p>N°{{ roomID }}</p>
       <div class="room__header__top__players">
-        <p v-for="p, index in room.players"><span>P{{ index + 1 }}</span> {{ p.username }}</p>
+        <p :class="currentUserID === p.id && 'current'" v-for="p, index in room.players"><span>P{{ index + 1 }}</span> {{ p.username }}</p>
       </div>
-      <button class="btn--secondary">Start a new game</button>
+      <div>
+        <button class="btn--secondary">Start a new game</button>
+        <button @click="handleLeave" class="btn--secondary">Leave room</button>
+      </div>
     </div>
   </div>
 </template>
@@ -14,6 +17,13 @@
 const roomID = useRoute().params.room as string
 
 const { room } = useRoom()
+
+const currentUserID = useCookie('dice-game-user-id')
+
+const handleLeave = async () => {
+  await useRoom().leave()
+  navigateTo('/')
+}
 </script>
 
 <style lang="scss">
