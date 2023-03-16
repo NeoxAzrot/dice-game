@@ -1,6 +1,6 @@
 <template>
   <div class="layout room">
-    <div v-if="room && users">
+    <div class="room__container" v-if="room && users">
       <RoomHeader />
       <div class="layout__container">
         <NuxtPage/>
@@ -25,3 +25,12 @@ onMounted(async () => {
   .catch((): any => navigateTo('/'))
 })
 </script>
+
+<style lang="scss">
+.room {
+  &__container {
+    display: flex;
+    height: 100%;
+  }
+}
+</style>

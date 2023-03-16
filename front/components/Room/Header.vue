@@ -1,8 +1,11 @@
 <template>
   <div class="room__header" v-if="users">
-    <p>N°{{ roomID }}</p>
-    <div class="room__header__players">
-      <p v-for="p, index in room.players"><span>P{{ index + 1 }}</span> {{ users[index] }}</p>
+    <div class="room__header__top">
+      <p>N°{{ roomID }}</p>
+      <div class="room__header__top__players">
+        <p v-for="p, index in room.players"><span>P{{ index + 1 }}</span> {{ users[index] }}</p>
+      </div>
+      <button class="btn--secondary">Start a new game</button>
     </div>
   </div>
 </template>
@@ -16,22 +19,34 @@ const { room, users } = useRoom()
 <style lang="scss">
 .room {
   &__header {
-    background-color: var(--color--second);
+    width: 100;
+    max-width: 30rem;
+    padding: 1rem;
     color: white;
-    width: 100%;
-    padding: 1rem 3rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 4rem;
+    height: 100vh;
 
-    &__players {
+    &__top {
+      border-radius: 0.2rem;
+      background-color: var(--color--second);
+      width: 100%;
+      height: 100%;
+      padding: 2rem;
       display: flex;
-      gap: 2rem;
+      flex-direction: column;
+      gap: 4rem;
 
-      span {
-        font-size: 0.9rem;
-        font-weight: 600;
+      &__players {
+        display: flex;
+        gap: 2rem;
+
+        span {
+          font-size: 0.9rem;
+          font-weight: 600;
+        }
+      }
+
+      button {
+        margin: auto 0 0 0;
       }
     }
   }
