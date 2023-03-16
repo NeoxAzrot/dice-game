@@ -1,7 +1,7 @@
 <template>
   <div class="game_wrapper">
-    <div class="game_header">
-      <h1>DICEZ</h1>
+    <div class="game_header" style="filter: invert();">
+      <img src="../../assets/diceex.png" alt="">
     </div>
     <div class="game_container">
       <div class="game_container--players">

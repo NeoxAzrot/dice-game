@@ -10,4 +10,11 @@ export namespace UserTypes {
       username: string;
     }
   }
+
+  export namespace Players {
+    export interface Props {
+      players: GlobalTypes.Player[];
+      actualPlayerId: string;
+    }
+  }
 }
