@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 
 import {
   createRoomService,
-  deleteRoomByIdService,
   getRoomByIdService,
   getRoomsService,
   joinRoomService,
@@ -121,17 +120,6 @@ export const getRoomById = async (req: Request, res: Response) => {
       players: room.data()?.players,
     },
   });
-};
-
-export const deleteRoomById = async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const room = await deleteRoomByIdService(id);
-
-  if (!room.exists) {
-    return res.status(400).json({ success: false, message: 'Room not found' });
-  }
-
-  return res.status(200).json({ success: true });
 };
 
 export const removeUserFromRoom = async (req: Request, res: Response) => {
