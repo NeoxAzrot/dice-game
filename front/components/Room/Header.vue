@@ -24,7 +24,7 @@ const { room } = useRoom()
 
 const currentUserID = useCookie('dice-game-user-id')
 
-const disableCreateButton = computed(() => room.value?.games.length > 0)
+const disableCreateButton = computed(() => room.value?.games ? room.value?.games.length > 0 : false)
 
 const handleLeave = async () => {
   await useRoom().leave()
@@ -80,8 +80,10 @@ const handleCreateGame = async() => {
       gap: 1rem;
 
       .createRoom {
-        cursor: not-allowed;
-        opacity: 0.5;
+        &.disabled {
+          cursor: not-allowed;
+          opacity: 0.5;
+        }
       }
     }
   }
