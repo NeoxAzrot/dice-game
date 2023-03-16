@@ -14,11 +14,12 @@
     "@nuxtjs/google-fonts": "^3.0.0",
     "@pinia/nuxt": "^0.4.7",
     "firebase": "^9.17.2",
+    "nuxt-svgo": "^1.1.0",
     "pinia": "^2.0.33",
     "sass": "^1.59.3",
     "uniqolor": "^1.1.0"
   },
   "overrides": {
-    "vue" : "latest"
+    "vue": "latest"
   }
 }

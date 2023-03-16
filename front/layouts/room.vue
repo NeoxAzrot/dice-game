@@ -27,7 +27,6 @@ onBeforeMount(async () => {
     listener.value = await useFirebase().listen('rooms', roomID, 'room')
   })
   .catch((): any => navigateTo('/'))
-  
 })
 
 onMounted(() => {  
@@ -39,6 +38,11 @@ onMounted(() => {
 
 <style lang="scss">
 .room {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   &__container {
     display: flex;
     height: 100%;

@@ -1,18 +1,18 @@
 <template>
   <div class="room__header" v-if="room">
-    <div class="room__header__top">
+    <div class="room__header__container">
       <div>
         <label>Room</label>
         <RoomCopyLink />
       </div>
       <div>
         <label>Players</label>
-        <div class="room__header__top__players">
+        <div class="room__header__players">
           <p :class="currentUserID === p.id && 'current'" v-for="p, index in room.players">{{ p.username }}</p>
         </div>
       </div>
       <div class="room__header__actions">
-        <button class="btn--secondary">Start a new game</button>
+        <button @click="handleNewGame" class="btn--secondary">Start a new game</button>
         <button @click="handleLeave" class="btn--secondary">Leave room</button>
       </div>
     </div>
@@ -28,6 +28,13 @@ const handleLeave = async () => {
   await useRoom().leave()
   navigateTo('/')
 }
+
+const handleNewGame = async() => {
+  useGame().create().then((r) => {
+    console.log(r.data.id)
+  })
+}
+
 </script>
 
 <style lang="scss">
@@ -37,14 +44,18 @@ const handleLeave = async () => {
     color: white;
     position: fixed;
     bottom: 0;
+    left: 0;
+    background-color: var(--color--second);
+    display: flex;
 
-    &__top {
-      background-color: var(--color--second);
+    &__container {
+      margin: auto;
       width: 100%;
       height: 100%;
       padding: 2rem;
       display: inline-flex;
       gap: 4rem;
+      max-width: 120rem;
 
       > div {
         label {
@@ -54,10 +65,11 @@ const handleLeave = async () => {
         }
       }
 
-      &__players {
-        display: flex;
-        gap: 2rem;
-      }
+    }
+    
+    &__players {
+      display: flex;
+      gap: 2rem;
     }
 
     &__actions {
