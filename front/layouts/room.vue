@@ -14,15 +14,16 @@
 </template>
 
 <script setup lang="ts">
+import type { Unsubscribe } from '@firebase/util';
 const roomID = useRoute().params.room as string
 
 const { room } = useRoom()
 
-const listener: Ref<any> = ref(null)
+const listener: Ref<{ unsubscribe: Unsubscribe } | null> = ref(null)
 
 onBeforeMount(async () => {
   useRoom().verify(roomID)
-  .then(async (): Promise<any> => {
+  .then(async (): Promise<void> => {
     listener.value = await useFirebase().listen('rooms', roomID, 'room')
   })
   .catch((): any => navigateTo('/'))

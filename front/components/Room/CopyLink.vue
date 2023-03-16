@@ -17,7 +17,7 @@ const popupText = ref('click to copy')
 const handleClick = () => {
   copied.value = true
   popupText.value = 'copied'
-  navigator.clipboard.writeText(`${APP_URL}/${roomID}`)
+  navigator.clipboard.writeText(`${APP_URL}?room=${roomID}`)
   setTimeout(() => {
     copied.value = false
   }, 1000)
