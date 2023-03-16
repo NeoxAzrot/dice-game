@@ -31,7 +31,7 @@
 const { username, roomID } = useStore();
 const selection: Ref<'join' | 'create'> = ref('join')
 
-const requestedRoom = ref('')
+const requestedRoom = ref(useRoute().query.room as string || '')
 
 const cookie = useCookie('dice-game-user-id')
 
