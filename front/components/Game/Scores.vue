@@ -15,6 +15,7 @@ const { players } = defineProps(['players']);
   padding: 5px 20px;
   border-radius: var(--radius--main);
   box-shadow: var(--box-shadow);
+  background-color: var(--color--second);
   >*:not(:last-child) {
     position: relative;
     &::after {

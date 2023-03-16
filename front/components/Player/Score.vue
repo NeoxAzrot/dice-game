@@ -1,7 +1,7 @@
 <template>
   <div class="score_container">
     <h4>{{ player.username }}</h4>
-    <h4 class="color-second">{{ player.score }}</h4>
+    <h4>{{ player.score }}</h4>
   </div>
 </template>
 

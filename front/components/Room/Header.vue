@@ -8,11 +8,11 @@
       <div>
         <label>Players</label>
         <div class="room__header__players">
-          <p :class="currentUserID === p.id && 'current'" v-for="p, index in room.players">{{ p.username }}</p>
+          <p :class="currentUserID === p.id && 'current'" v-for="p in room.players">{{ p.username }}</p>
         </div>
       </div>
       <div class="room__header__actions">
-        <button @click="handleNewGame" class="btn--secondary">Start a new game</button>
+        <button @click="handleCreateGame" class="btn--secondary createRoom" :class="(isInGame && isEnoughPlayer) && 'disabled'">Start a new game</button>
         <button @click="handleLeave" class="btn--secondary">Leave room</button>
       </div>
     </div>
@@ -24,12 +24,15 @@ const { room } = useRoom()
 
 const currentUserID = useCookie('dice-game-user-id')
 
+const isInGame = computed(() => room.value?.games ? room.value?.games.length > 0 : false)
+const isEnoughPlayer = computed(() => room.value ? room.value.players.length >= 2 : false)
+
 const handleLeave = async () => {
   await useRoom().leave()
   navigateTo('/')
 }
 
-const handleNewGame = async() => {
+const handleCreateGame = async() => {  
   useGame().create().then((r) => {
     console.log(r.data.id)
   })
@@ -76,6 +79,13 @@ const handleNewGame = async() => {
       margin: 0 0 0 auto;
       display: flex;
       gap: 1rem;
+
+      .createRoom {
+        &.disabled {
+          cursor: not-allowed;
+          opacity: 0.5;
+        }
+      }
     }
   }
 }

@@ -49,31 +49,27 @@ const cookie = useCookie('dice-game-user-id');
 const error = ref('');
 
 const handleJoin = (e: Event) => {
-  e.preventDefault();
-  useRoom()
-    .join(requestedRoom.value)
-    .then(({ data }) => {
-      cookie.value = data.user.id;
-      window.location.href = `${useRuntimeConfig().APP_URL}/${data.room.id}`;
-    })
-    .catch((err) => {
-      error.value = 'Cannot join this room';
-    });
-};
+  e.preventDefault()
+  useRoom().join(requestedRoom.value)
+  .then(({ data }) => {
+    cookie.value = data.user.id
+    window.location.href = `${useRuntimeConfig().APP_URL}/${data.room.id}`
+  }).catch((err) => {
+    error.value = err.response._data.message
+  })
+}
 
 const handleCreate = (e: Event) => {
-  e.preventDefault();
-  useRoom()
-    .create()
-    .then(({ data }) => {
-      cookie.value = data.user.id;
-      roomID.value = data.room.id;
-      window.location.href = `${useRuntimeConfig().APP_URL}/${data.room.id}`;
-    })
-    .catch((err) => {
-      error.value = 'Cannot create room';
-    });
-};
+  e.preventDefault()
+  useRoom().create()
+  .then(({ data }) => {
+    cookie.value = data.user.id
+    roomID.value = data.room.id
+    window.location.href = `${useRuntimeConfig().APP_URL}/${data.room.id}`
+  }).catch((err) => {
+    error.value = err.response._data.message
+  })
+}
 </script>
 
 <style lang="scss">

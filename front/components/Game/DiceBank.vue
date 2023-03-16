@@ -1,6 +1,6 @@
 <template>
   <div class="bank_container">
-    <GameDice @click="" v-for="dice in dices" :number="dice" />
+    <GameDice @click="" v-for="dice in dices" :dice="dice" />
   </div>
 </template>
 
