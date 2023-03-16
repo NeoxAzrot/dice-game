@@ -7,6 +7,8 @@ export namespace GlobalTypes {
   export interface Player {
     id: string;
     username: string;
+    score?: number;
+    displayScore?: number;
     isReady?: boolean;
   }
 }

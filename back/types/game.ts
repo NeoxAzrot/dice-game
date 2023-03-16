@@ -11,4 +11,13 @@ export namespace GameTypes {
       userId: string;
     }
   }
+
+  export namespace PlayRound {
+    export interface Props {
+      gameId: string;
+      move: 'roll' | 'hold';
+      userId: string;
+      dicesKept?: number[];
+    }
+  }
 }
