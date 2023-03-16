@@ -38,9 +38,12 @@ export const createGameService = async (roomId: string) => {
     combinations: [],
   });
 
-  await database.collection('rooms').doc(roomId).update({
-    gameId: game.id,
-  });
+  await database
+    .collection('rooms')
+    .doc(roomId)
+    .update({
+      games: [...room.data()?.games, game.id],
+    });
 
   return game;
 };
