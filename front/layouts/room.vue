@@ -19,10 +19,21 @@ const { room } = useRoom()
 
 const listener: Ref<any> = ref(null)
 
-onMounted(async () => {
+const userID = useCookie('dice-game-user-id')
+
+onBeforeMount(async () => {
   useRoom().verify(roomID)
-  .then(async (): Promise<any> => listener.value = await useFirebase().listen('rooms', roomID, 'room'))
+  .then(async (): Promise<any> => {
+    listener.value = await useFirebase().listen('rooms', roomID, 'room')
+  })
   .catch((): any => navigateTo('/'))
+  
+})
+
+onMounted(() => {  
+  window.addEventListener('beforeunload', () => {
+    useRoom().leave()
+  })
 })
 </script>
 

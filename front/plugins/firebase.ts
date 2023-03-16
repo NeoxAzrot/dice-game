@@ -17,9 +17,17 @@ export default defineNuxtPlugin(() => {
   const db = getFirestore(app);
 
   const listen = async (collection: string, document: string, type: 'room' | 'game') => {
+    let firstTime = true
+
     const unsubscribe = onSnapshot(doc(db, collection, document), async (req: any) => {
       if (type === 'room') useRoom().room.value = req.data();
       if (type === 'game') useGame().value = req.data();
+      if (firstTime) {
+        if (!req.data().players.some((player: any) => player.id === useCookie('dice-game-user-id').value)) {
+          navigateTo('/')
+        }
+        firstTime = false
+      }
     });
 
     return { unsubscribe }

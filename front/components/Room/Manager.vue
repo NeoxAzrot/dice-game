@@ -33,10 +33,13 @@ const selection: Ref<'join' | 'create'> = ref('join')
 
 const requestedRoom = ref('')
 
+const cookie = useCookie('dice-game-user-id')
+
 const handleJoin = (e: Event) => {
   e.preventDefault()
   useRoom().join(requestedRoom.value)
   .then(({ data }) => {
+    cookie.value = data.user.id
     window.location.href = `${useRuntimeConfig().APP_URL}/${data.room.id}`
   }).catch((err) => {
     console.error(err)
@@ -47,6 +50,7 @@ const handleCreate = (e: Event) => {
   e.preventDefault()
   useRoom().create()
   .then(({ data }) => {
+    cookie.value = data.user.id
     roomID.value = data.room.id
     window.location.href = `${useRuntimeConfig().APP_URL}/${data.room.id}`
   }).catch((err) => {

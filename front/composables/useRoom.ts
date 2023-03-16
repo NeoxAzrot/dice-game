@@ -3,7 +3,7 @@ import useRoomStore from "~~/store/room";
 
 export default function useRoom() {
   const { API_ENDPOINT: endpoint } = useRuntimeConfig().public
-  const { username } = useStore()
+  const { username, roomID } = useStore()
 
   const { room, users } = storeToRefs(useRoomStore());
 
@@ -27,16 +27,10 @@ export default function useRoom() {
     })
   }
 
-  const fetchNames = async () => {
-    const usernames: string[] = []
-    for (const player of room.value.players) {
-      const { data }: any = await $fetch(endpoint + `/users/${player}/`, {
-        method: 'GET',
-      })
-      usernames.push(data.username)
-    }
-    users.value = usernames
-    return usernames
+  const leave = () => {
+    return $fetch(endpoint + `/rooms/${useRoute().params.room}`, {
+      method: 'DELETE',
+    })
   }
-  return { room, users, join, create, verify, fetchNames }
+  return { room, users, join, create, verify, leave }
 } 
