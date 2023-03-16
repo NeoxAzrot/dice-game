@@ -1,3 +1,3 @@
 <template>
-  <RoomViewer />
+  <GameViewer />
 </template>
