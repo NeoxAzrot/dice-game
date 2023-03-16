@@ -15,7 +15,7 @@
   align-items: center;
   height: 100vh;
   width: 100vw;
-  background-color: #f5f5f5;
+  background-color: var(--color--body);
 }
 
 .layout {
@@ -27,7 +27,6 @@
       text-align: start;
       width: 100%;
       font-size: 6rem;
-      color: #393939;
     }
   }
 }

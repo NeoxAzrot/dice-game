@@ -6,7 +6,7 @@
         <GameBoard />
         <PlayerCard :player="playerExample[1]" />
       </div>
-      <div>
+      <div class="game_container--infos">
         <GameScores :players="playerExample" />
         <GameRules />
       </div>
@@ -31,15 +31,17 @@ const playerExample = [
   background-color: var(--color--body);
 
   .game_container {
-    width: clamp(500px, 50vw, 800px);
-    height: clamp(500px, 50vh, 800px);
-    display: grid;
-    grid-template-columns: 2fr 1fr;
+    display: flex;
+    justify-content: center;
+    padding: 0 5vw;
     .game_container--board {
       display: flex;
       flex-direction: column;
       align-items: center;
       margin-right: 30px;
+    }
+    .game_container--infos {
+      max-width: 250px;
     }
     >*>* {
       margin: 20px 0;
