@@ -6,8 +6,9 @@
         <NuxtPage/>
       </div>
     </div>
-    <div v-else>
-      <p>Loading room</p>
+    <div class="room__loader" v-else>
+      <p class="room__loader__title">Loading room...</p>
+      <p class="room__loader__text">Our server is giving everything he can ❤️</p>
     </div>
   </div>
 </template>
@@ -40,6 +41,25 @@ onMounted(() => {
   &__container {
     display: flex;
     height: 100%;
+  }
+
+  &__loader {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+
+    &__title {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    &__text {
+      font-size: 1.2rem;
+      font-weight: 400;
+    }
   }
 }
 </style>

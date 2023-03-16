@@ -16,7 +16,6 @@
   height: 100vh;
   width: 100vw;
   background-color: #f5f5f5;
-
 }
 
 .layout {
@@ -28,6 +27,7 @@
       text-align: start;
       width: 100%;
       font-size: 6rem;
+      color: #393939;
     }
   }
 }
