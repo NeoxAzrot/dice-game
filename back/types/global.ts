@@ -15,7 +15,8 @@ export namespace GlobalTypes {
   export interface CombinationsResponse {
     combinations: {
       name: string;
-      value: number;
+      values: number[];
+      score: number;
     }[];
     dices: {
       value: number;
