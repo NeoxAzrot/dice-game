@@ -17,7 +17,6 @@ export const getRanksService = async () => {
       };
     }
 
-    // TODO: just id, not winner status
     const wins = games.filter((game: RankTypes.Game.Props) => game.winner === user.id).length;
     const allGames = games.length;
 

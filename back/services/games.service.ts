@@ -214,6 +214,42 @@ export const playRoundService = async ({
       })
       .then(() => getGameByIdService(gameId));
 
+    if (isWinner) {
+      await database
+        .collection('rooms')
+        .doc(game.data()?.roomId)
+        .update({
+          updatedAt,
+          games: game.data()?.games.map((item: { id: string }) => {
+            if (item.id === gameId) {
+              return {
+                ...item,
+                gameStatus: GAME_STATUS.FINISHED,
+              };
+            }
+
+            return item;
+          }),
+        });
+
+      await database
+        .collection('users')
+        .doc(userId)
+        .update({
+          updatedAt,
+          games: game.data()?.players.map((item: { id: string }) => {
+            if (item.id === gameId) {
+              return {
+                ...item,
+                winner: userId,
+              };
+            }
+
+            return item;
+          }),
+        });
+    }
+
     return {
       success: true,
       data: newGame.data(),
@@ -289,6 +325,23 @@ export const changePlayerReadyStatusService = async ({
         },
       })
       .then(() => getGameByIdService(gameId));
+
+    await database
+      .collection('rooms')
+      .doc(game.data()?.roomId)
+      .update({
+        updatedAt,
+        games: game.data()?.games.map((item: { id: string }) => {
+          if (item.id === gameId) {
+            return {
+              ...item,
+              gameStatus: GAME_STATUS.PLAYING,
+            };
+          }
+
+          return item;
+        }),
+      });
 
     return {
       success: true,
