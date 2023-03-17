@@ -14,6 +14,7 @@ Le front affiche les dés et permet de les relancer ou les bloquer.
 - [ ] Run: Six dice in a sequence (1,2,3,4,5,6). Worth 2500 points
 - [ ] Replay a round when all dice are playable
 - [ ] Hold without choosing dices, take best dices
+- [ ] Timer when disconnect
 
 ### Back
 

@@ -99,4 +99,26 @@ export namespace Games {
       combinations: response.combinations,
     };
   };
+
+  export const getScore = ({ dices, combinations }: GlobalTypes.GetScoreProps) => {
+    let score = 0;
+
+    for (let i = 1; i <= MAX_DICE_VALUE; i++) {
+      const newDices = dices.filter((dice) => dice === i);
+
+      if (newDices.length > 0) {
+        const newCombination = combinations.find(
+          (combination) =>
+            combination.values.length === newDices.length &&
+            combination.values.every((value) => newDices.includes(value)),
+        );
+
+        if (newCombination) {
+          score += newCombination.score;
+        }
+      }
+    }
+
+    return score;
+  };
 }

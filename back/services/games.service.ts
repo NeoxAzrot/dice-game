@@ -5,6 +5,7 @@ import {
   GAME_STATUS,
   MAX_DICE,
   MAX_DICE_VALUE,
+  MAX_SCORE,
   MIN_DICE_VALUE,
   MIN_PLAYERS,
 } from 'utils/constants';
@@ -143,7 +144,16 @@ export const playRoundService = async ({
       };
     }
 
-    // TODO: check if dices are valid (in game.dices) or in combinations (BETTER)
+    const score = Games.getScore({ dices: dicesKept, combinations: game.data()?.combinations });
+
+    if (score === 0) {
+      return {
+        success: false,
+        message: 'Invalid holding combination',
+      };
+    }
+
+    const isWinner = score >= MAX_SCORE;
 
     const nextPlayer = Players.getNext({
       players: game.data()?.players,
@@ -159,16 +169,18 @@ export const playRoundService = async ({
           if (player.id === userId) {
             return {
               ...player,
-              score: player.score + 1, // TODO: add points to player score and displayScore
-              displayScore: player.displayScore + 1, // TODO: add points to player score and displayScore
+              score: player.score + score,
+              displayScore: player.score + score,
             };
           }
 
           return player;
         }),
+        winner: isWinner ? userId : null,
         state: {
           ...game.data()?.state,
-          turn: nextPlayer.id,
+          gameStatus: isWinner ? GAME_STATUS.FINISHED : GAME_STATUS.PLAYING,
+          turn: isWinner ? null : nextPlayer.id,
         },
         dices: [],
         combinations: [],
