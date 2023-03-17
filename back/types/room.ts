@@ -11,6 +11,7 @@ export namespace RoomTypes {
         id: string;
         username: string;
       };
+      isPrivate: boolean;
     }
   }
 

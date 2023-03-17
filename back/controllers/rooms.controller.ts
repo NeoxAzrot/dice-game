@@ -10,7 +10,7 @@ import {
 import { getUserByUsernameService } from 'services/users.service';
 
 export const createRoom = async (req: Request, res: Response) => {
-  const { username } = req.body;
+  const { username, isPrivate } = req.body;
 
   if (!username) {
     return res.status(400).json({ success: false, message: 'Missing username' });
@@ -27,6 +27,7 @@ export const createRoom = async (req: Request, res: Response) => {
       id: user.id,
       username,
     },
+    isPrivate,
   });
 
   if (!room.id) {
@@ -100,6 +101,7 @@ export const getRooms = async (req: Request, res: Response) => {
     data: {
       rooms: rooms.docs.map((room) => ({
         id: room.id,
+        players: room.data().players,
       })),
     },
   });
