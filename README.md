@@ -26,6 +26,5 @@ Le front affiche les dés et permet de les relancer ou les bloquer.
 
 - [ ] Add a music kit
 - [ ] Add a chat
-- [ ] Add a score
-- [ ] Add a ranking
+- [x] Add a ranking
 - [ ] Add music design on interaction

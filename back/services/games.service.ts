@@ -45,8 +45,28 @@ export const createGameService = async (roomId: string) => {
     .collection('rooms')
     .doc(roomId)
     .update({
+      updatedAt: createdAt,
       games: [...room.data()?.games, game.id],
     });
+
+  const users = await database
+    .collection('users')
+    .where(
+      'username',
+      'in',
+      room.data()?.players.map((player: GlobalTypes.Player) => player.username),
+    )
+    .get();
+
+  users.forEach(async (user) => {
+    database
+      .collection('users')
+      .doc(user.id)
+      .update({
+        updatedAt: createdAt,
+        games: [...user.data()?.games, game.id],
+      });
+  });
 
   return game;
 };
