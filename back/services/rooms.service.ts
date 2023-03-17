@@ -27,6 +27,7 @@ export const createRoomService = async ({ user }: RoomTypes.Create.Props) => {
   return room;
 };
 
+// TODO: Check if user is in room, it's an error NOT WORKING NOW
 export const joinRoomService = async ({ roomId, user }: RoomTypes.Join.Props) => {
   const updatedAt = new Date().toISOString();
   const room = await database.collection('rooms').doc(roomId).get();
