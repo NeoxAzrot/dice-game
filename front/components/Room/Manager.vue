@@ -55,7 +55,7 @@ const cookie = useCookie('dice-game-user-id');
 
 const selection: Ref<'join' | 'create'> = ref('join');
 
-const { username, roomID } = useStore();
+const { username, roomID, userID } = useStore();
 const requestedRoom = ref((useRoute().query.room as string) || '');
 
 const isPrivate = ref(false)
@@ -76,6 +76,7 @@ const handleJoin = (e: Event) => {
   useRoom().join(requestedRoom.value)
   .then(({ data }) => {
     cookie.value = data.user.id
+    userID.value = data.user.id
     window.location.href = `${useRuntimeConfig().APP_URL}/${data.room.id}`
   }).catch((err) => {
     error.value = err.response._data.message
@@ -88,6 +89,7 @@ const handleCreate = (e: Event) => {
   .then(({ data }) => {
     cookie.value = data.user.id
     roomID.value = data.room.id
+    userID.value = data.user.id
     window.location.href = `${useRuntimeConfig().APP_URL}/${data.room.id}`
   }).catch((err) => {
     error.value = err.response._data.message

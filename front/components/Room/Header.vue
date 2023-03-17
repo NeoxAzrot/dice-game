@@ -1,6 +1,9 @@
 <template>
   <div class="room__header">
     <div class="room__header__container">
+      <div class="room__header__logo">
+        <img style="filter: invert();" src="../../assets/diceex.png" alt="">
+      </div>
       <p @click="handleLeave" class="room__header__leave">Leave room</p>
     </div>
   </div>
@@ -21,12 +24,19 @@ const handleLeave = async () => {
   left: 0;
   padding: 2rem;
   display: flex;
-  
+
   &__container {
     margin: auto;
     width: 100%;
     max-width: var(--container--max-width);
     display: flex;
+    align-items: center;
+  }
+
+  &__logo {
+    img {
+      height: 30px;
+    }
   }
 
   &__leave {

@@ -5,7 +5,7 @@
         <div :style="{ width: '30px', height: '30px', background: colorName.color, borderRadius: '100%' }"></div>
         <h2>{{ player.username }}</h2>
       </div>
-      <h2>score: {{ player.score }}</h2>
+      <h2>score: {{ player.displayScore }}</h2>
     </div>
     <PlayerEmojis />
   </div>

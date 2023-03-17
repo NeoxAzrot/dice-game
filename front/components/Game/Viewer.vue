@@ -1,12 +1,8 @@
 <template>
   <div class="game">
-    <div class="game_header" style="filter: invert();">
-      <img src="../../assets/diceex.png" alt="">
-    </div>
     <div class="game_container">
       <div class="game_container--players">
-        <PlayerCard :player="playerExample[1]" />
-        <PlayerCard :player="playerExample[0]" />
+        <PlayerCard v-for="player in game.players" :player="player" />
       </div>
       <div class="game_container--board">
         <GameBoard />
@@ -19,10 +15,7 @@
 </template>
 
 <script setup lang="ts">
-const playerExample = [
-  { username: 'Sami', score: 1000 },
-  { username: 'Paul', score: 500 }
-]
+const { game } = useGame();
 </script>
 
 <style lang="scss">
@@ -32,12 +25,6 @@ const playerExample = [
   display: flex;
   flex-direction: column;
   z-index: 1;
-
-  &_header {
-    padding: 30px 0;
-    display: flex;
-    justify-content: center;
-  }
 
   &_container {
     display: flex;

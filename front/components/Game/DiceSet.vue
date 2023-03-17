@@ -5,17 +5,14 @@
 </template>
 
 <script setup lang="ts">
-interface Dice {
-  value: number,
-  allowed: boolean
-}
+import { Dice } from '~~/interfaces/game.interfaces';
 
 const { dices } = defineProps(['dices']);
 
 const emits = defineEmits(['stockDice']);
 
 const stockDice = (dice: Dice, index: number) => {
-  if (!dice.allowed) return;
+  if (dice.isLocked) return;
 
   emits('stockDice', index);
 }

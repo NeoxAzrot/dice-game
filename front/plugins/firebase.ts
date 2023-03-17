@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, doc, onSnapshot } from 'firebase/firestore';
+import { getFirestore, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 
 export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig()
@@ -29,16 +29,22 @@ export default defineNuxtPlugin(() => {
           firstTime = false
         }
       };
-      if (type === 'game') useGame().game.value = req.data();
+      if (type === 'game') useGame().game.value = { ...req.data(), id: req.id };
     });
 
     return { unsubscribe }
   }
 
+  const update = async (collection: string, document: string, data: any) => {
+    //const oldData = await getDoc(doc(db, collection, document));
+
+    updateDoc(doc(db, collection, document), data);
+  };
+
   return {
     provide: {
       firebase: {
-        app, db, listen
+        app, db, listen, update
       }
     }
   }

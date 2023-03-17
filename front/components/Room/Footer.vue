@@ -12,7 +12,11 @@
         </div>
       </div>
       <div class="room__footer__actions">
-        <button @click="handleCreateGame" class="btn--primary createRoom" :class="(isInGame && isEnoughPlayer) && 'disabled'">Start a new game</button>
+        <button v-if="!game" @click="handleCreateGame" class="btn--primary createRoom"
+          :class="(isInGame && isEnoughPlayer) && 'disabled'">Start a new game</button>
+        <button v-else-if="game.state.gameStatus === 'waiting'" @click="handleReadyGame"
+          class="btn--primary createRoom">Ready {{
+            game.players.filter((e: any) => e.isReady).length }}/2</button>
       </div>
     </div>
   </div>
@@ -20,14 +24,21 @@
 
 <script setup lang="ts">
 const { room } = useRoom()
+const { game } = useGame()
 
 const currentUserID = useCookie('dice-game-user-id')
 
 const isInGame = computed(() => room.value?.games ? room.value?.games.length > 0 : false)
 const isEnoughPlayer = computed(() => room.value ? room.value.players.length >= 2 : false)
 
-const handleCreateGame = async () => {  
+const handleCreateGame = async () => {
+  if (!isEnoughPlayer) return;
+
   useGame().create()
+}
+
+const handleReadyGame = async () => {
+  useGame().ready()
 }
 
 </script>
@@ -41,7 +52,7 @@ const handleCreateGame = async () => {
     bottom: 2rem;
     left: 0;
     display: flex;
-    
+
     &__container {
       --shadow--size: 3.2rem;
       --shadow--opacity: 0.3;
@@ -66,7 +77,7 @@ const handleCreateGame = async () => {
         height: 2px;
       }
 
-      > div {
+      >div {
         label {
           font-size: 1.2rem;
           font-weight: 600;
@@ -78,7 +89,7 @@ const handleCreateGame = async () => {
         --shadow--size: 5rem;
       }
     }
-    
+
     &__players {
       display: flex;
       gap: 2rem;
