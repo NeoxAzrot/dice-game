@@ -5,7 +5,7 @@ import { MAX_PLAYERS } from 'utils/constants';
 
 import { database } from '../firebase';
 
-export const createRoomService = async ({ user }: RoomTypes.Create.Props) => {
+export const createRoomService = async ({ user, isPrivate }: RoomTypes.Create.Props) => {
   const createdAt = new Date().toISOString();
   const { id, username } = user;
 
@@ -22,6 +22,9 @@ export const createRoomService = async ({ user }: RoomTypes.Create.Props) => {
       isPlaying: false,
     },
     games: [],
+    settings: {
+      isPrivate,
+    },
   });
 
   return room;
@@ -97,7 +100,7 @@ export const joinRoomService = async ({ roomId, user }: RoomTypes.Join.Props) =>
 };
 
 export const getRoomsService = async () => {
-  const rooms = await database.collection('rooms').get();
+  const rooms = await database.collection('rooms').where('settings.isPrivate', '==', false).get();
 
   return rooms;
 };
