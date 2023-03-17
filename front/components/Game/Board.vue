@@ -12,10 +12,6 @@
 </template>
 
 <script setup lang="ts">
-const disabledLaunch = computed(() => {
-  return diceNumber.value.board.length < 1;
-})
-
 interface Dice {
   value: number,
   allowed: boolean
@@ -25,6 +21,10 @@ interface ListDice {
   board: Dice[],
   bank: Dice[]
 }
+
+const disabledLaunch = computed(() => {
+  return diceNumber.value.board.length < 1;
+})
 
 const diceNumber: Ref<ListDice> = ref({ board: [{ value: 0, allowed: false }, { value: 0, allowed: false }, { value: 0, allowed: false }, { value: 0, allowed: false }, { value: 0, allowed: false }, { value: 0, allowed: false }], bank: [] });
 
@@ -51,8 +51,7 @@ const stockDice = (number: number) => {
   justify-content: center;
   flex-direction: column;
   padding: 0.5rem 2rem;
-  border-radius: var(--radius--main);
-  box-shadow: var(--box-shadow);
+  min-height: 300px;
 
   .board_container--control {
     display: flex;

@@ -1,5 +1,5 @@
 <template>
-  <div class="rule_container">
+  <div class="rule">
     <!-- <button @click="open = !open">{{ open ? 'Close' : 'Open' }} Modal</button> -->
     <transition>
       <div v-if="open" class="rule_modal">
@@ -30,21 +30,22 @@ const rules = {
 </script>
 
 <style lang="scss">
-.rule_container {
-  .rule_modal {
+.rule {
+  &_modal {
     display: flex;
     flex-direction: column;
-    padding: 5px 20px;
     border-radius: var(--radius--main);
+    overflow: hidden;
     box-shadow: var(--box-shadow);
-    border: 2px solid var(--color--second);
 
-    .rule_modal--header {
+    &--header {
       padding: 10px 20px;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
+      background: var(--color--second);
+      margin-bottom: 5px;
     }
 
     ul {
