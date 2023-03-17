@@ -30,7 +30,6 @@ export const createRoomService = async ({ user, isPrivate }: RoomTypes.Create.Pr
   return room;
 };
 
-// TODO: Check if user is in room, it's an error NOT WORKING NOW
 export const joinRoomService = async ({ roomId, user }: RoomTypes.Join.Props) => {
   const updatedAt = new Date().toISOString();
   const room = await database.collection('rooms').doc(roomId).get();
@@ -49,7 +48,7 @@ export const joinRoomService = async ({ roomId, user }: RoomTypes.Join.Props) =>
     const players = room.data()?.players;
 
     if (players.length < MAX_PLAYERS) {
-      if (players.includes(user.id)) {
+      if (players.find((player: GlobalTypes.Player) => player.id === user.id)) {
         return {
           success: false,
           message: 'Cannot join room, user already in room',
