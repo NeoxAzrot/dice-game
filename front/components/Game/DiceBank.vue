@@ -14,7 +14,7 @@ defineEmits(['stockDice']);
 .bank_container {
   display: flex;
   padding: 30px 50px;
-  min-width: clamp(300px, 60vw, 700px);
+  // min-width: clamp(300px, 60vw, 700px);
   justify-content: center;
 }
 </style>

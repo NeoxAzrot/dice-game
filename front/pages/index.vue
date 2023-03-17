@@ -50,7 +50,7 @@ const selectedRoom = ref()
 
 .layout {
   &__container {
-    max-width: 90rem;
+    max-width: var(--container--max-width--small);
     display: grid;
     gap: 5rem;
     grid-template-columns: 1fr 1fr;

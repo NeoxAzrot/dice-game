@@ -4,7 +4,7 @@
     <transition>
       <div v-if="open" class="rule_modal">
         <div class="rule_modal--header">
-          <h3>Combinaisons possibles</h3>
+          <h3>Possible combinations</h3>
         </div>
         <ul>
           <li v-for="(rule, index) in rules">{{ index }}<span class="">{{ rule }}</span></li>
@@ -32,39 +32,36 @@ const rules = {
 <style lang="scss">
 .rule {
   &_modal {
+    --color--tr: rgba(28, 28, 29, 0.3);
+    --color--bl: #353661;
     display: flex;
     flex-direction: column;
-    border-radius: var(--radius--main);
     overflow: hidden;
-    box-shadow: var(--box-shadow);
+    // background-image: linear-gradient(-45deg, var(--color--tr), var(--color--bl)), linear-gradient(-135deg, var(--color--tr), var(--color--bl));
+    // background-size: 100% 2px, 2px 100%;
+    // background-position: 0 100%, 0% 100%;
+    // border-bottom: 2px solid var(--color--tr);
+    // background-repeat: no-repeat;
+    border: 2px solid var(--color--bl);
+    padding: 2rem;
 
     &--header {
-      padding: 10px 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      text-align: center;
-      background: var(--color--second);
-      margin-bottom: 5px;
+      margin-bottom: 2rem;
     }
 
     ul {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
       li {
         display: flex;
         justify-content: space-between;
         position: relative;
-        padding: 5px;
-        &:not(:last-child) {
-          &::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: -0px;
-            height: 1px;
-            background: rgba(#ffffff, 0.5);
-          }
-        }
+        opacity: 0.6;
       }
     }
   }
