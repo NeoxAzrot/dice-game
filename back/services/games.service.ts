@@ -150,7 +150,7 @@ export const playRoundService = async ({
           ...game.data()?.state,
         },
         dices: newDices,
-        bank: [...game.data()?.bank, ...dicesKept],
+        bank: [...dicesKept],
         combinations,
       })
       .then(() => getGameByIdService(gameId));
@@ -217,10 +217,10 @@ export const playRoundService = async ({
     if (isWinner) {
       await database
         .collection('rooms')
-        .doc(game.data()?.roomId)
+        .doc(newGame.data()?.roomId)
         .update({
           updatedAt,
-          games: game.data()?.games.map((item: { id: string }) => {
+          games: newGame.data()?.games.map((item: { id: string }) => {
             if (item.id === gameId) {
               return {
                 ...item,
@@ -237,7 +237,7 @@ export const playRoundService = async ({
         .doc(userId)
         .update({
           updatedAt,
-          games: game.data()?.players.map((item: { id: string }) => {
+          games: newGame.data()?.players.map((item: { id: string }) => {
             if (item.id === gameId) {
               return {
                 ...item,
@@ -331,7 +331,7 @@ export const changePlayerReadyStatusService = async ({
       .doc(game.data()?.roomId)
       .update({
         updatedAt,
-        games: game.data()?.games.map((item: { id: string }) => {
+        games: newGameData.data()?.games.map((item: { id: string }) => {
           if (item.id === gameId) {
             return {
               ...item,
