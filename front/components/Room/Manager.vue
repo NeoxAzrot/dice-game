@@ -24,7 +24,7 @@
         <label for="room">Room</label>
         <input type="text" id="room" name="room" v-model="requestedRoom" />
       </div>
-      <input type="submit" value="Join" />
+      <input type="submit" value="Join" class="btn--primary" />
     </form>
 
     <form v-else @submit="handleCreate">
@@ -32,14 +32,17 @@
         <label for="username">Username</label>
         <input type="text" id="username" name="username" v-model="username" />
       </div>
-      <input type="submit" value="Create" />
+      <input type="submit" value="Create" class="btn--primary" />
     </form>
-    <p class="room-manager__error" v-if="error">{{ error }}</p>
+    <p class="room-manager__error" v-if="error"><WarningIcon />{{ error }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
+import WarningIcon from '~/assets/icons/warning.svg'
+
 const { username, roomID } = useStore();
+
 const selection: Ref<'join' | 'create'> = ref('join');
 
 const requestedRoom = ref((useRoute().query.room as string) || '');
@@ -47,6 +50,10 @@ const requestedRoom = ref((useRoute().query.room as string) || '');
 const cookie = useCookie('dice-game-user-id');
 
 const error = ref('');
+
+watch(() => selection.value, () => {
+  error.value = ''
+})
 
 const handleJoin = (e: Event) => {
   e.preventDefault()
@@ -115,6 +122,14 @@ const handleCreate = (e: Event) => {
     color: #ff0000;
     font-size: 1.4rem;
     letter-spacing: normal;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    svg {
+      width: 1.6rem;
+      height: 1.6rem;
+    }
   }
 }
 </style>

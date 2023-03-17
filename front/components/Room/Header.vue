@@ -1,92 +1,40 @@
 <template>
-  <div class="room__header" v-if="room">
+  <div class="room__header">
     <div class="room__header__container">
-      <div>
-        <label>Room</label>
-        <RoomCopyLink />
-      </div>
-      <div>
-        <label>Players</label>
-        <div class="room__header__players">
-          <p :class="currentUserID === p.id && 'current'" v-for="p in room.players">{{ p.username }}</p>
-        </div>
-      </div>
-      <div class="room__header__actions">
-        <button @click="handleCreateGame" class="btn--secondary createRoom" :class="(isInGame && isEnoughPlayer) && 'disabled'">Start a new game</button>
-        <button @click="handleLeave" class="btn--secondary">Leave room</button>
-      </div>
+      <p @click="handleLeave" class="room__header__leave">Leave room</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const { room } = useRoom()
-
-const currentUserID = useCookie('dice-game-user-id')
-
-const isInGame = computed(() => room.value?.games ? room.value?.games.length > 0 : false)
-const isEnoughPlayer = computed(() => room.value ? room.value.players.length >= 2 : false)
-
 const handleLeave = async () => {
   await useRoom().leave()
   navigateTo('/')
 }
-
-const handleCreateGame = async() => {  
-  useGame().create().then((r) => {
-    console.log(r.data.id)
-  })
-}
-
 </script>
 
 <style lang="scss">
-.room {
-  &__header {
+.room__header {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  padding: 2rem;
+  display: flex;
+  
+  &__container {
+    margin: auto;
     width: 100%;
-    color: white;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    background-color: var(--color--second);
+    max-width: var(--container--max-width);
     display: flex;
+  }
 
-    &__container {
-      margin: auto;
-      width: 100%;
-      height: 100%;
-      padding: 2rem;
-      display: inline-flex;
-      gap: 4rem;
-      max-width: 120rem;
-
-      > div {
-        label {
-          font-size: 1.2rem;
-          font-weight: 600;
-          margin-bottom: 0.5rem;
-        }
-      }
-
-    }
-    
-    &__players {
-      display: flex;
-      gap: 2rem;
-    }
-
-    &__actions {
-      margin: 0 0 0 auto;
-      display: flex;
-      gap: 1rem;
-
-      .createRoom {
-        &.disabled {
-          cursor: not-allowed;
-          opacity: 0.5;
-        }
-      }
-    }
+  &__leave {
+    color: var(--color--third);
+    margin: 0 0 0 auto;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
   }
 }
 </style>

@@ -50,13 +50,13 @@ const stockDice = (number: number) => {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  padding: 5px 20px;
+  padding: 0.5rem 2rem;
   border-radius: var(--radius--main);
   box-shadow: var(--box-shadow);
 
   .board_container--control {
     display: flex;
-    gap: 20px;
+    gap: 2rem;
 
     >.btn {
       white-space: nowrap;
