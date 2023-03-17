@@ -41,6 +41,12 @@
 <script setup lang="ts">
 import WarningIcon from '~/assets/icons/warning.svg'
 
+const props = defineProps({
+  selected: {
+    type: String,
+    default: ''
+}})
+
 const { username, roomID } = useStore();
 
 const selection: Ref<'join' | 'create'> = ref('join');
@@ -53,6 +59,11 @@ const error = ref('');
 
 watch(() => selection.value, () => {
   error.value = ''
+})
+
+watch(() => props.selected, () => {
+  selection.value = 'join'
+  requestedRoom.value = props.selected
 })
 
 const handleJoin = (e: Event) => {

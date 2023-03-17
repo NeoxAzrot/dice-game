@@ -1,6 +1,5 @@
 <template>
   <div class="layout room">
-    <GlobalGradients/>
     <div class="room__container" v-if="room && room.players">
       <RoomHeader />
       <RoomFooter />
