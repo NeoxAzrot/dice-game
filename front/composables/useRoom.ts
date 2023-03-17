@@ -27,10 +27,10 @@ export default function useRoom() {
     })
   }
 
-  const create: () => Promise<JoinOrCreateRoom> = () => {
+  const create: (isPrivate: boolean) => Promise<JoinOrCreateRoom> = (isPrivate: boolean) => {
     return $fetch(endpoint + '/rooms', {
       method: 'POST',
-      body: JSON.stringify({ username: username.value })
+      body: JSON.stringify({ username: username.value, isPrivate: isPrivate })
     })
   }
 
@@ -46,5 +46,11 @@ export default function useRoom() {
       body: JSON.stringify({ userId: useCookie('dice-game-user-id').value })
     })
   }
-  return { room, join, create, verify, leave }
+
+  const listAll: () => Promise<any> = () => {
+    return $fetch(endpoint + `/rooms`, {
+      method: 'GET',
+    })
+  }
+  return { room, join, create, verify, leave, listAll }
 } 

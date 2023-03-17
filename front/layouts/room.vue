@@ -2,10 +2,8 @@
   <div class="layout room">
     <div class="room__container" v-if="room && room.players">
       <RoomHeader />
-      <p v-if="game">{{ game.state.gameStatus }}</p>
-      <div class="layout__container">
-        <NuxtPage/>
-      </div>
+      <RoomFooter />
+      <NuxtPage />
     </div>
     <div class="room__loader" v-else>
       <p class="room__loader__title">Loading room...</p>
@@ -26,23 +24,23 @@ const gameListener: Ref<{ unsubscribe: Unsubscribe } | null> = ref(null)
 
 onBeforeMount(async () => {
   useRoom().verify(roomID)
-  .then(async (): Promise<void> => {
-    roomListener.value = await useFirebase().listen('rooms', roomID, 'room')
-  })
-  .catch((): any => navigateTo('/'))
+    .then(async (): Promise<void> => {
+      roomListener.value = await useFirebase().listen('rooms', roomID, 'room')
+    })
+    .catch((): any => navigateTo('/'))
 })
 
-onMounted(() => {  
+onMounted(() => {
   window.addEventListener('beforeunload', () => {
     useRoom().leave()
   })
-}) 
+})
 
 watch(
   () => room.value?.games,
   async () => {
-    if(room.value?.games.length) {
-      gameListener.value = await useFirebase().listen('games', room.value.games[0], 'game')
+    if (room.value?.games.length) {
+      gameListener.value = await useFirebase().listen('games', room.value.games.filter(e => e.gameStatus !== 'finished')[0]['id'], 'game')
     }
   }
 )

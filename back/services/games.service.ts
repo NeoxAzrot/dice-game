@@ -5,9 +5,11 @@ import {
   GAME_STATUS,
   MAX_DICE,
   MAX_DICE_VALUE,
+  MAX_SCORE,
   MIN_DICE_VALUE,
   MIN_PLAYERS,
 } from 'utils/constants';
+import { Games } from 'utils/games';
 import { Numbers } from 'utils/numbers';
 import { Players } from 'utils/players';
 
@@ -34,9 +36,9 @@ export const createGameService = async (roomId: string) => {
     state: {
       gameStatus: GAME_STATUS.WAITING,
       turn: null,
-      rolls: 0,
     },
     dices: [],
+    bank: [],
     combinations: [],
   });
 
@@ -44,8 +46,40 @@ export const createGameService = async (roomId: string) => {
     .collection('rooms')
     .doc(roomId)
     .update({
-      games: [...room.data()?.games, game.id],
+      updatedAt: createdAt,
+      games: [
+        ...room.data()?.games,
+        {
+          id: game.id,
+          gameStatus: GAME_STATUS.WAITING,
+        },
+      ],
     });
+
+  const users = await database
+    .collection('users')
+    .where(
+      'username',
+      'in',
+      room.data()?.players.map((player: GlobalTypes.Player) => player.username),
+    )
+    .get();
+
+  users.forEach(async (user) => {
+    database
+      .collection('users')
+      .doc(user.id)
+      .update({
+        updatedAt: createdAt,
+        games: [
+          ...room.data()?.games,
+          {
+            id: game.id,
+            winner: null,
+          },
+        ],
+      });
+  });
 
   return game;
 };
@@ -105,14 +139,7 @@ export const playRoundService = async ({
 
   if (move === 'roll') {
     const dices = await rollDicesService(MAX_DICE - dicesKept.length);
-    const combinations = [
-      {
-        name: '1',
-        value: 1,
-      },
-    ];
-
-    // TODO: check all combinations
+    const { dices: newDices, combinations } = Games.getCombinations(dices);
 
     const newGame = await database
       .collection('games')
@@ -121,16 +148,16 @@ export const playRoundService = async ({
         updatedAt,
         state: {
           ...game.data()?.state,
-          rolls: game.data()?.state.rolls + 1,
         },
-        dices,
+        dices: newDices,
+        bank: [...dicesKept],
         combinations,
       })
       .then(() => getGameByIdService(gameId));
 
     return {
       success: true,
-      data: newGame.data(), // TODO: send only necessary data
+      data: newGame.data(),
     };
   } else if (move === 'hold') {
     if (dicesKept.length === 0) {
@@ -151,7 +178,8 @@ export const playRoundService = async ({
       };
     }
 
-    // TODO: check if dices are valid (in game.dices) or in combinations (BETTER)
+    const score = game.data()?.displayScore;
+    const isWinner = score >= MAX_SCORE;
 
     const nextPlayer = Players.getNext({
       players: game.data()?.players,
@@ -167,26 +195,64 @@ export const playRoundService = async ({
           if (player.id === userId) {
             return {
               ...player,
-              score: player.score + 1, // TODO: add points to player score and displayScore
-              displayScore: player.displayScore + 1, // TODO: add points to player score and displayScore
+              score: player.score + score,
+              displayScore: player.score + score,
             };
           }
 
           return player;
         }),
+        winner: isWinner ? userId : null,
         state: {
           ...game.data()?.state,
-          rolls: 0,
-          turn: nextPlayer.id,
+          gameStatus: isWinner ? GAME_STATUS.FINISHED : GAME_STATUS.PLAYING,
+          turn: isWinner ? null : nextPlayer.id,
         },
         dices: [],
+        bank: [],
         combinations: [],
       })
       .then(() => getGameByIdService(gameId));
 
+    if (isWinner) {
+      await database
+        .collection('rooms')
+        .doc(newGame.data()?.roomId)
+        .update({
+          updatedAt,
+          games: newGame.data()?.games.map((item: { id: string }) => {
+            if (item.id === gameId) {
+              return {
+                ...item,
+                gameStatus: GAME_STATUS.FINISHED,
+              };
+            }
+
+            return item;
+          }),
+        });
+
+      await database
+        .collection('users')
+        .doc(userId)
+        .update({
+          updatedAt,
+          games: newGame.data()?.players.map((item: { id: string }) => {
+            if (item.id === gameId) {
+              return {
+                ...item,
+                winner: userId,
+              };
+            }
+
+            return item;
+          }),
+        });
+    }
+
     return {
       success: true,
-      data: newGame.data(), // TODO: send only necessary data
+      data: newGame.data(),
     };
   } else {
     return {
@@ -259,6 +325,23 @@ export const changePlayerReadyStatusService = async ({
         },
       })
       .then(() => getGameByIdService(gameId));
+
+    await database
+      .collection('rooms')
+      .doc(game.data()?.roomId)
+      .update({
+        updatedAt,
+        games: newGameData.data()?.games.map((item: { id: string }) => {
+          if (item.id === gameId) {
+            return {
+              ...item,
+              gameStatus: GAME_STATUS.PLAYING,
+            };
+          }
+
+          return item;
+        }),
+      });
 
     return {
       success: true,

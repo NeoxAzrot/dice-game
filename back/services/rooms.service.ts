@@ -5,7 +5,7 @@ import { MAX_PLAYERS } from 'utils/constants';
 
 import { database } from '../firebase';
 
-export const createRoomService = async ({ user }: RoomTypes.Create.Props) => {
+export const createRoomService = async ({ user, isPrivate }: RoomTypes.Create.Props) => {
   const createdAt = new Date().toISOString();
   const { id, username } = user;
 
@@ -22,6 +22,9 @@ export const createRoomService = async ({ user }: RoomTypes.Create.Props) => {
       isPlaying: false,
     },
     games: [],
+    settings: {
+      isPrivate: isPrivate || false,
+    },
   });
 
   return room;
@@ -45,7 +48,7 @@ export const joinRoomService = async ({ roomId, user }: RoomTypes.Join.Props) =>
     const players = room.data()?.players;
 
     if (players.length < MAX_PLAYERS) {
-      if (players.includes(user.id)) {
+      if (players.find((player: GlobalTypes.Player) => player.id === user.id)) {
         return {
           success: false,
           message: 'Cannot join room, user already in room',
@@ -96,7 +99,7 @@ export const joinRoomService = async ({ roomId, user }: RoomTypes.Join.Props) =>
 };
 
 export const getRoomsService = async () => {
-  const rooms = await database.collection('rooms').get();
+  const rooms = await database.collection('rooms').where('settings.isPrivate', '==', false).get();
 
   return rooms;
 };

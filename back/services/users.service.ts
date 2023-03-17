@@ -6,12 +6,19 @@ export const createUserService = async ({ username }: UserTypes.Create.Props) =>
   const createdAt = new Date().toISOString();
 
   const user = await database.collection('users').add({
-    username,
     createdAt,
     updatedAt: createdAt,
+    username,
+    games: [],
   });
 
   return user;
+};
+
+export const getUsersService = async () => {
+  const users = await database.collection('users').get();
+
+  return users;
 };
 
 export const getUserByUsernameService = async (username: string) => {

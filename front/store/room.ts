@@ -1,5 +1,10 @@
 import { defineStore } from 'pinia'
 
+type Game = {
+  gameStatus: string,
+  id: string
+}
+
 type Room = {
   createdAt: string,
   updatedAt: string,
@@ -7,7 +12,7 @@ type Room = {
     id: string,
     username: string
   }[],
-  games: string[],
+  games: Game[],
 }
 
 const useRoomStore = defineStore('room', () => {

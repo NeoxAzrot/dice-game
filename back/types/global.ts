@@ -1,4 +1,9 @@
 export namespace GlobalTypes {
+  interface Combination {
+    name: string;
+    values: number[];
+    score: number;
+  }
   export interface DefaultData {
     createdAt: Date;
     updatedAt?: Date;
@@ -10,5 +15,13 @@ export namespace GlobalTypes {
     score: number;
     displayScore: number;
     isReady: boolean;
+  }
+
+  export interface CombinationsResponse {
+    combinations: Combination[];
+    dices: {
+      value: number;
+      isLocked: boolean;
+    }[];
   }
 }

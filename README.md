@@ -10,6 +10,12 @@ Le front affiche les dés et permet de les relancer ou les bloquer.
 
 ## Todo
 
+- [ ] Three Pairs: Any three sets of two pairs of dice. Includes having a four of a kind plus a pair. Worth 1500 points
+- [ ] Run: Six dice in a sequence (1,2,3,4,5,6). Worth 2500 points
+- [ ] Replay a round when all dice are playable
+- [ ] Hold without choosing dices, take best dices
+- [ ] Timer when disconnect
+
 ### Back
 
 - [ ] Add response types on async function
@@ -20,6 +26,6 @@ Le front affiche les dés et permet de les relancer ou les bloquer.
 
 - [ ] Add a music kit
 - [ ] Add a chat
-- [ ] Add a score
 - [ ] Add a ranking
 - [ ] Add music design on interaction
+- [ ] Add a timer of game duration in Footer

@@ -24,7 +24,7 @@
         <label for="room">Room</label>
         <input type="text" id="room" name="room" v-model="requestedRoom" />
       </div>
-      <input type="submit" value="Join" />
+      <input type="submit" value="Join" class="btn--primary" />
     </form>
 
     <form v-else @submit="handleCreate">
@@ -32,27 +32,51 @@
         <label for="username">Username</label>
         <input type="text" id="username" name="username" v-model="username" />
       </div>
-      <input type="submit" value="Create" />
+      <div class="room-manager__field input">
+        <label for="username">Private</label>
+        <label class="checkbox" :class="isPrivate && 'checked'" @click="isPrivate = !isPrivate"></label>
+      </div>
+      <input type="submit" value="Create" class="btn--primary" />
     </form>
-    <p class="room-manager__error" v-if="error">{{ error }}</p>
+    <p class="room-manager__error" v-if="error"><WarningIcon />{{ error }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
-const { username, roomID } = useStore();
-const selection: Ref<'join' | 'create'> = ref('join');
+import WarningIcon from '~/assets/icons/warning.svg'
 
-const requestedRoom = ref((useRoute().query.room as string) || '');
+const props = defineProps({
+  selected: {
+    type: String,
+    default: ''
+}})
 
 const cookie = useCookie('dice-game-user-id');
 
+const selection: Ref<'join' | 'create'> = ref('join');
+
+const { username, roomID, userID } = useStore();
+const requestedRoom = ref((useRoute().query.room as string) || '');
+
+const isPrivate = ref(false)
+
 const error = ref('');
+
+watch(() => selection.value, () => {
+  error.value = ''
+})
+
+watch(() => props.selected, () => {
+  selection.value = 'join'
+  requestedRoom.value = props.selected
+})
 
 const handleJoin = (e: Event) => {
   e.preventDefault()
   useRoom().join(requestedRoom.value)
   .then(({ data }) => {
     cookie.value = data.user.id
+    userID.value = data.user.id
     window.location.href = `${useRuntimeConfig().APP_URL}/${data.room.id}`
   }).catch((err) => {
     error.value = err.response._data.message
@@ -61,10 +85,11 @@ const handleJoin = (e: Event) => {
 
 const handleCreate = (e: Event) => {
   e.preventDefault()
-  useRoom().create()
+  useRoom().create(isPrivate.value)
   .then(({ data }) => {
     cookie.value = data.user.id
     roomID.value = data.room.id
+    userID.value = data.user.id
     window.location.href = `${useRuntimeConfig().APP_URL}/${data.room.id}`
   }).catch((err) => {
     error.value = err.response._data.message
@@ -115,6 +140,14 @@ const handleCreate = (e: Event) => {
     color: #ff0000;
     font-size: 1.4rem;
     letter-spacing: normal;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    svg {
+      width: 1.6rem;
+      height: 1.6rem;
+    }
   }
 }
 </style>
