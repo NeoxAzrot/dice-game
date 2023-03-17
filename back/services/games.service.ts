@@ -47,7 +47,13 @@ export const createGameService = async (roomId: string) => {
     .doc(roomId)
     .update({
       updatedAt: createdAt,
-      games: [...room.data()?.games, game.id],
+      games: [
+        ...room.data()?.games,
+        {
+          id: game.id,
+          gameStatus: GAME_STATUS.WAITING,
+        },
+      ],
     });
 
   const users = await database
@@ -65,7 +71,13 @@ export const createGameService = async (roomId: string) => {
       .doc(user.id)
       .update({
         updatedAt: createdAt,
-        games: [...user.data()?.games, game.id],
+        games: [
+          ...room.data()?.games,
+          {
+            id: game.id,
+            winner: null,
+          },
+        ],
       });
   });
 
