@@ -3,7 +3,7 @@
   flex-direction: column;
   gap: 0.5rem;
 
-  input {
+  input:not([type="checkbox"]) {
     outline: none;
     border: none;
     padding: 1rem;
@@ -18,5 +18,45 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.1rem;
+  }
+  
+  .checkbox {
+    position: relative;
+    width: 2.2rem;
+    height: 2.2rem;
+    background-color: var(--color--grey--dark);
+    border-radius: var(--radius--main);
+    cursor: pointer;
+
+    &.checked {
+      &::after {
+        opacity: 1;
+      }
+    }
+
+    input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    &::after {
+      content: "";
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      margin: auto;
+      width: 49%;
+      height: 49%;
+      border-radius: 2px;
+      background-color: var(--color--second);
+    }
   }
 }

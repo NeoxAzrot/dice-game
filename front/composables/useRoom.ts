@@ -27,10 +27,10 @@ export default function useRoom() {
     })
   }
 
-  const create: () => Promise<JoinOrCreateRoom> = () => {
+  const create: (isPrivate: boolean) => Promise<JoinOrCreateRoom> = (isPrivate: boolean) => {
     return $fetch(endpoint + '/rooms', {
       method: 'POST',
-      body: JSON.stringify({ username: username.value })
+      body: JSON.stringify({ username: username.value, isPrivate: isPrivate })
     })
   }
 
