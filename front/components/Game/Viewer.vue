@@ -1,5 +1,5 @@
 <template>
-  <div class="game_wrapper">
+  <div class="game">
     <div class="game_header" style="filter: invert();">
       <img src="../../assets/diceex.png" alt="">
     </div>
@@ -12,7 +12,6 @@
         <GameBoard />
       </div>
       <div class="game_container--infos">
-        <GameScores :players="playerExample" />
         <GameRules />
       </div>
     </div>
@@ -27,30 +26,37 @@ const playerExample = [
 </script>
 
 <style lang="scss">
-.game_wrapper {
+.game {
   width: 100%;
-  height: 100vh;
-  background-color: var(--color--body);
+  height: calc(100vh - 100px);
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
 
-  .game_header {
+  &_header {
     padding: 30px 0;
     display: flex;
     justify-content: center;
   }
 
-  .game_container {
+  &_container {
     display: flex;
     justify-content: center;
+    gap: 50px;
     padding: 0 5vw;
+    flex-grow: 1;
 
-    .game_container--board {
+    &--player {
+
+    }
+
+    &--board {
       display: flex;
-      flex-direction: column;
       align-items: center;
       margin-right: 30px;
     }
 
-    .game_container--infos {
+    &--infos {
       max-width: 250px;
     }
 
