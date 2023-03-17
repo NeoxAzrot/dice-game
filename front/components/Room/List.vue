@@ -4,6 +4,7 @@
     <ul class="rooms-list__container">
       <li @click="emits('selected', room.id)" v-for="room in rooms">
         <p>{{ room.id }}</p>
+        <p>{{ room.players.length }}/2</p>
       </li>
     </ul>
   </div>
@@ -45,6 +46,15 @@ onMounted(() => {
     li {
       padding: 1rem 1rem 1rem 0;
       opacity: 0.6;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: opacity 0.1s ease-in-out;
+
+      &:hover {
+        opacity: 0.2;
+      }
     }
   }
 }
