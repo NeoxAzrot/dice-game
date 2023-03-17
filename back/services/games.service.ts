@@ -38,6 +38,7 @@ export const createGameService = async (roomId: string) => {
       turn: null,
     },
     dices: [],
+    bank: [],
     combinations: [],
   });
 
@@ -137,13 +138,14 @@ export const playRoundService = async ({
           ...game.data()?.state,
         },
         dices: newDices,
+        bank: [...game.data()?.bank, ...dicesKept],
         combinations,
       })
       .then(() => getGameByIdService(gameId));
 
     return {
       success: true,
-      data: newGame.data(), // TODO: send only necessary data
+      data: newGame.data(),
     };
   } else if (move === 'hold') {
     if (dicesKept.length === 0) {
@@ -164,15 +166,7 @@ export const playRoundService = async ({
       };
     }
 
-    const score = Games.getScore({ dices: dicesKept, combinations: game.data()?.combinations });
-
-    if (score === 0) {
-      return {
-        success: false,
-        message: 'Invalid holding combination',
-      };
-    }
-
+    const score = game.data()?.displayScore;
     const isWinner = score >= MAX_SCORE;
 
     const nextPlayer = Players.getNext({
@@ -203,13 +197,14 @@ export const playRoundService = async ({
           turn: isWinner ? null : nextPlayer.id,
         },
         dices: [],
+        bank: [],
         combinations: [],
       })
       .then(() => getGameByIdService(gameId));
 
     return {
       success: true,
-      data: newGame.data(), // TODO: send only necessary data
+      data: newGame.data(),
     };
   } else {
     return {

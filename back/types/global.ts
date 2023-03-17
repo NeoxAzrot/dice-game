@@ -24,9 +24,4 @@ export namespace GlobalTypes {
       isLocked: boolean;
     }[];
   }
-
-  export interface GetScoreProps {
-    combinations: Combination[];
-    dices: number[];
-  }
 }
