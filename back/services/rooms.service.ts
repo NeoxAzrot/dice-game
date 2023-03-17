@@ -23,7 +23,7 @@ export const createRoomService = async ({ user, isPrivate }: RoomTypes.Create.Pr
     },
     games: [],
     settings: {
-      isPrivate,
+      isPrivate: isPrivate || false,
     },
   });
 
