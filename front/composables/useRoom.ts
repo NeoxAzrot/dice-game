@@ -46,5 +46,11 @@ export default function useRoom() {
       body: JSON.stringify({ userId: useCookie('dice-game-user-id').value })
     })
   }
-  return { room, join, create, verify, leave }
+
+  const listAll: () => Promise<any> = () => {
+    return $fetch(endpoint + `/rooms`, {
+      method: 'GET',
+    })
+  }
+  return { room, join, create, verify, leave, listAll }
 } 
