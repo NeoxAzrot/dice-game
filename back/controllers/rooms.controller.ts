@@ -120,6 +120,7 @@ export const getRoomById = async (req: Request, res: Response) => {
     data: {
       id: room.id,
       players: room.data()?.players,
+      settings: room.data()?.settings,
     },
   });
 };
