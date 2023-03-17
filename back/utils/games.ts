@@ -17,8 +17,6 @@ export namespace Games {
       combinations: [],
     };
 
-    console.log(dices);
-
     for (let i = 1; i <= MAX_DICE_VALUE; i++) {
       const newDices = dices.filter((dice) => dice === i);
 
@@ -95,8 +93,6 @@ export namespace Games {
         });
       }
     }
-
-    console.log(response);
 
     return {
       dices: Arrays.shuffle(response.dices),

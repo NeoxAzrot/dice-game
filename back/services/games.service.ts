@@ -35,7 +35,6 @@ export const createGameService = async (roomId: string) => {
     state: {
       gameStatus: GAME_STATUS.WAITING,
       turn: null,
-      rolls: 0,
     },
     dices: [],
     combinations: [],
@@ -115,7 +114,6 @@ export const playRoundService = async ({
         updatedAt,
         state: {
           ...game.data()?.state,
-          rolls: game.data()?.state.rolls + 1,
         },
         dices: newDices,
         combinations,
@@ -170,7 +168,6 @@ export const playRoundService = async ({
         }),
         state: {
           ...game.data()?.state,
-          rolls: 0,
           turn: nextPlayer.id,
         },
         dices: [],
