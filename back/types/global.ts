@@ -11,4 +11,15 @@ export namespace GlobalTypes {
     displayScore: number;
     isReady: boolean;
   }
+
+  export interface CombinationsResponse {
+    combinations: {
+      name: string;
+      value: number;
+    }[];
+    dices: {
+      value: number;
+      isLocked: boolean;
+    }[];
+  }
 }

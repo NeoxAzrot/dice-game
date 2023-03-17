@@ -8,6 +8,7 @@ import {
   MIN_DICE_VALUE,
   MIN_PLAYERS,
 } from 'utils/constants';
+import { Games } from 'utils/games';
 import { Numbers } from 'utils/numbers';
 import { Players } from 'utils/players';
 
@@ -105,14 +106,7 @@ export const playRoundService = async ({
 
   if (move === 'roll') {
     const dices = await rollDicesService(MAX_DICE - dicesKept.length);
-    const combinations = [
-      {
-        name: '1',
-        value: 1,
-      },
-    ];
-
-    // TODO: check all combinations
+    const { dices: newDices, combinations } = Games.getCombinations(dices);
 
     const newGame = await database
       .collection('games')
@@ -123,7 +117,7 @@ export const playRoundService = async ({
           ...game.data()?.state,
           rolls: game.data()?.state.rolls + 1,
         },
-        dices,
+        dices: newDices,
         combinations,
       })
       .then(() => getGameByIdService(gameId));

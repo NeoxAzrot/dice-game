@@ -101,6 +101,7 @@ export const getRooms = async (req: Request, res: Response) => {
     data: {
       rooms: rooms.docs.map((room) => ({
         id: room.id,
+        players: room.data().players,
       })),
     },
   });
