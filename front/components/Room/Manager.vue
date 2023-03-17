@@ -32,6 +32,10 @@
         <label for="username">Username</label>
         <input type="text" id="username" name="username" v-model="username" />
       </div>
+      <div class="room-manager__field input">
+        <label for="username">Private</label>
+        <label class="checkbox" :class="isPrivate && 'checked'" @click="isPrivate = !isPrivate"></label>
+      </div>
       <input type="submit" value="Create" class="btn--primary" />
     </form>
     <p class="room-manager__error" v-if="error"><WarningIcon />{{ error }}</p>
@@ -47,13 +51,14 @@ const props = defineProps({
     default: ''
 }})
 
-const { username, roomID } = useStore();
+const cookie = useCookie('dice-game-user-id');
 
 const selection: Ref<'join' | 'create'> = ref('join');
 
+const { username, roomID } = useStore();
 const requestedRoom = ref((useRoute().query.room as string) || '');
 
-const cookie = useCookie('dice-game-user-id');
+const isPrivate = ref(false)
 
 const error = ref('');
 
@@ -79,7 +84,7 @@ const handleJoin = (e: Event) => {
 
 const handleCreate = (e: Event) => {
   e.preventDefault()
-  useRoom().create()
+  useRoom().create(isPrivate.value)
   .then(({ data }) => {
     cookie.value = data.user.id
     roomID.value = data.room.id
