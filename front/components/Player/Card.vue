@@ -8,6 +8,7 @@
       <h2 class="card__score">{{ player.displayScore }}</h2>
     </div>
     <PlayerEmojis />
+    <p class="card__turn" v-if="player.id === game.state.turn">Playing...</p>
   </div>
 </template>
 
@@ -15,6 +16,7 @@
 import uniqolor from 'uniqolor';
 
 const { player } = defineProps(['player']);
+const { game } = useGame()
 
 const colorName: Ref<{ color: string, isLight: boolean }> = ref(uniqolor(player.username));
 </script>
@@ -26,6 +28,7 @@ const colorName: Ref<{ color: string, isLight: boolean }> = ref(uniqolor(player.
   gap: 5rem;
   padding: 1rem 1rem 1rem 0;
   border-radius: var(--radius--main);
+  position: relative;
 
   &__container {
     display: flex;
@@ -57,6 +60,15 @@ const colorName: Ref<{ color: string, isLight: boolean }> = ref(uniqolor(player.
   &__score {
     font-size: 1.4rem;
     opacity: 0.7;
+  }
+
+  &__turn {
+    position: absolute;
+    left: 102%;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    height: fit-content;
   }
 }
 </style>
