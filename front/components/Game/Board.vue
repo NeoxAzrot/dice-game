@@ -1,12 +1,12 @@
 <template>
   <div class="board_container">
-    <GameDiceSet @stockDice="stockDice" :dices="useGame().game.value.dices" />
+    <GameDiceSet @stockDice="stockDice" :dices="game.dices" />
     <div class="board_container--control">
       <button :disabled="disabledLaunch" class="btn" @click="launchdices">Lancer les dés</button>
       <button :disabled="true" class="btn" @click="">Garder le score</button>
     </div>
     <div>
-      <GameDiceBank :dices="diceNumber.bank" />
+      <GameDiceBank :dices="game.bank" />
     </div>
     <div class="board_container--infos" v-if="message">
       <p class="board_container--infos-error">
@@ -17,37 +17,37 @@
 </template>
 
 <script setup lang="ts">
-import { Combinaison, ListDice } from '~~/interfaces/game.interfaces';
 import WarningIcon from '~/assets/icons/warning.svg';
 
 const message: Ref<string | undefined> = ref();
 
-const currentCombinations: Ref<Combinaison[] | undefined> = ref(undefined);
-
 const disabledLaunch = computed(() => {
-  return diceNumber.value.board.length < 1;
+  return game.value.board.length < 1;
 })
 
-const diceNumber: Ref<ListDice> = ref({
-  board: [{ value: 0, isLocked: true }, { value: 1, isLocked: true }, { value: 1, isLocked: true }, { value: 1, isLocked: true }, { value: 1, isLocked: true }, { value: 1, isLocked: true }], bank: []
-});
+const { game } = useGame();
 
 const launchdices = async () => {
-  const res = await useGame().play('roll', diceNumber.value.bank.map(e => e.value)).catch(err => message.value = err.response._data.message);
-
-  currentCombinations.value = res.data.combinations;
-  diceNumber.value.board = res.data.dices;
+  useGame().play('roll', game.value.bank.map((e: any) => e.value))
+  .catch(err => message.value = err.response)
 }
 
 const stockDice = (number: number) => {
-  diceNumber.value.bank.push(...diceNumber.value.board.slice(number, number + 1));
-  diceNumber.value.board.splice(number, 1);
+  const newBoard = game.value.board.filter((e: any, i: number) => i !== number);
+  const newBank = game.value.bank.concat(game.value.board[number]);
 
-  const score = getScore(diceNumber.value.bank.map(e => e.value), currentCombinations.value!);
-
+  const score = getScore(game.value.bank.map((e: any) => e.value), game.value.combinations!);
   console.log(score);
-
-  useFirebase().update('games', useGame().game.value.id, { players: [...useGame().game.value.players.map((e: { id: string | null; displayScore: number; }) => { return { ...e, displayScore: e.id === useStore().userID.value ? e.displayScore + score : e.displayScore } })] })
+  
+  useFirebase().update('games', useGame().game.value.id, {
+    players: [...useGame().game.value.players.map((e: { id: string | null; displayScore: number; }) => {
+      return { ...e,
+        displayScore: e.id === useStore().userID.value ? e.displayScore + score : e.displayScore
+      }
+    })],
+    dices: newBoard,
+    bank: newBank
+  })
 }
 </script>
 
