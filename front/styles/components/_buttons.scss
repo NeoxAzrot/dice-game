@@ -24,12 +24,6 @@
   &--secondary {
     background-color: white;
     color: var(--color--second);
-
-    // &.disabled {
-    //   background-color: var(--color--main);
-    //   border: 2px solid var(--color--second);
-    //   color: var(--color--second);
-    // }
   }
 
   &.disabled {
