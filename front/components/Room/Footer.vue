@@ -6,7 +6,7 @@
         <RoomCopyLink />
       </div>
       <div>
-        <label>Players</label>
+        <label>Players 1 / {{ MAX_PLAYERS }}</label>
         <div class="room__footer__players">
           <p
             :class="currentUserID === p.id && 'current'"

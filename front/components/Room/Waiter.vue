@@ -6,7 +6,7 @@
         <CloseIcon class="closed"/>
 
         <span v-if="isEnoughPlayers">Waiting for the game to start</span>
-        <span v-if="!isEnoughPlayers">Waiting for {{ MIN_PLAYERS - room.players.length }} or {{ MAX_PLAYERS - room.players.length }} more players</span>
+        <span v-if="!isEnoughPlayers">Waiting for at least {{ MIN_PLAYERS - room.players.length }} more player</span>
       </div>
     </p>
   </div>
