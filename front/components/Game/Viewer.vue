@@ -20,7 +20,7 @@ const { game } = useGame();
 
 <style lang="scss">
 .game {
-  width: 100%;
+  width: var(--container--max-width);
   height: calc(100vh - 100px);
   display: flex;
   flex-direction: column;
@@ -30,12 +30,9 @@ const { game } = useGame();
     display: flex;
     justify-content: center;
     gap: 50px;
-    padding: 0 5vw;
+    padding: 2rem 0;
     flex-grow: 1;
-
-    &--player {
-
-    }
+    position: relative;
 
     &--board {
       display: flex;
@@ -44,10 +41,21 @@ const { game } = useGame();
     }
 
     &--infos {
+      right: 0;
       max-width: 250px;
     }
 
-    >*>* {
+    &--players,
+    &--infos {
+      position: absolute;
+      top: 2rem;
+    }
+
+    &--players {
+      left: 0;
+    }
+
+    > * > * {
       margin: 20px 0;
     }
   }

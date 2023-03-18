@@ -4,20 +4,23 @@
       <div>
         <CheckIcon class="checked"/>
         <CloseIcon class="closed"/>
-        Enough players...
+
+        <span v-if="isEnoughPlayers">Waiting for the game to start</span>
+        <span v-if="!isEnoughPlayers">Waiting for at least {{ MIN_PLAYERS - room.players.length }} more player</span>
       </div>
-      <span>{{ room.players.length }}/2</span>
     </p>
   </div>
 </template>
 
 <script setup lang="ts">
+import { MIN_PLAYERS } from '~/utils/constants';
+
 import CheckIcon from '@/assets/icons/check.svg';
 import CloseIcon from '@/assets/icons/close.svg';
 
 const { room } = useRoom()
 
-const isEnoughPlayers = computed(() => room.value ? room.value.players.length >= 2 : false)
+const isEnoughPlayers = computed(() => room.value ? room.value.players.length >= MIN_PLAYERS : false)
 </script>
 
 <style lang="scss">

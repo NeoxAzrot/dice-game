@@ -1,9 +1,14 @@
 <template>
   <div class="room__header">
     <div class="room__header__container">
-      <div class="room__header__logo">
-        <img style="filter: invert();" src="../../assets/diceex.png" alt="">
-      </div>
+      <a href="/" class="room__header__logo">
+        <nuxt-img
+          preload
+          format="webp"
+          style="filter: invert()"
+          src="/diceex.png"
+        />
+      </a>
       <p @click="handleLeave" class="room__header__leave">Leave room</p>
     </div>
   </div>
@@ -11,9 +16,9 @@
 
 <script setup lang="ts">
 const handleLeave = async () => {
-  await useRoom().leave()
-  navigateTo('/')
-}
+  await useRoom().leave();
+  navigateTo('/');
+};
 </script>
 
 <style lang="scss">

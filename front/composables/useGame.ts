@@ -24,7 +24,7 @@ const useGame = () => {
   const create: () => Promise<JoinOrCreateGame> = () => {
     return $fetch(endpoint + '/games', {
       method: 'POST',
-      body: JSON.stringify({ roomId: useRoute().params.room })
+      body: JSON.stringify({ roomId: useRoute().params.room, userId: useStore().userID.value })
     })
   }
 
@@ -36,7 +36,7 @@ const useGame = () => {
   }
 
   const play: (type: 'roll' | 'hold', diceKept?: Array<number>) => Promise<PlayGame> = (type, diceKept = []) => {
-    return $fetch(endpoint + `/games/${game.value?.id}/play`, {
+    return $fetch(endpoint + `/games/${game.value.id}/play`, {
       method: 'POST',
       body: JSON.stringify({
         "userId": useStore().userID.value,

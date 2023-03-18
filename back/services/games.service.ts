@@ -16,22 +16,20 @@ import { Players } from 'utils/players';
 import { database } from '../firebase';
 import { getRoomByIdService } from './rooms.service';
 
-export const createGameService = async (roomId: string) => {
-  const createdAt = new Date().toISOString();
-
+export const createGameService = async ({ roomId, userId }: GameTypes.Create.Props) => {
+  const createdAt = new Date().getTime();
   const room = await getRoomByIdService(roomId);
 
   const game = await database.collection('games').add({
-    createdAt,
-    updatedAt: createdAt,
     roomId,
     players: room.data()?.players.map((player: GlobalTypes.Player) => ({
       id: player.id,
       username: player.username,
       score: 0,
-      displayScore: 0,
-      isReady: false,
+      isReady: player.id === userId,
+      reaction: null,
     })),
+    roundScore: 0,
     winner: null,
     state: {
       gameStatus: GAME_STATUS.WAITING,
@@ -40,18 +38,20 @@ export const createGameService = async (roomId: string) => {
     dices: [],
     bank: [],
     combinations: [],
+    startedAt: null,
+    finishedAt: null,
   });
 
   await database
     .collection('rooms')
     .doc(roomId)
     .update({
-      updatedAt: createdAt,
       games: [
         ...room.data()?.games,
         {
           id: game.id,
           gameStatus: GAME_STATUS.WAITING,
+          createdAt,
         },
       ],
     });
@@ -70,9 +70,8 @@ export const createGameService = async (roomId: string) => {
       .collection('users')
       .doc(user.id)
       .update({
-        updatedAt: createdAt,
         games: [
-          ...room.data()?.games,
+          ...user.data()?.games,
           {
             id: game.id,
             winner: null,
@@ -112,8 +111,6 @@ export const playRoundService = async ({
   userId,
   dicesKept = [],
 }: GameTypes.PlayRound.Props) => {
-  const updatedAt = new Date().toISOString();
-
   const game = await getGameByIdService(gameId);
 
   if (!game.exists) {
@@ -141,17 +138,31 @@ export const playRoundService = async ({
     const dices = await rollDicesService(MAX_DICE - dicesKept.length);
     const { dices: newDices, combinations } = Games.getCombinations(dices);
 
+    const canPlay = newDices.some((dice: { isLocked: boolean }) => {
+      return !dice.isLocked;
+    });
+
     const newGame = await database
       .collection('games')
       .doc(gameId)
       .update({
-        updatedAt,
         state: {
           ...game.data()?.state,
+          turn: canPlay
+            ? userId
+            : Players.getNext({ players: game.data()?.players, actualPlayerId: userId }).id,
         },
-        dices: newDices,
-        bank: [...dicesKept],
-        combinations,
+        roundScore: canPlay ? game.data()?.roundScore : 0,
+        dices: canPlay ? newDices : [],
+        combinations: canPlay ? combinations : [],
+        bank: canPlay
+          ? game.data()?.bank.map((item: { isLocked: boolean }) => {
+              return {
+                ...item,
+                isLocked: true,
+              };
+            })
+          : [],
       })
       .then(() => getGameByIdService(gameId));
 
@@ -160,26 +171,22 @@ export const playRoundService = async ({
       data: newGame.data(),
     };
   } else if (move === 'hold') {
-    if (dicesKept.length === 0) {
+    const finishedAt = new Date().getTime();
+    const roundScore = game.data()?.roundScore;
+
+    if (roundScore === 0) {
       return {
         success: false,
-        message: 'Dices cannot be empty when holding',
+        message: 'You cannot hold without any points',
       };
     }
 
-    const isDiceInvalid = dicesKept.some((dice: number) => {
-      return dice < MIN_DICE_VALUE || dice > MAX_DICE_VALUE;
-    });
+    const userScore = game.data()?.players.find((player: GlobalTypes.Player) => {
+      return player.id === userId;
+    })?.score;
 
-    if (isDiceInvalid) {
-      return {
-        success: false,
-        message: 'Invalid dice value',
-      };
-    }
-
-    const score = game.data()?.displayScore;
-    const isWinner = score >= MAX_SCORE;
+    const newScore = userScore + roundScore;
+    const isWinner = newScore >= MAX_SCORE;
 
     const nextPlayer = Players.getNext({
       players: game.data()?.players,
@@ -190,18 +197,17 @@ export const playRoundService = async ({
       .collection('games')
       .doc(gameId)
       .update({
-        updatedAt,
         players: game.data()?.players.map((player: GlobalTypes.Player) => {
           if (player.id === userId) {
             return {
               ...player,
-              score: player.score + score,
-              displayScore: player.score + score,
+              score: newScore,
             };
           }
 
           return player;
         }),
+        roundScore: 0,
         winner: isWinner ? userId : null,
         state: {
           ...game.data()?.state,
@@ -211,16 +217,18 @@ export const playRoundService = async ({
         dices: [],
         bank: [],
         combinations: [],
+        finishedAt: isWinner ? finishedAt : null,
       })
       .then(() => getGameByIdService(gameId));
 
     if (isWinner) {
+      const room = await getRoomByIdService(game.data()?.roomId);
+
       await database
         .collection('rooms')
         .doc(newGame.data()?.roomId)
         .update({
-          updatedAt,
-          games: newGame.data()?.games.map((item: { id: string }) => {
+          games: room.data()?.games.map((item: { id: string }) => {
             if (item.id === gameId) {
               return {
                 ...item,
@@ -236,7 +244,6 @@ export const playRoundService = async ({
         .collection('users')
         .doc(userId)
         .update({
-          updatedAt,
           games: newGame.data()?.players.map((item: { id: string }) => {
             if (item.id === gameId) {
               return {
@@ -266,8 +273,6 @@ export const changePlayerReadyStatusService = async ({
   gameId,
   userId,
 }: GameTypes.ChangePlayerReadyStatus.Props) => {
-  const updatedAt = new Date().toISOString();
-
   const game = await getGameByIdService(gameId);
 
   if (!game.exists) {
@@ -307,31 +312,33 @@ export const changePlayerReadyStatusService = async ({
     .collection('games')
     .doc(gameId)
     .update({
-      updatedAt,
       players,
     })
     .then(() => getGameByIdService(gameId));
 
   if (newGame.data()?.players.every((player: GlobalTypes.Player) => player.isReady)) {
+    const startedAt = new Date().getTime();
+
     const newGameData = await database
       .collection('games')
       .doc(gameId)
       .update({
-        updatedAt,
         state: {
           gameStatus: GAME_STATUS.PLAYING,
           turn: newGame.data()?.players[Numbers.getRandom(0, newGame.data()?.players.length - 1)]
             .id,
         },
+        startedAt,
       })
       .then(() => getGameByIdService(gameId));
+
+    const room = await getRoomByIdService(game.data()?.roomId);
 
     await database
       .collection('rooms')
       .doc(game.data()?.roomId)
       .update({
-        updatedAt,
-        games: newGameData.data()?.games.map((item: { id: string }) => {
+        games: room.data()?.games.map((item: { id: string }) => {
           if (item.id === gameId) {
             return {
               ...item,
@@ -341,6 +348,10 @@ export const changePlayerReadyStatusService = async ({
 
           return item;
         }),
+        state: {
+          ...room.data()?.state,
+          isPlaying: true,
+        },
       });
 
     return {

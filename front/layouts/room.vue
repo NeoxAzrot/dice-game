@@ -40,7 +40,10 @@ watch(
   () => room.value?.games,
   async () => {
     if (room.value?.games.length) {
-      gameListener.value = await useFirebase().listen('games', room.value.games.filter(e => e.gameStatus !== 'finished')[0]['id'], 'game')
+      gameListener.value = await useFirebase().listen('games',
+        room.value.games.reduce((acc, val) => {
+          return acc.createdAt > val.createdAt ? acc : val;
+        })['id'], 'game')
     }
   }
 )

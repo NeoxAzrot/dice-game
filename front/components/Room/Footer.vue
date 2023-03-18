@@ -6,41 +6,86 @@
         <RoomCopyLink />
       </div>
       <div>
-        <label>Players</label>
+        <label>Players 1 / {{ MAX_PLAYERS }}</label>
         <div class="room__footer__players">
-          <p :class="currentUserID === p.id && 'current'" v-for="p in room.players">{{ p.username }}</p>
+          <p :class="currentUserID === p.id && 'current'" v-for="p in room.players">
+            {{ p.username }}
+            {{
+              game &&
+              (game.players.find((e: any) => e.id === p.id).isReady ? '🏁' : '')
+            }}
+          </p>
         </div>
       </div>
       <div class="room__footer__actions">
         <button v-if="!game" @click="handleCreateGame" class="btn--primary createRoom"
-          :class="(isInGame && isEnoughPlayer) && 'disabled'">Start a new game</button>
-        <button v-else-if="game.state.gameStatus === 'waiting'" @click="handleReadyGame"
-          class="btn--primary createRoom">Ready {{
-            game.players.filter((e: any) => e.isReady).length }}/2</button>
+          :class="!isEnoughPlayer && 'disabled'">
+          Start a new game
+        </button>
+        <button v-else-if="game.state.gameStatus === 'waiting'" @click="handleReadyGame" class="btn--primary createRoom">
+          Ready {{ game.players.filter((e: any) => e.isReady).length }}/{{
+            game.players.length
+          }}
+        </button>
+        <p v-else-if="game.state.gameStatus === 'playing'" class="timer">
+          {{ timer }}
+        </p>
+        <p v-else-if="game.state.gameStatus === 'finished'" class="timer">
+          The game lasted {{ timerEnd }}
+        </p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const { room } = useRoom()
-const { game } = useGame()
+import { MIN_PLAYERS } from '~/utils/constants';
 
-const currentUserID = useCookie('dice-game-user-id')
+const timer = ref();
 
-const isInGame = computed(() => room.value?.games ? room.value?.games.length > 0 : false)
-const isEnoughPlayer = computed(() => room.value ? room.value.players.length >= 2 : false)
+const timerEnd = computed(() => {
+  const time = game.value.finishedAt - game.value.startedAt
+  const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((time % (1000 * 60)) / 1000);
+
+  return minutes + ' minutes and ' + seconds + ' seconds';
+})
+
+const updateTimer = () => {
+  if (game.value.state.gameStatus !== 'playing') return;
+
+  const actualTime = new Date().getTime()
+  const time = actualTime - game.value.startedAt
+  const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((time % (1000 * 60)) / 1000);
+
+  timer.value = minutes + ':' + seconds;
+
+  window.requestAnimationFrame(updateTimer);
+}
+
+onMounted(() => {
+  updateTimer();
+})
+
+const { room } = useRoom();
+const { game } = useGame();
+
+const currentUserID = useCookie('dice-game-user-id');
+
+const isEnoughPlayer = computed(() =>
+  room.value ? room.value.players.length >= MIN_PLAYERS : false
+);
 
 const handleCreateGame = async () => {
-  if (!isEnoughPlayer) return;
+  if (!isEnoughPlayer.value) return;
 
-  useGame().create()
-}
+  useGame().create();
+};
 
 const handleReadyGame = async () => {
-  useGame().ready()
-}
-
+  useGame().ready();
+};
 </script>
 
 <style lang="scss">
@@ -68,7 +113,7 @@ const handleReadyGame = async () => {
       background: #1e1e1e;
 
       &::after {
-        content: "";
+        content: '';
         position: absolute;
         bottom: 100%;
         left: 0;
@@ -99,15 +144,23 @@ const handleReadyGame = async () => {
       margin: 0 0 0 auto;
       display: flex;
       gap: 1rem;
+      display: flex;
+      align-items: center;
 
       .createRoom {
         &.disabled {
           pointer-events: none;
           opacity: 0.5;
         }
-
       }
     }
   }
+}
+
+.timer {
+  color: var(--color--third);
+  margin: 0 0 0 auto;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 </style>

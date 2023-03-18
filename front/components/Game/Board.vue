@@ -1,54 +1,115 @@
 <template>
   <div class="board_container">
-    <GameDiceSet @stockDice="stockDice" :dices="useGame().game.value.dices" />
+    <h2>{{ game.roundScore }}</h2>
+    <GameDiceSet
+      @stockDice="(e) => updateDices(e, 'stock')"
+      :dices="game.dices"
+    />
     <div class="board_container--control">
-      <button :disabled="disabledLaunch" class="btn" @click="launchdices">Lancer les dés</button>
-      <button :disabled="true" class="btn" @click="">Garder le score</button>
+      <button
+        :disabled="disabledLaunch"
+        class="btn--secondary"
+        :class="{ disabled: disabledLaunch }"
+        @click="launchDices"
+      >
+        Lancer les dés
+      </button>
+      <button
+        :disabled="disabledKeep"
+        class="btn--secondary"
+        :class="{ disabled: disabledKeep }"
+        @click="keepDices"
+      >
+        Garder le score
+      </button>
     </div>
     <div>
-      <GameDiceBank :dices="diceNumber.bank" />
+      <GameDiceBank
+        @removeDice="(e) => updateDices(e, 'remove')"
+        :dices="game.bank"
+      />
     </div>
     <div class="board_container--infos" v-if="message">
-      <p class="board_container--infos-error">
-        <WarningIcon />{{ message }}
-      </p>
+      <p class="board_container--infos-error"><WarningIcon />{{ message }}</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Combinaison, ListDice } from '~~/interfaces/game.interfaces';
 import WarningIcon from '~/assets/icons/warning.svg';
 
 const message: Ref<string | undefined> = ref();
 
-const currentCombinations: Ref<Combinaison[] | undefined> = ref(undefined);
+const { userID } = useStore();
+const { game, play } = useGame();
+
+let oldRoundScore = 0;
 
 const disabledLaunch = computed(() => {
-  return diceNumber.value.board.length < 1;
-})
+  if(game.value.state.turn !== userID.value) return true;
+  if(game.value.dices.length !== 0 && game.value.bank.filter((e: any) => !e.isLocked).length === 0) return true;
+  /* const newBank = game.value.bank.filter((e: any) => !e.isLocked);
+  for (let i = 1; i <= 6; i++) {
+    const newDices = newBank.filter((dice: any) => dice === i).map((e: any) => e.value);
+    const score = getCombinationScore(newDices, game.value.combinations);
 
-const diceNumber: Ref<ListDice> = ref({
-  board: [{ value: 0, isLocked: true }, { value: 1, isLocked: true }, { value: 1, isLocked: true }, { value: 1, isLocked: true }, { value: 1, isLocked: true }, { value: 1, isLocked: true }], bank: []
+    console.log(i, newDices, score);
+
+    if(score === 0 && game.value.bank.length > 0) return true;
+  } */
+  return false;
 });
 
-const launchdices = async () => {
-  const res = await useGame().play('roll', diceNumber.value.bank.map(e => e.value)).catch(err => message.value = err.response._data.message);
+const disabledKeep = computed(() => {
+  return (
+    game.value.state.turn !== userID.value || game.value.dices.length === 0
+  );
+});
 
-  currentCombinations.value = res.data.combinations;
-  diceNumber.value.board = res.data.dices;
-}
+const launchDices = async () => {
+  oldRoundScore = game.value.roundScore;
 
-const stockDice = (number: number) => {
-  diceNumber.value.bank.push(...diceNumber.value.board.slice(number, number + 1));
-  diceNumber.value.board.splice(number, 1);
+  play(
+    'roll',
+    game.value.bank.map((e: any) => e.value)
+  ).catch((err) => (message.value = err.response));
+};
 
-  const score = getScore(diceNumber.value.bank.map(e => e.value), currentCombinations.value!);
+const keepDices = async () => {
+  oldRoundScore = 0;
 
-  console.log(score);
+  //calculer la meilleur combinaison de des et update roundScore
 
-  useFirebase().update('games', useGame().game.value.id, { players: [...useGame().game.value.players.map((e: { id: string | null; displayScore: number; }) => { return { ...e, displayScore: e.id === useStore().userID.value ? e.displayScore + score : e.displayScore } })] })
-}
+  play(
+    'hold'
+  ).catch((err) => (message.value = err.response));
+};
+
+const updateDices = (number: number, type: 'stock' | 'remove') => {
+  let newBoard, newBank;
+
+  switch (type) {
+    case 'stock':
+      newBoard = game.value.dices.filter((e: any, i: number) => i !== number);
+      newBank = game.value.bank.concat(game.value.dices[number]);
+      break;
+    case 'remove':
+      newBank = game.value.bank.filter((e: any, i: number) => i !== number);
+      newBoard = game.value.dices.concat(game.value.bank[number]);
+      break;
+  }
+
+  const score = getBankScore(
+    newBank.filter((e: any) => !e.isLocked).map((e: any) => e.value),
+    game.value.combinations
+  );
+
+  useFirebase().update('games', game.value.id, {
+    roundScore: oldRoundScore + score,
+    dices: newBoard,
+    bank: newBank,
+  });
+};
 </script>
 
 <style lang="scss">
@@ -80,7 +141,7 @@ const stockDice = (number: number) => {
     display: flex;
     gap: 2rem;
 
-    >.btn {
+    > .btn {
       white-space: nowrap;
     }
   }

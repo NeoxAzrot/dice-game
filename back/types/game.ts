@@ -1,8 +1,9 @@
-import { GlobalTypes } from './global';
-
 export namespace GameTypes {
-  export interface Firebase extends GlobalTypes.DefaultData {
-    example: string;
+  export namespace Create {
+    export interface Props {
+      roomId: string;
+      userId: string;
+    }
   }
 
   export namespace ChangePlayerReadyStatus {

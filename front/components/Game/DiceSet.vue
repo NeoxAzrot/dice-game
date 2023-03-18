@@ -8,12 +8,14 @@
 import { Dice } from '~~/interfaces/game.interfaces';
 
 const { dices } = defineProps(['dices']);
+const { game } = useGame();
+const { userID } = useStore();
 
 const emits = defineEmits(['stockDice']);
 
 const stockDice = (dice: Dice, index: number) => {
-  if (dice.isLocked) return;
-
+  if (dice.isLocked || game.value.state.turn !== userID.value) return;
+  
   emits('stockDice', index);
 }
 </script>
@@ -22,7 +24,7 @@ const stockDice = (dice: Dice, index: number) => {
 .set_container {
   display: flex;
   padding: 30px 50px;
-  min-width: clamp(300px, 60vw, 700px);
+  // min-width: clamp(300px, 60vw, 700px);
   justify-content: center;
 }
 </style>

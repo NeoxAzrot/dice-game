@@ -1,6 +1,0 @@
-# Usage
-
-**useStore()** ->
-  - roomID
-  - username
-
