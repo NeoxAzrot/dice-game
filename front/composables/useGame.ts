@@ -36,7 +36,7 @@ const useGame = () => {
   }
 
   const play: (type: 'roll' | 'hold', diceKept?: Array<number>) => Promise<PlayGame> = (type, diceKept = []) => {
-    return $fetch(endpoint + `/games/${game.value?.id}/play`, {
+    return $fetch(endpoint + `/games/${game.value.id}/play`, {
       method: 'POST',
       body: JSON.stringify({
         "userId": useStore().userID.value,
