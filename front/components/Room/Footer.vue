@@ -8,10 +8,7 @@
       <div>
         <label>Players</label>
         <div class="room__footer__players">
-          <p
-            :class="currentUserID === p.id && 'current'"
-            v-for="p in room.players"
-          >
+          <p :class="currentUserID === p.id && 'current'" v-for="p in room.players">
             {{ p.username }}
             {{
               game &&
@@ -21,23 +18,18 @@
         </div>
       </div>
       <div class="room__footer__actions">
-        <button
-          v-if="!game"
-          @click="handleCreateGame"
-          class="btn--primary createRoom"
-          :class="!isEnoughPlayer && 'disabled'"
-        >
+        <button v-if="!game" @click="handleCreateGame" class="btn--primary createRoom"
+          :class="!isEnoughPlayer && 'disabled'">
           Start a new game
         </button>
-        <button
-          v-else-if="game.state.gameStatus === 'waiting'"
-          @click="handleReadyGame"
-          class="btn--primary createRoom"
-        >
+        <button v-else-if="game.state.gameStatus === 'waiting'" @click="handleReadyGame" class="btn--primary createRoom">
           Ready {{ game.players.filter((e: any) => e.isReady).length }}/{{
             game.players.length
           }}
         </button>
+        <p v-else-if="game.state.gameStatus === 'playing'" class="timer">
+          The game is playing since : {{ game.startedAt }}
+        </p>
       </div>
     </div>
   </div>
@@ -100,7 +92,7 @@ const handleReadyGame = async () => {
         height: 2px;
       }
 
-      > div {
+      >div {
         label {
           font-size: 1.2rem;
           font-weight: 600;
@@ -131,5 +123,12 @@ const handleReadyGame = async () => {
       }
     }
   }
+}
+
+.timer {
+  color: var(--color--third);
+  margin: 0 0 0 auto;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 </style>
