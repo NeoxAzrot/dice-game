@@ -63,16 +63,16 @@ const updateDices = (number: number, type: 'stock' | 'remove') => {
   switch (type) {
     case 'stock':
       newBoard = game.value.dices.filter((e: any, i: number) => i !== number);
-      newBank = game.value.bank.concat(game.value.dices.filter((e: any) => !e.isLocked)[number]);
+      newBank = game.value.bank.concat(game.value.dices[number]);
       break;
     case 'remove':
       newBank = game.value.bank.filter((e: any, i: number) => i !== number);
-      newBoard = game.value.dices.concat(game.value.bank.filter((e: any) => !e.isLocked)[number]);
+      newBoard = game.value.dices.concat(game.value.bank[number]);
       break;
   }
 
   const score = getScore(
-    newBank.map((e: any) => e.value),
+    newBank.filter((e: any) => !e.isLocked).map((e: any) => e.value),
     game.value.combinations
   );
 
