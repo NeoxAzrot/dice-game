@@ -1,16 +1,17 @@
 <template>
   <div class="layout home">
-    <div>
-      <div class="layout__container">
-        <div class="home__left">
-          <RoomList @selected="id => selectedRoom = id" />
-        </div>
-        <div class="home__right">
-          <h1>Enter the game</h1>
-          <RoomManager :selected="selectedRoom" />
-        </div>
+    <div class="layout__container">
+      <div class="home__left">
+        <RoomList @selected="id => selectedRoom = id" />
+      </div>
+      <div class="home__right">
+        <h1>Enter the game</h1>
+        <RoomManager :selected="selectedRoom" />
       </div>
     </div>
+    <footer class="home__footer">
+      <NuxtLink class="home__rankinglink" to="/ranking" clas>Ranking</NuxtLink>
+    </footer>
   </div>
 </template>
 
@@ -45,6 +46,25 @@ const selectedRoom = ref()
     background-position: 0 0%, 100% 100%;
     border-bottom: 2px solid var(--color--tr);
     background-repeat: no-repeat;
+  }
+
+  &__footer {
+    width: 100%;
+    max-width: var(--container--max-width--small);
+    margin: 0 0 0 0;
+    position: fixed;
+    bottom: 0;
+    padding: 2rem 0;
+    display: flex;
+    justify-content: center;
+
+    a {
+      margin: 2rem auto;
+      font-size: 1.4rem;
+      text-decoration: none;
+      color: var(--color--third);
+      opacity: 0.6;
+    }
   }
 }
 
