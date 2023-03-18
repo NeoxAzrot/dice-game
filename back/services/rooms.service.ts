@@ -99,9 +99,28 @@ export const joinRoomService = async ({ roomId, user }: RoomTypes.Join.Props) =>
 };
 
 export const getRoomsService = async () => {
-  const rooms = await database.collection('rooms').where('settings.isPrivate', '==', false).get();
+  const rooms = await database
+    .collection('rooms')
+    .where('settings.isPrivate', '==', false)
+    .where('state.isPlaying', '==', false)
+    .get();
 
-  return rooms;
+  const sortedRooms = rooms.docs.sort((a, b) => {
+    const aPlayers = a.data().players.length;
+    const bPlayers = b.data().players.length;
+
+    if (aPlayers < bPlayers) {
+      return 1;
+    }
+
+    if (aPlayers > bPlayers) {
+      return -1;
+    }
+
+    return 0;
+  });
+
+  return sortedRooms;
 };
 
 export const getRoomByIdService = async (id: string) => {

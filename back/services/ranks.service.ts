@@ -28,5 +28,11 @@ export const getRanksService = async () => {
     };
   });
 
-  return ranks;
+  const sortedRanks = ranks.sort(
+    (a, b) => b.winRate - a.winRate || b.wins - a.wins || a.username - b.username,
+  );
+
+  console.log(sortedRanks);
+
+  return sortedRanks;
 };

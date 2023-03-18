@@ -150,7 +150,6 @@ export const playRoundService = async ({
           ...game.data()?.state,
         },
         dices: newDices,
-        bank: [...dicesKept],
         combinations,
       })
       .then(() => getGameByIdService(gameId));
