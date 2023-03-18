@@ -7,7 +7,7 @@
       </div>
       <h2 class="card__score">{{ player.displayScore }}</h2>
     </div>
-    <PlayerEmojis />
+    <PlayerEmojis :player="player" />
     <p class="card__turn" v-if="player.id === game.state.turn">Playing...</p>
   </div>
 </template>
