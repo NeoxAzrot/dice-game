@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 type Game = {
   gameStatus: string;
   id: string;
+  createdAt: string;
 };
 
 type Room = {

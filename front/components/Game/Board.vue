@@ -48,6 +48,15 @@ let oldRoundScore = 0;
 const disabledLaunch = computed(() => {
   if(game.value.state.turn !== userID.value) return true;
   if(game.value.dices.length !== 0 && game.value.bank.filter((e: any) => !e.isLocked).length === 0) return true;
+  /* const newBank = game.value.bank.filter((e: any) => !e.isLocked);
+  for (let i = 1; i <= 6; i++) {
+    const newDices = newBank.filter((dice: any) => dice === i).map((e: any) => e.value);
+    const score = getCombinationScore(newDices, game.value.combinations);
+
+    console.log(i, newDices, score);
+
+    if(score === 0 && game.value.bank.length > 0) return true;
+  } */
   return false;
 });
 
@@ -90,7 +99,7 @@ const updateDices = (number: number, type: 'stock' | 'remove') => {
       break;
   }
 
-  const score = getScore(
+  const score = getBankScore(
     newBank.filter((e: any) => !e.isLocked).map((e: any) => e.value),
     game.value.combinations
   );
