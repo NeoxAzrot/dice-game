@@ -21,10 +21,11 @@ import WarningIcon from '~/assets/icons/warning.svg';
 
 const message: Ref<string | undefined> = ref();
 
+const userID = useCookie('dice-game-user-id')
 const { game } = useGame();
   
 const disabledLaunch = computed(() => {
-  return game.value.dices.length < 1;
+  return game.value.state.turn !== userID.value;
 })
 
 const launchdices = async () => {

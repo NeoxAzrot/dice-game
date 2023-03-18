@@ -24,7 +24,7 @@ const useGame = () => {
   const create: () => Promise<JoinOrCreateGame> = () => {
     return $fetch(endpoint + '/games', {
       method: 'POST',
-      body: JSON.stringify({ roomId: useRoute().params.room })
+      body: JSON.stringify({ roomId: useRoute().params.room, userId: useStore().userID.value })
     })
   }
 

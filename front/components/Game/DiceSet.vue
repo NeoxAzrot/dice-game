@@ -8,12 +8,14 @@
 import { Dice } from '~~/interfaces/game.interfaces';
 
 const { dices } = defineProps(['dices']);
+const { game } = useGame();
+const userID = useCookie('dice-game-user-id')
 
 const emits = defineEmits(['stockDice']);
 
 const stockDice = (dice: Dice, index: number) => {
-  if (dice.isLocked) return;
-
+  if (dice.isLocked || game.value.state.turn !== userID) return;
+  
   emits('stockDice', index);
 }
 </script>
