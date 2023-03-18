@@ -21,11 +21,11 @@ import WarningIcon from '~/assets/icons/warning.svg';
 
 const message: Ref<string | undefined> = ref();
 
-const disabledLaunch = computed(() => {
-  return game.value.board.length < 1;
-})
-
 const { game } = useGame();
+  
+const disabledLaunch = computed(() => {
+  return game.value.dices.length < 1;
+})
 
 const launchdices = async () => {
   useGame().play('roll', game.value.bank.map((e: any) => e.value))
@@ -33,8 +33,8 @@ const launchdices = async () => {
 }
 
 const stockDice = (number: number) => {
-  const newBoard = game.value.board.filter((e: any, i: number) => i !== number);
-  const newBank = game.value.bank.concat(game.value.board[number]);
+  const newBoard = game.value.dices.filter((e: any, i: number) => i !== number);
+  const newBank = game.value.bank.concat(game.value.dices[number]);
 
   const score = getScore(game.value.bank.map((e: any) => e.value), game.value.combinations!);
   console.log(score);
