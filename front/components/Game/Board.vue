@@ -67,9 +67,10 @@ const launchDices = async () => {
 const keepDices = async () => {
   oldRoundScore = 0;
 
+  //calculer la meilleur combinaison de des et update roundScore
+
   play(
-    'hold',
-    game.value.bank.map((e: any) => e.value)
+    'hold'
   ).catch((err) => (message.value = err.response));
 };
 

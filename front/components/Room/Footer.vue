@@ -8,7 +8,7 @@
       <div>
         <label>Players</label>
         <div class="room__footer__players">
-          <p :class="currentUserID === p.id && 'current'" v-for="p in room.players">{{ p.username }}</p>
+          <p :class="currentUserID === p.id && 'current'" v-for="p in room.players">{{ p.username }} {{ game && (game.players.find((e: any ) => e.id === p.id).isReady ? '🏴' : '') }}</p>
         </div>
       </div>
       <div class="room__footer__actions">
