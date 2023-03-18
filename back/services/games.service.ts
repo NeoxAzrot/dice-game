@@ -17,6 +17,7 @@ import { database } from '../firebase';
 import { getRoomByIdService } from './rooms.service';
 
 export const createGameService = async ({ roomId, userId }: GameTypes.Create.Props) => {
+  const createdAt = new Date().getTime();
   const room = await getRoomByIdService(roomId);
 
   const game = await database.collection('games').add({
@@ -48,6 +49,7 @@ export const createGameService = async ({ roomId, userId }: GameTypes.Create.Pro
         {
           id: game.id,
           gameStatus: GAME_STATUS.WAITING,
+          createdAt,
         },
       ],
     });
@@ -67,7 +69,7 @@ export const createGameService = async ({ roomId, userId }: GameTypes.Create.Pro
       .doc(user.id)
       .update({
         games: [
-          ...room.data()?.games,
+          ...user.data()?.games,
           {
             id: game.id,
             winner: null,
@@ -167,23 +169,6 @@ export const playRoundService = async ({
       data: newGame.data(),
     };
   } else if (move === 'hold') {
-    // if (dicesKept.length === 0) {
-    //   return {
-    //     success: false,
-    //     message: 'Dices cannot be empty when holding',
-    //   };
-    // }
-
-    // const isDiceInvalid = dicesKept.some((dice: number) => {
-    //   return dice < MIN_DICE_VALUE || dice > MAX_DICE_VALUE;
-    // });
-
-    // if (isDiceInvalid) {
-    //   return {
-    //     success: false,
-    //     message: 'Invalid dice value',
-    //   };
-    // }
     const roundScore = game.data()?.roundScore;
 
     if (roundScore === 0) {
