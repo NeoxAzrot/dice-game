@@ -9,6 +9,7 @@ type Room = {
   players: {
     id: string;
     username: string;
+    isReady: boolean;
   }[];
   games: Game[];
 };
