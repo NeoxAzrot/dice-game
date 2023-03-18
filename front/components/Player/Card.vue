@@ -1,11 +1,11 @@
 <template>
   <div class="card">
-    <div class="card_container">
-      <div class="card_container--infos">
-        <div :style="{ width: '30px', height: '30px', background: colorName.color, borderRadius: '100%' }"></div>
-        <h2>{{ player.username }}</h2>
+    <div class="card__container">
+      <div class="card__container--infos">
+        <h2 class="card__username">{{ player.username }}</h2>
+        <div class="card__color" :style="{ background: colorName.color }"></div>
       </div>
-      <h2>score: {{ player.displayScore }}</h2>
+      <h2 class="card__score">{{ player.displayScore }}</h2>
     </div>
     <PlayerEmojis />
   </div>
@@ -22,26 +22,41 @@ const colorName: Ref<{ color: string, isLight: boolean }> = ref(uniqolor(player.
 <style lang="scss">
 .card {
   display: flex;
-  gap: 10px;
-  align-items: center;
-  padding: 10px;
+  justify-content: space-between;
+  gap: 5rem;
+  padding: 1rem 1rem 1rem 0;
   border-radius: var(--radius--main);
-  box-shadow: var(--box-shadow);
 
-  &_container {
+  &__container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 0.5rem;
 
     &--infos {
       display: flex;
+      gap: 1rem;
       align-items: center;
-
-      h2 {
-        font-size: 2rem;
-        margin-left: 10px;
-      }
     }
+  }
+
+  &__color {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+  }
+
+  h2 {
+  
+  }
+
+  &__username {
+    font-size: 1.6rem;
+    font-weight: 400;
+  }
+
+  &__score {
+    font-size: 1.4rem;
+    opacity: 0.7;
   }
 }
 </style>

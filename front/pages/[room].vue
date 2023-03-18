@@ -7,7 +7,6 @@
 
 <script setup lang="ts">
 const { game } = useGame();
-const { room } = useRoom();
 
 definePageMeta({
   layout: 'room',
