@@ -1,33 +1,33 @@
 <template>
   <div class="rooms-list">
-    <h2>Available rooms</h2>
+    <h2>Public rooms</h2>
     <ul class="rooms-list__container">
       <li @click="emits('selected', room.id)" v-for="room in rooms">
         <p>{{ room.id }}</p>
-        <p>{{ room.players.length }}/2</p>
+        <p>{{ room.players.length }} / {{ MAX_PLAYERS }}</p>
       </li>
     </ul>
   </div>
 </template>
 
 <script setup lang="ts">
-const rooms = ref()
-const REFRESH_INTERVAL = 5000
+const rooms = ref();
+const REFRESH_INTERVAL = 5000;
 
-const emits = defineEmits(['selected'])
+const emits = defineEmits(['selected']);
 
 const fetchRooms = async () => {
-  const { data } = await useRoom().listAll()
-  rooms.value = data.rooms
-}
+  const { data } = await useRoom().listAll();
+  rooms.value = data.rooms;
+};
 
-fetchRooms()
+fetchRooms();
 
 onMounted(() => {
   setInterval(() => {
-    fetchRooms()
-  }, REFRESH_INTERVAL)
-})
+    fetchRooms();
+  }, REFRESH_INTERVAL);
+});
 </script>
 
 <style lang="scss">
