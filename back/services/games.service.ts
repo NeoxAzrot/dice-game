@@ -215,12 +215,14 @@ export const playRoundService = async ({
       .then(() => getGameByIdService(gameId));
 
     if (isWinner) {
+      const room = await getRoomByIdService(game.data()?.roomId);
+
       await database
         .collection('rooms')
         .doc(newGame.data()?.roomId)
         .update({
           updatedAt,
-          games: newGame.data()?.games.map((item: { id: string }) => {
+          games: room.data()?.games.map((item: { id: string }) => {
             if (item.id === gameId) {
               return {
                 ...item,
@@ -326,12 +328,14 @@ export const changePlayerReadyStatusService = async ({
       })
       .then(() => getGameByIdService(gameId));
 
+    const room = await getRoomByIdService(game.data()?.roomId);
+
     await database
       .collection('rooms')
       .doc(game.data()?.roomId)
       .update({
         updatedAt,
-        games: newGameData.data()?.games.map((item: { id: string }) => {
+        games: room.data()?.games.map((item: { id: string }) => {
           if (item.id === gameId) {
             return {
               ...item,
