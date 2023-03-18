@@ -14,7 +14,7 @@ export default defineNuxtConfig({
   css: [
     "@/styles/main.scss"
   ],
-  modules: ['@pinia/nuxt', '@nuxtjs/google-fonts', 'nuxt-svgo'],
+  modules: ['@pinia/nuxt', '@nuxtjs/google-fonts', 'nuxt-svgo', '@nuxt/image-edge'],
   googleFonts: {
     families: {
       Poppins: true,
