@@ -1,5 +1,5 @@
 <template>
-  <div :class="['dice_container', dice.isLocked ? 'disabled' : '']">
+  <div :class="['dice_container', isLocked ? 'disabled' : '']">
     <span v-if="dice.value === 1" class="dice">
       <span class="dot grid-five"></span>
     </span>
@@ -38,6 +38,14 @@
 
 <script setup lang="ts">
 const { dice } = defineProps(['dice']);
+
+const { game } = useGame();
+const { userID } = useStore()
+
+const isLocked = computed(() => {
+  return game.value.state.turn === userID.value ? dice.value.isLocked : true;
+})
+
 </script>
 
 <style lang="scss">
