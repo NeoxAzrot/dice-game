@@ -8,7 +8,7 @@
       <button :disabled="true" class="btn" @click="">Garder le score</button>
     </div>
     <div>
-      <GameDiceBank :dices="game.bank" />
+      <GameDiceBank @removeDice="removeDice" :dices="game.bank" />
     </div>
     <div class="board_container--infos" v-if="message">
       <p class="board_container--infos-error"><WarningIcon />{{ message }}</p>
@@ -21,7 +21,7 @@ import WarningIcon from '~/assets/icons/warning.svg';
 
 const message: Ref<string | undefined> = ref();
 
-const userID = useCookie('dice-game-user-id');
+const { userID } = useStore()
 const { game } = useGame();
 
 const disabledLaunch = computed(() => {
@@ -42,25 +42,52 @@ const stockDice = (number: number) => {
   const newBank = game.value.bank.concat(game.value.dices[number]);
 
   const score = getScore(
-    game.value.bank.map((e: any) => e.value),
-    game.value.combinations!
+    newBank.map((e: any) => e.value),
+    game.value.combinations
   );
-  console.log(score);
-
-  useFirebase().update('games', useGame().game.value.id, {
+  
+  useFirebase().update('games', game.value.id, {
     players: [
-      ...useGame().game.value.players.map(
+      ...game.value.players.map(
         (e: { id: string | null; displayScore: number }) => {
           return {
             ...e,
             displayScore:
-              e.id === useStore().userID.value
-                ? e.displayScore + score
-                : e.displayScore,
+            e.id === userID.value
+            ? e.displayScore + score
+            : e.displayScore,
           };
         }
-      ),
-    ],
+        ),
+      ],
+    dices: newBoard,
+    bank: newBank,
+  });
+};
+
+const removeDice = (number: number) => {
+  const newBank = game.value.bank.filter((e: any, i: number) => i !== number);
+  const newBoard = game.value.dices.concat(game.value.bank[number]);
+
+  const score = getScore(
+    newBank.map((e: any) => e.value),
+    game.value.combinations
+  );
+  
+  useFirebase().update('games', game.value.id, {
+    players: [
+      ...game.value.players.map(
+        (e: { id: string | null; displayScore: number }) => {
+          return {
+            ...e,
+            displayScore:
+            e.id === userID.value
+            ? e.displayScore + score
+            : e.displayScore,
+          };
+        }
+        ),
+      ],
     dices: newBoard,
     bank: newBank,
   });

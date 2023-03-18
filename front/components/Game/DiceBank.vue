@@ -1,13 +1,23 @@
 <template>
   <div class="bank_container">
-    <GameDice @click="" v-for="dice in dices" :dice="dice" />
+    <GameDice v-for="dice, index in dices" @click="removeDice(dice, index)" :dice="dice" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { Dice } from '~~/interfaces/game.interfaces';
 const { dices } = defineProps(['dices']);
 
-defineEmits(['stockDice']);
+const { game } = useGame();
+const { userID } = useStore();
+
+const emits = defineEmits(['removeDice']);
+
+const removeDice = (dice: Dice, index: number) => {
+  if (dice.isLocked || game.value.state.turn !== userID.value) return;
+  
+  emits('removeDice', index);
+}
 </script>
 
 <style lang="scss">
