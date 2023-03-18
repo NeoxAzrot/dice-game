@@ -8,10 +8,7 @@
       <div>
         <label>Players 1 / {{ MAX_PLAYERS }}</label>
         <div class="room__footer__players">
-          <p
-            :class="currentUserID === p.id && 'current'"
-            v-for="p in room.players"
-          >
+          <p :class="currentUserID === p.id && 'current'" v-for="p in room.players">
             {{ p.username }}
             {{
               game &&
@@ -21,23 +18,21 @@
         </div>
       </div>
       <div class="room__footer__actions">
-        <button
-          v-if="!game"
-          @click="handleCreateGame"
-          class="btn--primary createRoom"
-          :class="!isEnoughPlayer && 'disabled'"
-        >
+        <button v-if="!game" @click="handleCreateGame" class="btn--primary createRoom"
+          :class="!isEnoughPlayer && 'disabled'">
           Start a new game
         </button>
-        <button
-          v-else-if="game.state.gameStatus === 'waiting'"
-          @click="handleReadyGame"
-          class="btn--primary createRoom"
-        >
+        <button v-else-if="game.state.gameStatus === 'waiting'" @click="handleReadyGame" class="btn--primary createRoom">
           Ready {{ game.players.filter((e: any) => e.isReady).length }}/{{
             game.players.length
           }}
         </button>
+        <p v-else-if="game.state.gameStatus === 'playing'" class="timer">
+          {{ timer }}
+        </p>
+        <p v-else-if="game.state.gameStatus === 'finished'" class="timer">
+          The game lasted {{ timerEnd }}
+        </p>
       </div>
     </div>
   </div>
@@ -45,6 +40,33 @@
 
 <script setup lang="ts">
 import { MIN_PLAYERS } from '~/utils/constants';
+
+const timer = ref();
+
+const timerEnd = computed(() => {
+  const time = game.value.finishedAt - game.value.startedAt
+  const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((time % (1000 * 60)) / 1000);
+
+  return minutes + ' minutes and ' + seconds + ' seconds';
+})
+
+const updateTimer = () => {
+  if (game.value.state.gameStatus !== 'playing') return;
+
+  const actualTime = new Date().getTime()
+  const time = actualTime - game.value.startedAt
+  const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((time % (1000 * 60)) / 1000);
+
+  timer.value = minutes + ':' + seconds;
+
+  window.requestAnimationFrame(updateTimer);
+}
+
+onMounted(() => {
+  updateTimer();
+})
 
 const { room } = useRoom();
 const { game } = useGame();
@@ -100,7 +122,7 @@ const handleReadyGame = async () => {
         height: 2px;
       }
 
-      > div {
+      >div {
         label {
           font-size: 1.2rem;
           font-weight: 600;
@@ -122,6 +144,8 @@ const handleReadyGame = async () => {
       margin: 0 0 0 auto;
       display: flex;
       gap: 1rem;
+      display: flex;
+      align-items: center;
 
       .createRoom {
         &.disabled {
@@ -131,5 +155,12 @@ const handleReadyGame = async () => {
       }
     }
   }
+}
+
+.timer {
+  color: var(--color--third);
+  margin: 0 0 0 auto;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 </style>
