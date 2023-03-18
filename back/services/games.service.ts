@@ -165,25 +165,37 @@ export const playRoundService = async ({
       data: newGame.data(),
     };
   } else if (move === 'hold') {
-    if (dicesKept.length === 0) {
+    // if (dicesKept.length === 0) {
+    //   return {
+    //     success: false,
+    //     message: 'Dices cannot be empty when holding',
+    //   };
+    // }
+
+    // const isDiceInvalid = dicesKept.some((dice: number) => {
+    //   return dice < MIN_DICE_VALUE || dice > MAX_DICE_VALUE;
+    // });
+
+    // if (isDiceInvalid) {
+    //   return {
+    //     success: false,
+    //     message: 'Invalid dice value',
+    //   };
+    // }
+    const roundScore = game.data()?.roundScore;
+
+    if (roundScore === 0) {
       return {
         success: false,
-        message: 'Dices cannot be empty when holding',
+        message: 'You cannot hold without any points',
       };
     }
 
-    const isDiceInvalid = dicesKept.some((dice: number) => {
-      return dice < MIN_DICE_VALUE || dice > MAX_DICE_VALUE;
-    });
+    const userScore = game.data()?.players.find((player: GlobalTypes.Player) => {
+      return player.id === userId;
+    })?.score;
 
-    if (isDiceInvalid) {
-      return {
-        success: false,
-        message: 'Invalid dice value',
-      };
-    }
-
-    const newScore = game.data()?.score + game.data()?.roundScore;
+    const newScore = userScore + roundScore;
     const isWinner = newScore >= MAX_SCORE;
 
     const nextPlayer = Players.getNext({

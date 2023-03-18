@@ -93,7 +93,7 @@ export const getRooms = async (req: Request, res: Response) => {
   const rooms = await getRoomsService();
 
   if (rooms.length === 0) {
-    return res.status(400).json({ success: false, message: 'No rooms found' });
+    return res.status(200).json({ success: false, message: 'No rooms found' });
   }
 
   return res.status(200).json({
