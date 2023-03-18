@@ -21,3 +21,4 @@
 - [ ] Add a ranking
 - [ ] Add music design on interaction
 - [ ] Add a timer of game duration in Footer
+- [ ] Add viewer count

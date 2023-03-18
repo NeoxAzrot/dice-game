@@ -38,6 +38,8 @@ export const createGameService = async ({ roomId, userId }: GameTypes.Create.Pro
     dices: [],
     bank: [],
     combinations: [],
+    startedAt: null,
+    finishedAt: null,
   });
 
   await database
@@ -50,7 +52,6 @@ export const createGameService = async ({ roomId, userId }: GameTypes.Create.Pro
           id: game.id,
           gameStatus: GAME_STATUS.WAITING,
           createdAt,
-          startedAt: null,
         },
       ],
     });
@@ -170,6 +171,7 @@ export const playRoundService = async ({
       data: newGame.data(),
     };
   } else if (move === 'hold') {
+    const finishedAt = new Date().getTime();
     const roundScore = game.data()?.roundScore;
 
     if (roundScore === 0) {
@@ -215,6 +217,7 @@ export const playRoundService = async ({
         dices: [],
         bank: [],
         combinations: [],
+        finishedAt: isWinner ? finishedAt : null,
       })
       .then(() => getGameByIdService(gameId));
 
@@ -325,6 +328,7 @@ export const changePlayerReadyStatusService = async ({
           turn: newGame.data()?.players[Numbers.getRandom(0, newGame.data()?.players.length - 1)]
             .id,
         },
+        startedAt,
       })
       .then(() => getGameByIdService(gameId));
 
@@ -347,7 +351,6 @@ export const changePlayerReadyStatusService = async ({
         state: {
           ...room.data()?.state,
           isPlaying: true,
-          startedAt,
         },
       });
 
