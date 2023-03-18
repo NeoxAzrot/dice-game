@@ -134,8 +134,8 @@ export const playRoundService = async ({
     const dices = await rollDicesService(MAX_DICE - dicesKept.length);
     const { dices: newDices, combinations } = Games.getCombinations(dices);
 
-    const hasCombinations = combinations.some((combination: { score: number }) => {
-      return combination.score > 0;
+    const canPlay = newDices.some((dice: { isLocked: boolean }) => {
+      return !dice.isLocked;
     });
 
     const newGame = await database
@@ -144,11 +144,11 @@ export const playRoundService = async ({
       .update({
         state: {
           ...game.data()?.state,
-          turn: hasCombinations
+          turn: canPlay
             ? userId
             : Players.getNext({ players: game.data()?.players, actualPlayerId: userId }).id,
         },
-        roundScore: hasCombinations ? game.data()?.roundScore : 0,
+        roundScore: canPlay ? game.data()?.roundScore : 0,
         dices: newDices,
         combinations,
         bank: game.data()?.bank.map((item: { isLocked: boolean }) => {
