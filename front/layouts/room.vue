@@ -39,7 +39,6 @@ onMounted(() => {
 watch(
   () => room.value?.games,
   async () => {
-    console.log('watch games in room');
     if (room.value?.games.length) {
       gameListener.value = await useFirebase().listen('games',
         room.value.games.reduce((acc, val) => {
