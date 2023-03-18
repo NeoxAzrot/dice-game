@@ -6,12 +6,9 @@ import { MAX_PLAYERS } from 'utils/constants';
 import { database } from '../firebase';
 
 export const createRoomService = async ({ user, isPrivate }: RoomTypes.Create.Props) => {
-  const createdAt = new Date().toISOString();
   const { id, username } = user;
 
   const room = await database.collection('rooms').add({
-    createdAt,
-    updatedAt: createdAt,
     players: [
       {
         id,
@@ -31,7 +28,6 @@ export const createRoomService = async ({ user, isPrivate }: RoomTypes.Create.Pr
 };
 
 export const joinRoomService = async ({ roomId, user }: RoomTypes.Join.Props) => {
-  const updatedAt = new Date().toISOString();
   const room = await database.collection('rooms').doc(roomId).get();
 
   if (room.exists) {
@@ -62,7 +58,6 @@ export const joinRoomService = async ({ roomId, user }: RoomTypes.Join.Props) =>
         .collection('rooms')
         .doc(roomId)
         .update({
-          updatedAt,
           players: [
             ...room.data()?.players,
             {
@@ -109,11 +104,11 @@ export const getRoomsService = async () => {
     const aPlayers = a.data().players.length;
     const bPlayers = b.data().players.length;
 
-    const aCreatedAt = new Date(a.data().createdAt).getTime();
-    const bCreatedAt = new Date(b.data().createdAt).getTime();
+    const aCreatedAt = a.createTime.seconds;
+    const bCreatedAt = b.createTime.seconds;
 
     if (aPlayers === bPlayers) {
-      return bCreatedAt - aCreatedAt;
+      return aCreatedAt - bCreatedAt;
     }
 
     return aPlayers - bPlayers;
@@ -142,7 +137,6 @@ export const removeUserFromRoomService = async ({
   roomId,
   userId,
 }: RoomTypes.RemoveUserFromRoom.Props) => {
-  const updatedAt = new Date().toISOString();
   const room = await getRoomByIdService(roomId);
 
   if (room.exists) {
@@ -151,7 +145,6 @@ export const removeUserFromRoomService = async ({
       .doc(roomId)
       .update({
         players: room.data()?.players.filter((player: GlobalTypes.Player) => player.id !== userId),
-        updatedAt,
       })
       .then(() => getRoomByIdService(roomId));
 

@@ -3,11 +3,7 @@ import { UserTypes } from 'types/user';
 import { database } from '../firebase';
 
 export const createUserService = async ({ username }: UserTypes.Create.Props) => {
-  const createdAt = new Date().toISOString();
-
   const user = await database.collection('users').add({
-    createdAt,
-    updatedAt: createdAt,
     username,
     games: [],
   });
