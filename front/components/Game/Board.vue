@@ -1,20 +1,36 @@
 <template>
   <div class="board_container">
     <h2>{{ game.roundScore }}</h2>
-    <GameDiceSet @stockDice="(e) => updateDices(e, 'stock')" :dices="game.dices" />
+    <GameDiceSet
+      @stockDice="(e) => updateDices(e, 'stock')"
+      :dices="game.dices"
+    />
     <div class="board_container--control">
-      <button :disabled="disabledLaunch" class="btn" @click="launchDices">
+      <button
+        :disabled="disabledLaunch"
+        class="btn--secondary"
+        :class="{ disabled: disabledLaunch }"
+        @click="launchDices"
+      >
         Lancer les dés
       </button>
-      <button :disabled="disabledKeep" class="btn" @click="keepDices">Garder le score</button>
+      <button
+        :disabled="disabledKeep"
+        class="btn--secondary"
+        :class="{ disabled: disabledKeep }"
+        @click="keepDices"
+      >
+        Garder le score
+      </button>
     </div>
     <div>
-      <GameDiceBank @removeDice="(e) => updateDices(e, 'remove')" :dices="game.bank" />
+      <GameDiceBank
+        @removeDice="(e) => updateDices(e, 'remove')"
+        :dices="game.bank"
+      />
     </div>
     <div class="board_container--infos" v-if="message">
-      <p class="board_container--infos-error">
-        <WarningIcon />{{ message }}
-      </p>
+      <p class="board_container--infos-error"><WarningIcon />{{ message }}</p>
     </div>
   </div>
 </template>
@@ -24,7 +40,7 @@ import WarningIcon from '~/assets/icons/warning.svg';
 
 const message: Ref<string | undefined> = ref();
 
-const { userID } = useStore()
+const { userID } = useStore();
 const { game, play } = useGame();
 
 let oldRoundScore = 0;
@@ -34,8 +50,10 @@ const disabledLaunch = computed(() => {
 });
 
 const disabledKeep = computed(() => {
-  return game.value.state.turn !== userID.value || game.value.dices.length === 0;
-})
+  return (
+    game.value.state.turn !== userID.value || game.value.dices.length === 0
+  );
+});
 
 const launchDices = async () => {
   oldRoundScore = game.value.roundScore;
@@ -43,8 +61,7 @@ const launchDices = async () => {
   play(
     'roll',
     game.value.bank.map((e: any) => e.value)
-  )
-    .catch((err) => (message.value = err.response));
+  ).catch((err) => (message.value = err.response));
 };
 
 const keepDices = async () => {
@@ -53,9 +70,8 @@ const keepDices = async () => {
   play(
     'hold',
     game.value.bank.map((e: any) => e.value)
-  )
-    .catch((err) => (message.value = err.response));
-}
+  ).catch((err) => (message.value = err.response));
+};
 
 const updateDices = (number: number, type: 'stock' | 'remove') => {
   let newBoard, newBank;
@@ -81,7 +97,7 @@ const updateDices = (number: number, type: 'stock' | 'remove') => {
     dices: newBoard,
     bank: newBank,
   });
-}
+};
 </script>
 
 <style lang="scss">
@@ -113,7 +129,7 @@ const updateDices = (number: number, type: 'stock' | 'remove') => {
     display: flex;
     gap: 2rem;
 
-    >.btn {
+    > .btn {
       white-space: nowrap;
     }
   }
