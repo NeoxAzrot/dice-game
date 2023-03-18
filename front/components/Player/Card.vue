@@ -5,7 +5,7 @@
         <h2 class="card__username">{{ player.username }}</h2>
         <div class="card__color" :style="{ background: colorName.color }"></div>
       </div>
-      <h2 class="card__score">{{ player.displayScore }}</h2>
+      <h2 class="card__score">{{ player.score }}</h2>
     </div>
     <PlayerEmojis />
     <p class="card__turn" v-if="player.id === game.state.turn">Playing...</p>

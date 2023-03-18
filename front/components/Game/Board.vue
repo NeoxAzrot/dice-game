@@ -1,17 +1,20 @@
 <template>
   <div class="board_container">
+    <h2>{{ game.roundScore }}</h2>
     <GameDiceSet @stockDice="(e) => updateDices(e, 'stock')" :dices="game.dices" />
     <div class="board_container--control">
       <button :disabled="disabledLaunch" class="btn" @click="launchDices">
         Lancer les dés
       </button>
-      <button :disabled="true" class="btn" @click="">Garder le score</button>
+      <button :disabled="disabledKeep" class="btn" @click="keepDices">Garder le score</button>
     </div>
     <div>
       <GameDiceBank @removeDice="(e) => updateDices(e, 'remove')" :dices="game.bank" />
     </div>
     <div class="board_container--infos" v-if="message">
-      <p class="board_container--infos-error"><WarningIcon />{{ message }}</p>
+      <p class="board_container--infos-error">
+        <WarningIcon />{{ message }}
+      </p>
     </div>
   </div>
 </template>
@@ -22,32 +25,49 @@ import WarningIcon from '~/assets/icons/warning.svg';
 const message: Ref<string | undefined> = ref();
 
 const { userID } = useStore()
-const { game } = useGame();
+const { game, play } = useGame();
+
+let oldRoundScore = 0;
 
 const disabledLaunch = computed(() => {
   return game.value.state.turn !== userID.value;
 });
 
+const disabledKeep = computed(() => {
+  return game.value.state.turn !== userID.value && game.value.dices.length > 0;
+})
+
 const launchDices = async () => {
-  useGame()
-    .play(
-      'roll',
-      game.value.bank.map((e: any) => e.value)
-    )
+  oldRoundScore = game.value.roundScore;
+
+  play(
+    'roll',
+    game.value.bank.map((e: any) => e.value)
+  )
     .catch((err) => (message.value = err.response));
 };
+
+const keepDices = async () => {
+  oldRoundScore = 0;
+
+  play(
+    'hold',
+    game.value.bank.map((e: any) => e.value)
+  )
+    .catch((err) => (message.value = err.response));
+}
 
 const updateDices = (number: number, type: 'stock' | 'remove') => {
   let newBoard, newBank;
 
-  switch(type) {
+  switch (type) {
     case 'stock':
       newBoard = game.value.dices.filter((e: any, i: number) => i !== number);
-      newBank = game.value.bank.concat(game.value.dices[number]);
+      newBank = game.value.bank.concat(game.value.dices.filter((e: any) => !e.isLocked)[number]);
       break;
     case 'remove':
       newBank = game.value.bank.filter((e: any, i: number) => i !== number);
-      newBoard = game.value.dices.concat(game.value.bank[number]);
+      newBoard = game.value.dices.concat(game.value.bank.filter((e: any) => !e.isLocked)[number]);
       break;
   }
 
@@ -55,21 +75,9 @@ const updateDices = (number: number, type: 'stock' | 'remove') => {
     newBank.map((e: any) => e.value),
     game.value.combinations
   );
-  
+
   useFirebase().update('games', game.value.id, {
-    players: [
-      ...game.value.players.map(
-        (e: { id: string | null; displayScore: number }) => {
-          return {
-            ...e,
-            displayScore:
-            e.id === userID.value
-            ? e.displayScore + score
-            : e.displayScore,
-          };
-        }
-        ),
-      ],
+    roundScore: oldRoundScore + score,
     dices: newBoard,
     bank: newBank,
   });
@@ -105,7 +113,7 @@ const updateDices = (number: number, type: 'stock' | 'remove') => {
     display: flex;
     gap: 2rem;
 
-    > .btn {
+    >.btn {
       white-space: nowrap;
     }
   }
