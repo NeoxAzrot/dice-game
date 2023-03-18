@@ -28,10 +28,11 @@ const { game } = useGame();
 
   &_container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     gap: 50px;
     padding: 2rem 0;
     flex-grow: 1;
+    position: relative;
 
     &--board {
       display: flex;
@@ -40,7 +41,18 @@ const { game } = useGame();
     }
 
     &--infos {
+      right: 0;
       max-width: 250px;
+    }
+
+    &--players,
+    &--infos {
+      position: absolute;
+      top: 2rem;
+    }
+
+    &--players {
+      left: 0;
     }
 
     > * > * {
