@@ -28,7 +28,10 @@
           }}
         </button>
         <p v-else-if="game.state.gameStatus === 'playing'" class="timer">
-          The game is playing since : {{ game.startedAt }}
+          {{ timer }}
+        </p>
+        <p v-else-if="game.state.gameStatus === 'finished'" class="timer">
+          The game lasted {{ timerEnd }}
         </p>
       </div>
     </div>
@@ -37,6 +40,33 @@
 
 <script setup lang="ts">
 import { MIN_PLAYERS } from '~/utils/constants';
+
+const timer = ref();
+
+const timerEnd = computed(() => {
+  const time = game.value.finishedAt - game.value.startedAt
+  const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((time % (1000 * 60)) / 1000);
+
+  return minutes + ' minutes and ' + seconds + ' seconds';
+})
+
+const updateTimer = () => {
+  if (game.value.state.gameStatus !== 'playing') return;
+
+  const actualTime = new Date().getTime()
+  const time = actualTime - game.value.startedAt
+  const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((time % (1000 * 60)) / 1000);
+
+  timer.value = minutes + ':' + seconds;
+
+  window.requestAnimationFrame(updateTimer);
+}
+
+onMounted(() => {
+  updateTimer();
+})
 
 const { room } = useRoom();
 const { game } = useGame();
@@ -114,6 +144,8 @@ const handleReadyGame = async () => {
       margin: 0 0 0 auto;
       display: flex;
       gap: 1rem;
+      display: flex;
+      align-items: center;
 
       .createRoom {
         &.disabled {

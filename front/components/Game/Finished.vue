@@ -13,8 +13,8 @@ const { game, create } = useGame();
 const { userID } = useStore();
 
 const titleFinished = computed(() => {
-  if(game.value.winner === userID.value) return 'You won';
-  return 'You loose';
+  if(game.value.winner === userID.value) return 'Victory';
+  return 'Defeat';
 })
 
 const handleCreateGame = async () => {
