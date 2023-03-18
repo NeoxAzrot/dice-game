@@ -2,7 +2,10 @@
   <div class="card">
     <div class="card__container" :class="player.id === game.state.turn && 'isTurn'">
       <div class="card__container--infos">
-        <h2 class="card__username">{{ player.username }}<strong v-if="player.id === userID"> (you)</strong></h2>
+        <h2 class="card__username">
+          {{ player.username }}
+          <strong v-if="player.id === userID"> (you)</strong>
+        </h2>
         <div class="card__color" :style="{ background: colorName.color }"></div>
       </div>
       <h2 class="card__score">{{ player.score }}</h2>
@@ -51,10 +54,6 @@ const colorName: Ref<{ color: string, isLight: boolean }> = ref(uniqolor(player.
     width: 1rem;
     height: 1rem;
     border-radius: 50%;
-  }
-
-  h2 {
-  
   }
 
   &__username {
