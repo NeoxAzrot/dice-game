@@ -5,6 +5,13 @@ export namespace GameTypes {
     example: string;
   }
 
+  export namespace Create {
+    export interface Props {
+      roomId: string;
+      userId: string;
+    }
+  }
+
   export namespace ChangePlayerReadyStatus {
     export interface Props {
       gameId: string;

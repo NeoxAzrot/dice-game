@@ -2,16 +2,16 @@
   <div class="board_container">
     <GameDiceSet @stockDice="stockDice" :dices="game.dices" />
     <div class="board_container--control">
-      <button :disabled="disabledLaunch" class="btn" @click="launchdices">Lancer les dés</button>
+      <button :disabled="disabledLaunch" class="btn" @click="launchdices">
+        Lancer les dés
+      </button>
       <button :disabled="true" class="btn" @click="">Garder le score</button>
     </div>
     <div>
       <GameDiceBank :dices="game.bank" />
     </div>
     <div class="board_container--infos" v-if="message">
-      <p class="board_container--infos-error">
-        <WarningIcon />{{ message }}
-      </p>
+      <p class="board_container--infos-error"><WarningIcon />{{ message }}</p>
     </div>
   </div>
 </template>
@@ -21,34 +21,50 @@ import WarningIcon from '~/assets/icons/warning.svg';
 
 const message: Ref<string | undefined> = ref();
 
+const userID = useCookie('dice-game-user-id');
 const { game } = useGame();
-  
+
 const disabledLaunch = computed(() => {
-  return game.value.dices.length < 1;
-})
+  return game.value.state.turn !== userID.value;
+});
 
 const launchdices = async () => {
-  useGame().play('roll', game.value.bank.map((e: any) => e.value))
-  .catch(err => message.value = err.response)
-}
+  useGame()
+    .play(
+      'roll',
+      game.value.bank.map((e: any) => e.value)
+    )
+    .catch((err) => (message.value = err.response));
+};
 
 const stockDice = (number: number) => {
   const newBoard = game.value.dices.filter((e: any, i: number) => i !== number);
   const newBank = game.value.bank.concat(game.value.dices[number]);
 
-  const score = getScore(game.value.bank.map((e: any) => e.value), game.value.combinations!);
+  const score = getScore(
+    game.value.bank.map((e: any) => e.value),
+    game.value.combinations!
+  );
   console.log(score);
-  
+
   useFirebase().update('games', useGame().game.value.id, {
-    players: [...useGame().game.value.players.map((e: { id: string | null; displayScore: number; }) => {
-      return { ...e,
-        displayScore: e.id === useStore().userID.value ? e.displayScore + score : e.displayScore
-      }
-    })],
+    players: [
+      ...useGame().game.value.players.map(
+        (e: { id: string | null; displayScore: number }) => {
+          return {
+            ...e,
+            displayScore:
+              e.id === useStore().userID.value
+                ? e.displayScore + score
+                : e.displayScore,
+          };
+        }
+      ),
+    ],
     dices: newBoard,
-    bank: newBank
-  })
-}
+    bank: newBank,
+  });
+};
 </script>
 
 <style lang="scss">
@@ -80,7 +96,7 @@ const stockDice = (number: number) => {
     display: flex;
     gap: 2rem;
 
-    >.btn {
+    > .btn {
       white-space: nowrap;
     }
   }

@@ -16,7 +16,7 @@ import { Players } from 'utils/players';
 import { database } from '../firebase';
 import { getRoomByIdService } from './rooms.service';
 
-export const createGameService = async (roomId: string) => {
+export const createGameService = async ({ roomId, userId }: GameTypes.Create.Props) => {
   const createdAt = new Date().toISOString();
 
   const room = await getRoomByIdService(roomId);
@@ -30,7 +30,7 @@ export const createGameService = async (roomId: string) => {
       username: player.username,
       score: 0,
       displayScore: 0,
-      isReady: false,
+      isReady: player.id === userId,
     })),
     winner: null,
     state: {
