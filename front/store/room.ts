@@ -1,24 +1,22 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 
 type Game = {
-  gameStatus: string,
-  id: string
-}
+  gameStatus: string;
+  id: string;
+};
 
 type Room = {
-  createdAt: string,
-  updatedAt: string,
   players: {
-    id: string,
-    username: string
-  }[],
-  games: Game[],
-}
+    id: string;
+    username: string;
+  }[];
+  games: Game[];
+};
 
 const useRoomStore = defineStore('room', () => {
-  const room: Ref<Room | undefined> = ref(undefined)
+  const room: Ref<Room | undefined> = ref(undefined);
 
-  return { room }
-})
+  return { room };
+});
 
-export default useRoomStore
+export default useRoomStore;

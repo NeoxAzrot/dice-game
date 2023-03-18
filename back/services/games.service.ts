@@ -17,13 +17,9 @@ import { database } from '../firebase';
 import { getRoomByIdService } from './rooms.service';
 
 export const createGameService = async ({ roomId, userId }: GameTypes.Create.Props) => {
-  const createdAt = new Date().toISOString();
-
   const room = await getRoomByIdService(roomId);
 
   const game = await database.collection('games').add({
-    createdAt,
-    updatedAt: createdAt,
     roomId,
     players: room.data()?.players.map((player: GlobalTypes.Player) => ({
       id: player.id,
@@ -47,7 +43,6 @@ export const createGameService = async ({ roomId, userId }: GameTypes.Create.Pro
     .collection('rooms')
     .doc(roomId)
     .update({
-      updatedAt: createdAt,
       games: [
         ...room.data()?.games,
         {
@@ -71,7 +66,6 @@ export const createGameService = async ({ roomId, userId }: GameTypes.Create.Pro
       .collection('users')
       .doc(user.id)
       .update({
-        updatedAt: createdAt,
         games: [
           ...room.data()?.games,
           {
@@ -113,8 +107,6 @@ export const playRoundService = async ({
   userId,
   dicesKept = [],
 }: GameTypes.PlayRound.Props) => {
-  const updatedAt = new Date().toISOString();
-
   const game = await getGameByIdService(gameId);
 
   if (!game.exists) {
@@ -142,14 +134,21 @@ export const playRoundService = async ({
     const dices = await rollDicesService(MAX_DICE - dicesKept.length);
     const { dices: newDices, combinations } = Games.getCombinations(dices);
 
+    const canPlay = newDices.some((dice: { isLocked: boolean }) => {
+      return !dice.isLocked;
+    });
+
     const newGame = await database
       .collection('games')
       .doc(gameId)
       .update({
-        updatedAt,
         state: {
           ...game.data()?.state,
+          turn: canPlay
+            ? userId
+            : Players.getNext({ players: game.data()?.players, actualPlayerId: userId }).id,
         },
+        roundScore: canPlay ? game.data()?.roundScore : 0,
         dices: newDices,
         combinations,
         bank: game.data()?.bank.map((item: { isLocked: boolean }) => {
@@ -184,9 +183,8 @@ export const playRoundService = async ({
       };
     }
 
-    // const newScore = game.data()?.score + game.data()?.roundScore;
-    // const isWinner = score >= MAX_SCORE;
-    const isWinner = false;
+    const newScore = game.data()?.score + game.data()?.roundScore;
+    const isWinner = newScore >= MAX_SCORE;
 
     const nextPlayer = Players.getNext({
       players: game.data()?.players,
@@ -197,12 +195,11 @@ export const playRoundService = async ({
       .collection('games')
       .doc(gameId)
       .update({
-        updatedAt,
         players: game.data()?.players.map((player: GlobalTypes.Player) => {
           if (player.id === userId) {
             return {
               ...player,
-              score: player.score + game.data()?.roundScore,
+              score: newScore,
             };
           }
 
@@ -228,7 +225,6 @@ export const playRoundService = async ({
         .collection('rooms')
         .doc(newGame.data()?.roomId)
         .update({
-          updatedAt,
           games: room.data()?.games.map((item: { id: string }) => {
             if (item.id === gameId) {
               return {
@@ -245,7 +241,6 @@ export const playRoundService = async ({
         .collection('users')
         .doc(userId)
         .update({
-          updatedAt,
           games: newGame.data()?.players.map((item: { id: string }) => {
             if (item.id === gameId) {
               return {
@@ -275,8 +270,6 @@ export const changePlayerReadyStatusService = async ({
   gameId,
   userId,
 }: GameTypes.ChangePlayerReadyStatus.Props) => {
-  const updatedAt = new Date().toISOString();
-
   const game = await getGameByIdService(gameId);
 
   if (!game.exists) {
@@ -316,7 +309,6 @@ export const changePlayerReadyStatusService = async ({
     .collection('games')
     .doc(gameId)
     .update({
-      updatedAt,
       players,
     })
     .then(() => getGameByIdService(gameId));
@@ -326,7 +318,6 @@ export const changePlayerReadyStatusService = async ({
       .collection('games')
       .doc(gameId)
       .update({
-        updatedAt,
         state: {
           gameStatus: GAME_STATUS.PLAYING,
           turn: newGame.data()?.players[Numbers.getRandom(0, newGame.data()?.players.length - 1)]
@@ -341,7 +332,6 @@ export const changePlayerReadyStatusService = async ({
       .collection('rooms')
       .doc(game.data()?.roomId)
       .update({
-        updatedAt,
         games: room.data()?.games.map((item: { id: string }) => {
           if (item.id === gameId) {
             return {

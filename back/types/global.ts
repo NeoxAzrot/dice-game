@@ -4,10 +4,6 @@ export namespace GlobalTypes {
     values: number[];
     score: number;
   }
-  export interface DefaultData {
-    createdAt: Date;
-    updatedAt?: Date;
-  }
 
   export interface Player {
     id: string;
