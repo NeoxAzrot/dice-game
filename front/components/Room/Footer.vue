@@ -34,7 +34,9 @@
           @click="handleReadyGame"
           class="btn--primary createRoom"
         >
-          Ready {{ game.players.filter((e: any) => e.isReady).length }}/2
+          Ready {{ game.players.filter((e: any) => e.isReady).length }}/{{
+            game.players.length
+          }}
         </button>
       </div>
     </div>
@@ -42,16 +44,15 @@
 </template>
 
 <script setup lang="ts">
+import { MIN_PLAYERS } from '~/utils/constants';
+
 const { room } = useRoom();
 const { game } = useGame();
 
 const currentUserID = useCookie('dice-game-user-id');
 
-const isInGame = computed(() =>
-  room.value?.games ? room.value?.games.length > 0 : false
-);
 const isEnoughPlayer = computed(() =>
-  room.value ? room.value.players.length >= 2 : false
+  room.value ? room.value.players.length >= MIN_PLAYERS : false
 );
 
 const handleCreateGame = async () => {

@@ -1,5 +1,5 @@
 export const MIN_PLAYERS = 2;
-export const MAX_PLAYERS = 2;
+export const MAX_PLAYERS = 4;
 
 export const MAX_SCORE = 10000;
 export const MAX_DICE = 6;
