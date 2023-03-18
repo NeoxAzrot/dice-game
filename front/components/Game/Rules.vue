@@ -7,7 +7,9 @@
           <h3>Possible combinations</h3>
         </div>
         <ul>
-          <li v-for="(rule, index) in rules">{{ index }}<span class="">{{ rule }}</span></li>
+          <li v-for="(rule, index) in rules">
+            {{ index }}<span class="">{{ rule }}</span>
+          </li>
         </ul>
       </div>
     </transition>
@@ -18,15 +20,20 @@
 const open: Ref<Boolean> = ref(true);
 
 const rules = {
-  '1': 100,
-  '5': 50,
-  'Triple 1': 1000,
-  'Triple 2': 200,
-  'Triple 3': 300,
-  'Triple 4': 400,
-  'Triple 5': 500,
-  'Triple 6': 600
-}
+  'Single of 1': 100,
+  'Single of 5': 50,
+  'Double of 1': 200,
+  'Double of 5': 100,
+  'Triple of 1': 1000,
+  'Triple of 2': 200,
+  'Triple of 3': 300,
+  'Triple of 4': 400,
+  'Triple of 5': 500,
+  'Triple of 6': 600,
+  'Quadruple of a kind': 1000,
+  'Quintuple of a kind': 2000,
+  'Sextuple of a kind': 3000,
+};
 </script>
 
 <style lang="scss">
@@ -65,4 +72,5 @@ const rules = {
       }
     }
   }
-}</style>
+}
+</style>
