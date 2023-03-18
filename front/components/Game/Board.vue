@@ -34,7 +34,7 @@ const disabledLaunch = computed(() => {
 });
 
 const disabledKeep = computed(() => {
-  return game.value.state.turn !== userID.value && game.value.dices.length > 0;
+  return game.value.state.turn !== userID.value || game.value.dices.length === 0;
 })
 
 const launchDices = async () => {
