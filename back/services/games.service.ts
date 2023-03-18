@@ -50,6 +50,7 @@ export const createGameService = async ({ roomId, userId }: GameTypes.Create.Pro
           id: game.id,
           gameStatus: GAME_STATUS.WAITING,
           createdAt,
+          startedAt: null,
         },
       ],
     });
@@ -313,6 +314,8 @@ export const changePlayerReadyStatusService = async ({
     .then(() => getGameByIdService(gameId));
 
   if (newGame.data()?.players.every((player: GlobalTypes.Player) => player.isReady)) {
+    const startedAt = new Date().getTime();
+
     const newGameData = await database
       .collection('games')
       .doc(gameId)
@@ -344,6 +347,7 @@ export const changePlayerReadyStatusService = async ({
         state: {
           ...room.data()?.state,
           isPlaying: true,
+          startedAt,
         },
       });
 
