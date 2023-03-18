@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-const listEmojis = ['😡', '🥸', '🫥', '💩', '🤮'];
+const listEmojis = ['😌', '😡', '🥸', '🫥', '💩', '🤮'];
 
 const { player } = defineProps(['player']);
 const { userID } = useStore();

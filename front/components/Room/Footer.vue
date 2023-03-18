@@ -8,39 +8,61 @@
       <div>
         <label>Players</label>
         <div class="room__footer__players">
-          <p :class="currentUserID === p.id && 'current'" v-for="p in room.players">{{ p.username }} {{ game && (game.players.find((e: any ) => e.id === p.id).isReady ? '🏴' : '') }}</p>
+          <p
+            :class="currentUserID === p.id && 'current'"
+            v-for="p in room.players"
+          >
+            {{ p.username }}
+            {{
+              game &&
+              (game.players.find((e: any) => e.id === p.id).isReady ? '🏁' : '')
+            }}
+          </p>
         </div>
       </div>
       <div class="room__footer__actions">
-        <button v-if="!game" @click="handleCreateGame" class="btn--primary createRoom"
-          :class="(!isEnoughPlayer) && 'disabled'">Start a new game</button>
-        <button v-else-if="game.state.gameStatus === 'waiting'" @click="handleReadyGame"
-          class="btn--primary createRoom">Ready {{
-            game.players.filter((e: any) => e.isReady).length }}/2</button>
+        <button
+          v-if="!game"
+          @click="handleCreateGame"
+          class="btn--primary createRoom"
+          :class="!isEnoughPlayer && 'disabled'"
+        >
+          Start a new game
+        </button>
+        <button
+          v-else-if="game.state.gameStatus === 'waiting'"
+          @click="handleReadyGame"
+          class="btn--primary createRoom"
+        >
+          Ready {{ game.players.filter((e: any) => e.isReady).length }}/2
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const { room } = useRoom()
-const { game } = useGame()
+const { room } = useRoom();
+const { game } = useGame();
 
-const currentUserID = useCookie('dice-game-user-id')
+const currentUserID = useCookie('dice-game-user-id');
 
-const isInGame = computed(() => room.value?.games ? room.value?.games.length > 0 : false)
-const isEnoughPlayer = computed(() => room.value ? room.value.players.length >= 2 : false)
+const isInGame = computed(() =>
+  room.value?.games ? room.value?.games.length > 0 : false
+);
+const isEnoughPlayer = computed(() =>
+  room.value ? room.value.players.length >= 2 : false
+);
 
 const handleCreateGame = async () => {
   if (!isEnoughPlayer.value) return;
 
-  useGame().create()
-}
+  useGame().create();
+};
 
 const handleReadyGame = async () => {
-  useGame().ready()
-}
-
+  useGame().ready();
+};
 </script>
 
 <style lang="scss">
@@ -68,7 +90,7 @@ const handleReadyGame = async () => {
       background: #1e1e1e;
 
       &::after {
-        content: "";
+        content: '';
         position: absolute;
         bottom: 100%;
         left: 0;
@@ -77,7 +99,7 @@ const handleReadyGame = async () => {
         height: 2px;
       }
 
-      >div {
+      > div {
         label {
           font-size: 1.2rem;
           font-weight: 600;
@@ -105,7 +127,6 @@ const handleReadyGame = async () => {
           pointer-events: none;
           opacity: 0.5;
         }
-
       }
     }
   }
