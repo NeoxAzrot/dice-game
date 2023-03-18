@@ -46,7 +46,9 @@ const { game, play } = useGame();
 let oldRoundScore = 0;
 
 const disabledLaunch = computed(() => {
-  return game.value.state.turn !== userID.value;
+  if(game.value.state.turn !== userID.value) return true;
+  if(game.value.dices.length === 0 || game.value.bank.filter((e: any) => !e.isLocked).length === 0) return true;
+  return false;
 });
 
 const disabledKeep = computed(() => {

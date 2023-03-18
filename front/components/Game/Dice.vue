@@ -43,9 +43,10 @@ const { game } = useGame();
 const { userID } = useStore()
 
 const isLocked = computed(() => {
-  return game.value.state.turn !== userID.value || dice.isLocked;
+  if(game.value.state.turn !== userID.value) return true;
+  if(dice.isLocked) return true;
+  return false;
 })
-
 </script>
 
 <style lang="scss">
