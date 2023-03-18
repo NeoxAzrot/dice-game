@@ -1,14 +1,13 @@
 <template>
   <div class="card">
-    <div class="card__container">
+    <div class="card__container" :class="player.id === game.state.turn && 'isTurn'">
       <div class="card__container--infos">
-        <h2 class="card__username">{{ player.username }}</h2>
+        <h2 class="card__username">{{ player.username }}<strong v-if="player.id === userID"> (you)</strong></h2>
         <div class="card__color" :style="{ background: colorName.color }"></div>
       </div>
       <h2 class="card__score">{{ player.score }}</h2>
     </div>
     <PlayerEmojis :player="player" />
-    <p class="card__turn" v-if="player.id === game.state.turn">Playing...</p>
   </div>
 </template>
 
@@ -16,6 +15,7 @@
 import uniqolor from 'uniqolor';
 
 const { player } = defineProps(['player']);
+const { userID } = useStore()
 const { game } = useGame()
 
 const colorName: Ref<{ color: string, isLight: boolean }> = ref(uniqolor(player.username));
@@ -34,6 +34,11 @@ const colorName: Ref<{ color: string, isLight: boolean }> = ref(uniqolor(player.
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+
+    &.isTurn {
+      border-left: 5px solid var(--color--second);
+      padding-left: 1rem;
+    }
 
     &--infos {
       display: flex;
