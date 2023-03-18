@@ -1,14 +1,14 @@
 <template>
   <div class="board_container">
-    <GameDiceSet @stockDice="stockDice" :dices="game.dices" />
+    <GameDiceSet @stockDice="(e) => updateDices(e, 'stock')" :dices="game.dices" />
     <div class="board_container--control">
-      <button :disabled="disabledLaunch" class="btn" @click="launchdices">
+      <button :disabled="disabledLaunch" class="btn" @click="launchDices">
         Lancer les dés
       </button>
       <button :disabled="true" class="btn" @click="">Garder le score</button>
     </div>
     <div>
-      <GameDiceBank @removeDice="removeDice" :dices="game.bank" />
+      <GameDiceBank @removeDice="(e) => updateDices(e, 'remove')" :dices="game.bank" />
     </div>
     <div class="board_container--infos" v-if="message">
       <p class="board_container--infos-error"><WarningIcon />{{ message }}</p>
@@ -28,7 +28,7 @@ const disabledLaunch = computed(() => {
   return game.value.state.turn !== userID.value;
 });
 
-const launchdices = async () => {
+const launchDices = async () => {
   useGame()
     .play(
       'roll',
@@ -37,9 +37,19 @@ const launchdices = async () => {
     .catch((err) => (message.value = err.response));
 };
 
-const stockDice = (number: number) => {
-  const newBoard = game.value.dices.filter((e: any, i: number) => i !== number);
-  const newBank = game.value.bank.concat(game.value.dices[number]);
+const updateDices = (number: number, type: 'stock' | 'remove') => {
+  let newBoard, newBank;
+
+  switch(type) {
+    case 'stock':
+      newBoard = game.value.dices.filter((e: any, i: number) => i !== number);
+      newBank = game.value.bank.concat(game.value.dices[number]);
+      break;
+    case 'remove':
+      newBank = game.value.bank.filter((e: any, i: number) => i !== number);
+      newBoard = game.value.dices.concat(game.value.bank[number]);
+      break;
+  }
 
   const score = getScore(
     newBank.map((e: any) => e.value),
@@ -63,35 +73,7 @@ const stockDice = (number: number) => {
     dices: newBoard,
     bank: newBank,
   });
-};
-
-const removeDice = (number: number) => {
-  const newBank = game.value.bank.filter((e: any, i: number) => i !== number);
-  const newBoard = game.value.dices.concat(game.value.bank[number]);
-
-  const score = getScore(
-    newBank.map((e: any) => e.value),
-    game.value.combinations
-  );
-  
-  useFirebase().update('games', game.value.id, {
-    players: [
-      ...game.value.players.map(
-        (e: { id: string | null; displayScore: number }) => {
-          return {
-            ...e,
-            displayScore:
-            e.id === userID.value
-            ? e.displayScore + score
-            : e.displayScore,
-          };
-        }
-        ),
-      ],
-    dices: newBoard,
-    bank: newBank,
-  });
-};
+}
 </script>
 
 <style lang="scss">
