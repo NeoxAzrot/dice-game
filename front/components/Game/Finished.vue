@@ -1,16 +1,33 @@
 <template>
-  <h1>BJ</h1>
-  <PlayerWinner v-for="player in game.players" :player="player" :isWinner="player.id === game.winner" />
-  <button @click="handleCreateGame" class="btn--primary createRoom">
-    Start a new game
-  </button>
+  <div class="finished">
+    <h1>{{ titleFinished }}</h1>
+    <PlayerWinner v-for="player in game.players" :player="player" :isWinner="player.id === game.winner" />
+    <button @click="handleCreateGame" class="btn--primary createRoom">
+      Start a new game
+    </button>
+  </div>
 </template>
 
 <script setup lang="ts">
 const { game, create } = useGame();
+const { userID } = useStore();
+
+const titleFinished = computed(() => {
+  if(game.value.winner === userID.value) return 'You won';
+  return 'You loose';
+})
 
 const handleCreateGame = async () => {
   create();
 };
 
 </script>
+
+<style lang="scss">
+.finished {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+</style>
