@@ -24,6 +24,10 @@
   &--secondary {
     background-color: white;
     color: var(--color--second);
+
+    &.disabled {
+      opacity: 0.2;
+    }
   }
 
   &.disabled {
