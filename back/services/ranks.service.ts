@@ -28,11 +28,24 @@ export const getRanksService = async () => {
     };
   });
 
-  const sortedRanks = ranks.sort(
-    (a, b) => b.winRate - a.winRate || b.wins - a.wins || a.username - b.username,
-  );
+  const sortedRanks = ranks.sort((a, b) => {
+    const aWinRate = a.winRate;
+    const bWinRate = b.winRate;
 
-  console.log(sortedRanks);
+    const aWins = a.wins;
+    const bWins = b.wins;
+
+    const aUsername = a.username;
+    const bUsername = b.username;
+
+    if (aWinRate !== bWinRate) {
+      return bWinRate - aWinRate;
+    } else if (aWins !== bWins) {
+      return bWins - aWins;
+    } else {
+      return aUsername.localeCompare(bUsername);
+    }
+  });
 
   return sortedRanks;
 };

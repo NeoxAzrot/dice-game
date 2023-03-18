@@ -29,9 +29,10 @@ export const createGameService = async ({ roomId, userId }: GameTypes.Create.Pro
       id: player.id,
       username: player.username,
       score: 0,
-      displayScore: 0,
       isReady: player.id === userId,
+      reaction: null,
     })),
+    roundScore: 0,
     winner: null,
     state: {
       gameStatus: GAME_STATUS.WAITING,
@@ -151,6 +152,12 @@ export const playRoundService = async ({
         },
         dices: newDices,
         combinations,
+        bank: game.data()?.bank.map((item: { isLocked: boolean }) => {
+          return {
+            ...item,
+            isLocked: true,
+          };
+        }),
       })
       .then(() => getGameByIdService(gameId));
 
@@ -177,8 +184,9 @@ export const playRoundService = async ({
       };
     }
 
-    const score = game.data()?.displayScore;
-    const isWinner = score >= MAX_SCORE;
+    // const newScore = game.data()?.score + game.data()?.roundScore;
+    // const isWinner = score >= MAX_SCORE;
+    const isWinner = false;
 
     const nextPlayer = Players.getNext({
       players: game.data()?.players,
@@ -194,13 +202,13 @@ export const playRoundService = async ({
           if (player.id === userId) {
             return {
               ...player,
-              score: player.score + score,
-              displayScore: player.score + score,
+              score: player.score + game.data()?.roundScore,
             };
           }
 
           return player;
         }),
+        roundScore: 0,
         winner: isWinner ? userId : null,
         state: {
           ...game.data()?.state,
@@ -344,6 +352,10 @@ export const changePlayerReadyStatusService = async ({
 
           return item;
         }),
+        state: {
+          ...room.data()?.state,
+          isPlaying: true,
+        },
       });
 
     return {

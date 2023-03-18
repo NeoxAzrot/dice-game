@@ -109,15 +109,14 @@ export const getRoomsService = async () => {
     const aPlayers = a.data().players.length;
     const bPlayers = b.data().players.length;
 
-    if (aPlayers < bPlayers) {
-      return 1;
+    const aCreatedAt = new Date(a.data().createdAt).getTime();
+    const bCreatedAt = new Date(b.data().createdAt).getTime();
+
+    if (aPlayers === bPlayers) {
+      return bCreatedAt - aCreatedAt;
     }
 
-    if (aPlayers > bPlayers) {
-      return -1;
-    }
-
-    return 0;
+    return aPlayers - bPlayers;
   });
 
   return sortedRooms;
