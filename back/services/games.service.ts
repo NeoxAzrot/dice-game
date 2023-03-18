@@ -149,14 +149,16 @@ export const playRoundService = async ({
             : Players.getNext({ players: game.data()?.players, actualPlayerId: userId }).id,
         },
         roundScore: canPlay ? game.data()?.roundScore : 0,
-        dices: newDices,
-        combinations,
-        bank: game.data()?.bank.map((item: { isLocked: boolean }) => {
-          return {
-            ...item,
-            isLocked: true,
-          };
-        }),
+        dices: canPlay ? newDices : [],
+        combinations: canPlay ? combinations : [],
+        bank: canPlay
+          ? game.data()?.bank.map((item: { isLocked: boolean }) => {
+              return {
+                ...item,
+                isLocked: true,
+              };
+            })
+          : [],
       })
       .then(() => getGameByIdService(gameId));
 

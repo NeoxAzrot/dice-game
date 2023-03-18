@@ -1,15 +1,26 @@
 <template>
   <div class="emoji">
-    <div class="emoji__container" @click="showSelector = !showSelector">{{ player.reaction || '😌' }}</div>
-    <div class="emoji__selector" v-if="userID === player.id" v-show="showSelector">
-        <button
-          v-for="emoji in listEmojis" :key="emoji"
-          class="emoji__selector__button"
-          :class="{ active: player.reaction === emoji }"
-          @click="handleReaction(emoji)"
-        >
-          {{ emoji }}
-        </button>
+    <div
+      class="emoji__container"
+      :class="{ active: userID === player.id }"
+      @click="showSelector = !showSelector"
+    >
+      {{ player.reaction || '😌' }}
+    </div>
+    <div
+      class="emoji__selector"
+      v-if="userID === player.id"
+      v-show="showSelector"
+    >
+      <button
+        v-for="emoji in listEmojis"
+        :key="emoji"
+        class="emoji__selector__button"
+        :class="{ active: player.reaction === emoji }"
+        @click="handleReaction(emoji)"
+      >
+        {{ emoji }}
+      </button>
     </div>
   </div>
 </template>
@@ -18,7 +29,7 @@
 const listEmojis = ['😡', '🥸', '🫥', '💩', '🤮'];
 
 const { player } = defineProps(['player']);
-const { userID } = useStore()
+const { userID } = useStore();
 const { game } = useGame();
 
 const showSelector = ref(false);
@@ -30,16 +41,15 @@ const handleReaction = (emote: string) => {
         (e: { id: string | null; displayScore: number; reaction: string }) => {
           return {
             ...e,
-            reaction:
-            e.id === userID.value
-            ? emote
-            : e.reaction,
+            reaction: e.id === userID.value ? emote : e.reaction,
           };
         }
-        ),
-      ],
-  })
-}
+      ),
+    ],
+  });
+
+  showSelector.value = false;
+};
 </script>
 
 <style lang="scss">
@@ -48,7 +58,11 @@ const handleReaction = (emote: string) => {
   position: relative;
 
   &__container {
-    cursor: pointer;
+    cursor: default;
+
+    &.active {
+      cursor: pointer;
+    }
   }
 
   &__selector {
