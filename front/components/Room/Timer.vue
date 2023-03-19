@@ -20,8 +20,6 @@ const timerEnd = computed(() => {
 });
 
 const updateTimer = () => {
-  if (game.value.state.gameStatus !== 'playing') return;
-
   const actualTime = new Date().getTime();
   const time = actualTime - game.value.startedAt;
   const actualTimer = getTimer(time);
