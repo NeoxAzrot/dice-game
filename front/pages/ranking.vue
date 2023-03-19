@@ -12,7 +12,7 @@
           <p>{{ user.username }}</p>
           <p>{{ user.allGames }}</p>
           <p>{{ user.wins }}</p>
-          <p>{{ user.winrate || 'Non defined' }}</p>
+          <p>{{ user.winRate + '%' }}</p>
         </li>
       </ul>
     </div>
@@ -22,11 +22,9 @@
 <script setup lang="ts">
 const { data: users } = useAsyncData('users', async () => {
   return fetch(`${useRuntimeConfig().public.API_ENDPOINT}/ranks`)
-    .then(res => res.json())
-    .then(res => res.data.ranks)
-})
-
-console.log(users.value)
+    .then((res) => res.json())
+    .then((res) => res.data.ranks);
+});
 </script>
 
 <style lang="scss" scoped>
@@ -79,7 +77,7 @@ console.log(users.value)
         margin-bottom: 2rem;
         position: sticky;
         top: 0;
-        
+
         p {
           font-weight: bold;
         }

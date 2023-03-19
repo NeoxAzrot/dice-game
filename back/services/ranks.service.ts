@@ -20,12 +20,14 @@ export const getRanksService = async () => {
     const wins = games.filter((game: RankTypes.Game.Props) => game.winner === user.id).length;
     const allGames = games.length;
 
+    const winRate = (wins / allGames || 0) * 100;
+
     return {
       id: user.id,
       username,
       wins,
       allGames,
-      winRate: wins / allGames,
+      winRate: Number(winRate.toFixed(2)),
     };
   });
 
@@ -36,6 +38,9 @@ export const getRanksService = async () => {
     const aWins = a.wins;
     const bWins = b.wins;
 
+    const aAllGames = a.allGames;
+    const bAllGames = b.allGames;
+
     const aUsername = a.username;
     const bUsername = b.username;
 
@@ -43,6 +48,8 @@ export const getRanksService = async () => {
       return bWinRate - aWinRate;
     } else if (aWins !== bWins) {
       return bWins - aWins;
+    } else if (aAllGames !== bAllGames) {
+      return bAllGames - aAllGames;
     } else {
       return aUsername.localeCompare(bUsername);
     }
