@@ -7,46 +7,53 @@
     </div>
     <div class="room__loader" v-else>
       <p class="room__loader__title">Loading room...</p>
-      <p class="room__loader__text">Our server is giving everything he can ❤️</p>
+      <p class="room__loader__text">
+        Our server is giving everything he can ❤️
+      </p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { Unsubscribe } from '@firebase/util';
-const roomID = useRoute().params.room as string
+const roomID = useRoute().params.room as string;
 
-const { room } = useRoom()
-const { game } = useGame()
+const { room } = useRoom();
+const { game } = useGame();
 
-const roomListener: Ref<{ unsubscribe: Unsubscribe } | null> = ref(null)
-const gameListener: Ref<{ unsubscribe: Unsubscribe } | null> = ref(null)
+const roomListener: Ref<{ unsubscribe: Unsubscribe } | null> = ref(null);
+const gameListener: Ref<{ unsubscribe: Unsubscribe } | null> = ref(null);
 
 onBeforeMount(async () => {
-  useRoom().verify(roomID)
+  useRoom()
+    .verify(roomID)
     .then(async (): Promise<void> => {
-      roomListener.value = await useFirebase().listen('rooms', roomID, 'room')
+      roomListener.value = await useFirebase().listen('rooms', roomID, 'room');
     })
-    .catch((): any => navigateTo('/'))
-})
+    .catch((): any => navigateTo('/'));
+});
 
 onMounted(() => {
   window.addEventListener('beforeunload', () => {
-    useRoom().leave()
-  })
-})
+    useRoom().leave();
+    // Add a timer in case the user is not leaving the room
+  });
+});
 
 watch(
   () => room.value?.games,
   async () => {
     if (room.value?.games.length) {
-      gameListener.value = await useFirebase().listen('games',
+      gameListener.value = await useFirebase().listen(
+        'games',
         room.value.games.reduce((acc, val) => {
           return acc.createdAt > val.createdAt ? acc : val;
-        })['id'], 'game')
+        })['id'],
+        'game'
+      );
     }
   }
-)
+);
 </script>
 
 <style lang="scss">
