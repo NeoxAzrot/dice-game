@@ -38,12 +38,7 @@
             game.players.length
           }}
         </button>
-        <p v-else-if="game.state.gameStatus === 'playing'" class="timer">
-          {{ timer }}
-        </p>
-        <p v-else-if="game.state.gameStatus === 'finished'" class="timer">
-          The game lasted {{ timerEnd }}
-        </p>
+        <RoomTimer v-if="game" />
       </div>
     </div>
   </div>
@@ -54,32 +49,6 @@ import { MIN_PLAYERS } from '~/utils/constants';
 
 const { room } = useRoom();
 const { game } = useGame();
-
-const timer = ref();
-
-const timerEnd = computed(() => {
-  if (!game.value) return;
-  const time = game.value.finishedAt - game.value.startedAt;
-  const actualTimer = getTimer(time);
-
-  return actualTimer.minutes + ':' + actualTimer.seconds;
-});
-
-const updateTimer = () => {
-  if (!game.value || game.value.state.gameStatus !== 'playing') return;
-
-  const actualTime = new Date().getTime();
-  const time = actualTime - game.value.startedAt;
-  const actualTimer = getTimer(time);
-
-  timer.value = actualTimer.minutes + ':' + actualTimer.seconds;
-
-  window.requestAnimationFrame(updateTimer);
-};
-
-onMounted(() => {
-  updateTimer();
-});
 
 const currentUserID = useCookie('dice-game-user-id');
 
