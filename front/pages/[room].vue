@@ -9,7 +9,11 @@
 <script setup lang="ts">
 const { game } = useGame();
 
+useHead({
+  title: 'Diceex game - Room',
+});
+
 definePageMeta({
   layout: 'room',
-})
+});
 </script>

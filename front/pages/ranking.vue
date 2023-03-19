@@ -20,6 +20,10 @@
 </template>
 
 <script setup lang="ts">
+useHead({
+  title: 'Diceex game - Ranking',
+});
+
 const { data: users } = useAsyncData('users', async () => {
   return fetch(`${useRuntimeConfig().public.API_ENDPOINT}/ranks`)
     .then((res) => res.json())
