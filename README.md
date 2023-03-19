@@ -18,7 +18,7 @@
 
 - [ ] Add a music kit
 - [ ] Add a chat
-- [ ] Add a ranking
+- [x] Add a ranking
 - [ ] Add music design on interaction
-- [ ] Add a timer of game duration in Footer
+- [x] Add a timer of game duration in Footer
 - [ ] Add viewer count

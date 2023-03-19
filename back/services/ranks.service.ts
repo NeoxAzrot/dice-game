@@ -21,6 +21,7 @@ export const getRanksService = async () => {
     const allGames = games.length;
 
     return {
+      id: user.id,
       username,
       wins,
       allGames,
