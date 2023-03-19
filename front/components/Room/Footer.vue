@@ -72,7 +72,6 @@ onMounted(() => {
   updateTimer();
 })
 
-
 const currentUserID = useCookie('dice-game-user-id');
 
 const isEnoughPlayer = computed(() =>

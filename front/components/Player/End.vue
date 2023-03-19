@@ -1,11 +1,11 @@
 <template>
-  <div class="winner" :class="isWinner && 'isWinner'">
-    <div class="winner__container">
-      <div class="winner__color" :style="{ background: colorName.color }"></div>
-      <h2 class="winner__username">
+  <div class="playerend" :class="isWinner && 'isWinner'">
+    <div class="playerend__container">
+      <div class="playerend__color" :style="{ background: colorName.color }"></div>
+      <h2 class="playerend__username">
         {{ player.username }}
       </h2>
-      <h2 class="winner__score">{{ player.score }}</h2>
+      <h2 class="playerend__score">{{ player.score }}</h2>
     </div>
   </div>
 </template>
@@ -19,7 +19,7 @@ const colorName: Ref<{ color: string, isLight: boolean }> = ref(uniqolor(player.
 </script>
 
 <style lang="scss">
-.winner {
+.playerend {
   justify-content: space-between;
   gap: 5rem;
   padding: 1rem;
@@ -50,7 +50,7 @@ const colorName: Ref<{ color: string, isLight: boolean }> = ref(uniqolor(player.
     opacity: 0.7;
   }
 
-  &.isWinner {
+  &.isplayerend {
     opacity: 1;
     border: 2px solid white;
   }
