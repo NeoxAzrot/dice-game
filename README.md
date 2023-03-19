@@ -22,3 +22,5 @@
 - [ ] Add viewer count
 - [ ] Add a dice animation
 - [ ] If a player disconnect, the game is stopped
+- [ ] Add if a user use url to join, he is redirected in home but with ?room=id
+- [ ] Add border flash on dice selectable
