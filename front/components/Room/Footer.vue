@@ -38,7 +38,7 @@
             game.players.length
           }}
         </button>
-        <RoomTimer v-if="game && game.state.gameStatus !== 'playing'" />
+        <RoomTimer v-if="game" />
       </div>
     </div>
   </div>
