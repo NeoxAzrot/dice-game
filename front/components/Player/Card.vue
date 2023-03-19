@@ -1,6 +1,9 @@
 <template>
   <div class="card">
-    <div class="card__container" :class="player.id === game.state.turn && 'isTurn'">
+    <div
+      class="card__container"
+      :class="player.id === game.state.turn && 'isTurn'"
+    >
       <div class="card__container--infos">
         <h2 class="card__username">
           {{ player.username }}
@@ -18,10 +21,12 @@
 import uniqolor from 'uniqolor';
 
 const { player } = defineProps(['player']);
-const { userID } = useStore()
-const { game } = useGame()
+const { userID } = useStore();
+const { game } = useGame();
 
-const colorName: Ref<{ color: string, isLight: boolean }> = ref(uniqolor(player.username));
+const colorName: Ref<{ color: string; isLight: boolean }> = ref(
+  uniqolor(player.username)
+);
 </script>
 
 <style lang="scss">

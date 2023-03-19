@@ -8,23 +8,23 @@
 </template>
 
 <script setup lang="ts">
-const { APP_URL } = useRuntimeConfig().public
+const { APP_URL } = useRuntimeConfig().public;
 const roomID = useRoute().params.room;
 
-const copied = ref(false)
-const popupText = ref('click to copy')
+const copied = ref(false);
+const popupText = ref('click to copy');
 
 const handleClick = () => {
-  copied.value = true
-  popupText.value = 'copied'
-  navigator.clipboard.writeText(`${APP_URL}?room=${roomID}`)
+  copied.value = true;
+  popupText.value = 'copied';
+  navigator.clipboard.writeText(`${APP_URL}?room=${roomID}`);
   setTimeout(() => {
-    copied.value = false
-  }, 1000)
+    copied.value = false;
+  }, 1000);
   setTimeout(() => {
-    popupText.value = 'click to copy'
-  }, 1200)
-}
+    popupText.value = 'click to copy';
+  }, 1200);
+};
 </script>
 
 <style lang="scss">

@@ -14,7 +14,7 @@ import uniqolor from 'uniqolor';
 
 const { player, isWinner } = defineProps(['player', 'isWinner']);
 
-const currentScore = ref(0)
+const currentScore = ref(0);
 
 onMounted(() => {
   const interval = setInterval(() => {
@@ -24,9 +24,11 @@ onMounted(() => {
       clearInterval(interval);
     }
   }, 2000 / player.score);
-})
+});
 
-const colorName: Ref<{ color: string, isLight: boolean }> = ref(uniqolor(player.username));
+const colorName: Ref<{ color: string; isLight: boolean }> = ref(
+  uniqolor(player.username)
+);
 </script>
 
 <style lang="scss">
@@ -38,7 +40,7 @@ const colorName: Ref<{ color: string, isLight: boolean }> = ref(uniqolor(player.
   position: relative;
 
   &.isWinner {
-    animation: goIn .5s ease-in forwards;
+    animation: goIn 0.5s ease-in forwards;
 
     @keyframes goIn {
       0% {

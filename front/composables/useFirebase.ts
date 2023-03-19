@@ -1,5 +1,5 @@
 export default function useFirebase() {
-  const { $firebase } = useNuxtApp()
+  const { $firebase } = useNuxtApp();
 
-  return $firebase
+  return $firebase;
 }

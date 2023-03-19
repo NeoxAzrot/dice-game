@@ -77,7 +77,7 @@ const launchDices = async () => {
   play(
     'roll',
     game.value.bank.map((e: any) => e.value)
-  ).catch((err) => (message.value = err.response));
+  ).catch((err) => (message.value = err.response._data.message));
 };
 
 const keepDices = async () => {
@@ -85,7 +85,7 @@ const keepDices = async () => {
 
   //calculer la meilleur combinaison de des et update roundScore
 
-  play('hold').catch((err) => (message.value = err.response));
+  play('hold').catch((err) => (message.value = err.response._data.message));
 };
 
 const updateDices = (number: number, type: 'stock' | 'remove') => {

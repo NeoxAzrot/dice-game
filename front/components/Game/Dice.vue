@@ -40,23 +40,24 @@
 const { dice } = defineProps(['dice']);
 
 const { game } = useGame();
-const { userID } = useStore()
+const { userID } = useStore();
 
 const isLocked = computed(() => {
-  if(game.value.state.turn !== userID.value) return true;
-  if(dice.isLocked) return true;
-  return false;
-})
+  return dice.isLocked || game.value.state.turn !== userID.value;
+});
 </script>
 
 <style lang="scss">
 .dice_container {
   padding: 10px;
-
   cursor: pointer;
 
   &.disabled {
-    cursor: not-allowed;
+    cursor: default;
+
+    .dice {
+      box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+    }
   }
 
   p {
@@ -71,12 +72,11 @@ const isLocked = computed(() => {
   background: var(--color--second);
   color: white;
   display: grid;
-  grid-template: repeat(3, 1fr) /repeat(3, 1fr);
+  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
   justify-items: center;
   align-items: center;
   border-radius: 12px;
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
-
+  box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.5);
 }
 
 .dot {

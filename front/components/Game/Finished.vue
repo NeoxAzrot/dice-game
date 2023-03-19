@@ -2,7 +2,12 @@
   <div class="finished">
     <h1>{{ titleFinished }}</h1>
     <div class="finished__players">
-      <PlayerEnd v-for="player in game.players" :player="player" :isWinner="player.id === game.winner" />
+      <PlayerEnd
+        v-for="player in game.players"
+        :key="player.id"
+        :player="player"
+        :isWinner="player.id === game.winner"
+      />
     </div>
     <button @click="handleCreateGame" class="btn--primary createRoom">
       Start a new game
@@ -15,14 +20,13 @@ const { game, create } = useGame();
 const { userID } = useStore();
 
 const titleFinished = computed(() => {
-  if(game.value.winner === userID.value) return 'Victory';
+  if (game.value.winner === userID.value) return 'Victory';
   return 'Defeat';
-})
+});
 
 const handleCreateGame = async () => {
   create();
 };
-
 </script>
 
 <style lang="scss">

@@ -34,7 +34,11 @@
       </div>
       <div class="room-manager__field input">
         <label for="username">Private</label>
-        <label class="checkbox" :class="isPrivate && 'checked'" @click="isPrivate = !isPrivate"></label>
+        <label
+          class="checkbox"
+          :class="isPrivate && 'checked'"
+          @click="isPrivate = !isPrivate"
+        ></label>
       </div>
       <input type="submit" value="Create" class="btn--primary" />
     </form>
@@ -43,13 +47,14 @@
 </template>
 
 <script setup lang="ts">
-import WarningIcon from '~/assets/icons/warning.svg'
+import WarningIcon from '~/assets/icons/warning.svg';
 
 const props = defineProps({
   selected: {
     type: String,
-    default: ''
-}})
+    default: '',
+  },
+});
 
 const cookie = useCookie('dice-game-user-id');
 
@@ -58,43 +63,53 @@ const selection: Ref<'join' | 'create'> = ref('join');
 const { username, roomID, userID } = useStore();
 const requestedRoom = ref((useRoute().query.room as string) || '');
 
-const isPrivate = ref(false)
+const isPrivate = ref(false);
 
 const error = ref('');
 
-watch(() => selection.value, () => {
-  error.value = ''
-})
+watch(
+  () => selection.value,
+  () => {
+    error.value = '';
+  }
+);
 
-watch(() => props.selected, () => {
-  selection.value = 'join'
-  requestedRoom.value = props.selected
-})
+watch(
+  () => props.selected,
+  () => {
+    selection.value = 'join';
+    requestedRoom.value = props.selected;
+  }
+);
 
 const handleJoin = (e: Event) => {
-  e.preventDefault()
-  useRoom().join(requestedRoom.value)
-  .then(({ data }) => {
-    cookie.value = data.user.id
-    userID.value = data.user.id
-    window.location.href = `${useRuntimeConfig().APP_URL}/${data.room.id}`
-  }).catch((err) => {
-    error.value = err.response._data.message
-  })
-}
+  e.preventDefault();
+  useRoom()
+    .join(requestedRoom.value)
+    .then(({ data }) => {
+      cookie.value = data.user.id;
+      userID.value = data.user.id;
+      window.location.href = `${useRuntimeConfig().APP_URL}/${data.room.id}`;
+    })
+    .catch((err) => {
+      error.value = err.response._data.message;
+    });
+};
 
 const handleCreate = (e: Event) => {
-  e.preventDefault()
-  useRoom().create(isPrivate.value)
-  .then(({ data }) => {
-    cookie.value = data.user.id
-    roomID.value = data.room.id
-    userID.value = data.user.id
-    window.location.href = `${useRuntimeConfig().APP_URL}/${data.room.id}`
-  }).catch((err) => {
-    error.value = err.response._data.message
-  })
-}
+  e.preventDefault();
+  useRoom()
+    .create(isPrivate.value)
+    .then(({ data }) => {
+      cookie.value = data.user.id;
+      roomID.value = data.room.id;
+      userID.value = data.user.id;
+      window.location.href = `${useRuntimeConfig().APP_URL}/${data.room.id}`;
+    })
+    .catch((err) => {
+      error.value = err.response._data.message;
+    });
+};
 </script>
 
 <style lang="scss">

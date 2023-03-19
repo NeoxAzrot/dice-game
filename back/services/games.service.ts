@@ -15,6 +15,7 @@ import { Players } from 'utils/players';
 
 import { database } from '../firebase';
 import { getRoomByIdService } from './rooms.service';
+import { getUserByIdService } from './users.service';
 
 export const createGameService = async ({ roomId, userId }: GameTypes.Create.Props) => {
   const createdAt = new Date().getTime();
@@ -74,7 +75,7 @@ export const createGameService = async ({ roomId, userId }: GameTypes.Create.Pro
           ...user.data()?.games,
           {
             id: game.id,
-            winner: null,
+            isWinner: false,
           },
         ],
       });
@@ -240,15 +241,17 @@ export const playRoundService = async ({
           }),
         });
 
+      const user = await getUserByIdService(userId);
+
       await database
         .collection('users')
         .doc(userId)
         .update({
-          games: newGame.data()?.players.map((item: { id: string }) => {
+          games: user.data()?.games.map((item: { id: string }) => {
             if (item.id === gameId) {
               return {
                 ...item,
-                winner: userId,
+                isWinner: true,
               };
             }
 
