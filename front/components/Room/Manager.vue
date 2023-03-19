@@ -84,6 +84,17 @@ watch(
 
 const handleJoin = (e: Event) => {
   e.preventDefault();
+
+  if (!username.value) {
+    error.value = 'Missing username';
+    return;
+  }
+
+  if (!requestedRoom.value) {
+    error.value = 'Missing room ID';
+    return;
+  }
+
   useRoom()
     .join(requestedRoom.value)
     .then(({ data }) => {
@@ -98,6 +109,12 @@ const handleJoin = (e: Event) => {
 
 const handleCreate = (e: Event) => {
   e.preventDefault();
+
+  if (!username.value) {
+    error.value = 'Missing username';
+    return;
+  }
+
   useRoom()
     .create(isPrivate.value)
     .then(({ data }) => {

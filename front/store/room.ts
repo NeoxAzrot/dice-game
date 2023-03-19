@@ -7,6 +7,9 @@ type Game = {
 };
 
 type Room = {
+  settings: {
+    isPrivate: boolean;
+  };
   players: {
     id: string;
     username: string;

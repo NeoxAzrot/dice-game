@@ -2,7 +2,10 @@
   <div class="room__footer" v-if="room">
     <div class="room__footer__container">
       <div>
-        <label>Room</label>
+        <label>
+          Room
+          <span v-if="room.settings.isPrivate">🔒</span>
+        </label>
         <RoomCopyLink />
       </div>
       <div>
