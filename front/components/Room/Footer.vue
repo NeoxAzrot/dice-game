@@ -8,7 +8,10 @@
       <div>
         <label>Players {{ room.players.length }} / {{ MAX_PLAYERS }}</label>
         <div class="room__footer__players">
-          <p :class="currentUserID === p.id && 'current'" v-for="p in room.players">
+          <p
+            :class="currentUserID === p.id && 'current'"
+            v-for="p in room.players"
+          >
             {{ p.username }}
             {{
               game &&
@@ -18,11 +21,19 @@
         </div>
       </div>
       <div class="room__footer__actions">
-        <button v-if="!game" @click="handleCreateGame" class="btn--primary createRoom"
-          :class="!isEnoughPlayer && 'disabled'">
+        <button
+          v-if="!game"
+          @click="handleCreateGame"
+          class="btn--primary createRoom"
+          :class="!isEnoughPlayer && 'disabled'"
+        >
           Start a new game
         </button>
-        <button v-else-if="game.state.gameStatus === 'waiting'" @click="handleReadyGame" class="btn--primary createRoom">
+        <button
+          v-else-if="game.state.gameStatus === 'waiting'"
+          @click="handleReadyGame"
+          class="btn--primary createRoom"
+        >
           Ready {{ game.players.filter((e: any) => e.isReady).length }}/{{
             game.players.length
           }}
@@ -40,6 +51,7 @@
 
 <script setup lang="ts">
 import { MIN_PLAYERS } from '~/utils/constants';
+import { getTimer } from '~~/utils/date';
 
 const { room } = useRoom();
 const { game } = useGame();
@@ -47,30 +59,28 @@ const { game } = useGame();
 const timer = ref();
 
 const timerEnd = computed(() => {
-  if(!game.value) return;
-  const time = game.value.finishedAt - game.value.startedAt
-  const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((time % (1000 * 60)) / 1000);
+  // if (!game.value) return;
+  const time = game.value.finishedAt - game.value.startedAt;
+  const actualTimer = getTimer(time);
 
-  return minutes + ' minutes and ' + seconds + ' seconds';
-})
+  return actualTimer.minutes + ':' + actualTimer.seconds;
+});
 
 const updateTimer = () => {
   if (!game.value || game.value.state.gameStatus !== 'playing') return;
 
-  const actualTime = new Date().getTime()
-  const time = actualTime - game.value.startedAt
-  const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((time % (1000 * 60)) / 1000);
+  const actualTime = new Date().getTime();
+  const time = actualTime - game.value.startedAt;
+  const actualTimer = getTimer(time);
 
-  timer.value = minutes + ':' + seconds;
+  timer.value = actualTimer.minutes + ':' + actualTimer.seconds;
 
   window.requestAnimationFrame(updateTimer);
-}
+};
 
 onMounted(() => {
   updateTimer();
-})
+});
 
 const currentUserID = useCookie('dice-game-user-id');
 
@@ -123,7 +133,7 @@ const handleReadyGame = async () => {
         height: 2px;
       }
 
-      >div {
+      > div {
         label {
           font-size: 1.2rem;
           font-weight: 600;
