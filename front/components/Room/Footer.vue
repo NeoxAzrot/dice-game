@@ -6,7 +6,7 @@
         <RoomCopyLink />
       </div>
       <div>
-        <label>Players 1 / {{ MAX_PLAYERS }}</label>
+        <label>Players {{ room.players.length }} / {{ MAX_PLAYERS }}</label>
         <div class="room__footer__players">
           <p :class="currentUserID === p.id && 'current'" v-for="p in room.players">
             {{ p.username }}
@@ -41,9 +41,13 @@
 <script setup lang="ts">
 import { MIN_PLAYERS } from '~/utils/constants';
 
+const { room } = useRoom();
+const { game } = useGame();
+
 const timer = ref();
 
 const timerEnd = computed(() => {
+  if(!game.value) return;
   const time = game.value.finishedAt - game.value.startedAt
   const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
   const seconds = Math.floor((time % (1000 * 60)) / 1000);
@@ -52,7 +56,7 @@ const timerEnd = computed(() => {
 })
 
 const updateTimer = () => {
-  if (game.value.state.gameStatus !== 'playing') return;
+  if (!game.value || game.value.state.gameStatus !== 'playing') return;
 
   const actualTime = new Date().getTime()
   const time = actualTime - game.value.startedAt
@@ -68,8 +72,6 @@ onMounted(() => {
   updateTimer();
 })
 
-const { room } = useRoom();
-const { game } = useGame();
 
 const currentUserID = useCookie('dice-game-user-id');
 

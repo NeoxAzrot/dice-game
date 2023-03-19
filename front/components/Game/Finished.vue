@@ -1,7 +1,7 @@
 <template>
   <div class="finished">
     <h1>{{ titleFinished }}</h1>
-    <PlayerWinner v-for="player in game.players" :player="player" :isWinner="player.id === game.winner" />
+    <PlayerEnd v-for="player in game.players" :player="player" :isWinner="player.id === game.winner" />
     <button @click="handleCreateGame" class="btn--primary createRoom">
       Start a new game
     </button>
