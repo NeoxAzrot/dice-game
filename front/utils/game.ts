@@ -1,4 +1,4 @@
-import { Combinaison } from '../interfaces/game.interfaces';
+import { Combinaison } from '../interfaces/game';
 
 export const getBankScore = (dices: number[], combinations: Combinaison[]) => {
   let score = 0;

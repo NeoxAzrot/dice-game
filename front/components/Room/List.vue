@@ -2,7 +2,11 @@
   <div class="rooms-list">
     <h2>Public rooms</h2>
     <ul class="rooms-list__container">
-      <li @click="emits('selected', room.id)" v-for="room in rooms">
+      <li
+        v-for="room in rooms"
+        :key="room.id"
+        @click="emits('selected', room.id)"
+      >
         <p>{{ room.id }}</p>
         <p>{{ room.players.length }} / {{ MAX_PLAYERS }}</p>
       </li>

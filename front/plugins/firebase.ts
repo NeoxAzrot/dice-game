@@ -2,7 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 
 export default defineNuxtPlugin(() => {
-  const config = useRuntimeConfig()
+  const config = useRuntimeConfig();
 
   const firebaseConfig = {
     apiKey: config.FIREBASE_API_KEY,
@@ -10,30 +10,45 @@ export default defineNuxtPlugin(() => {
     projectId: config.FIREBASE_PROJECT_ID,
     storageBucket: config.FIREBASE_STORAGE_BUCKET,
     messagingSenderId: config.FIREBASE_MESSAGING_SENDER_ID,
-    appId: config.FIREBASE_APP_ID
+    appId: config.FIREBASE_APP_ID,
   };
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  const listen = async (collection: string, document: string, type: 'room' | 'game') => {
-    let firstTime = true
+  const listen = async (
+    collection: string,
+    document: string,
+    type: 'room' | 'game'
+  ) => {
+    let firstTime = true;
 
-    const unsubscribe = onSnapshot(doc(db, collection, document), async (req: any) => {
-      if (type === 'room') {
-        useRoom().room.value = req.data()
-        if (firstTime) {
-          if (!req.data().players.some((player: any) => player.id === useCookie('dice-game-user-id').value)) {
-            navigateTo('/')
+    const unsubscribe = onSnapshot(
+      doc(db, collection, document),
+      async (req: any) => {
+        if (type === 'room') {
+          useRoom().room.value = req.data();
+          if (firstTime) {
+            if (
+              !req
+                .data()
+                .players.some(
+                  (player: any) =>
+                    player.id === useCookie('dice-game-user-id').value
+                )
+            ) {
+              navigateTo('/');
+            }
+            firstTime = false;
           }
-          firstTime = false
         }
-      };
-      if (type === 'game') useGame().game.value = { ...req.data(), id: req.id };
-    });
+        if (type === 'game')
+          useGame().game.value = { ...req.data(), id: req.id };
+      }
+    );
 
-    return { unsubscribe }
-  }
+    return { unsubscribe };
+  };
 
   const update = async (collection: string, document: string, data: any) => {
     //const oldData = await getDoc(doc(db, collection, document));
@@ -44,8 +59,11 @@ export default defineNuxtPlugin(() => {
   return {
     provide: {
       firebase: {
-        app, db, listen, update
-      }
-    }
-  }
-})
+        app,
+        db,
+        listen,
+        update,
+      },
+    },
+  };
+});

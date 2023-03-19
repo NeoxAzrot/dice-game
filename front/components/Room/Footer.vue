@@ -11,6 +11,7 @@
           <p
             :class="currentUserID === p.id && 'current'"
             v-for="p in room.players"
+            :key="p.id"
           >
             {{ p.username }}
             {{

@@ -8,7 +8,7 @@
           <p>Wins</p>
           <p>Winrate</p>
         </li>
-        <li v-for="user in users">
+        <li v-for="user in users" :key="user.id">
           <p>{{ user.username }}</p>
           <p>{{ user.allGames }}</p>
           <p>{{ user.wins }}</p>

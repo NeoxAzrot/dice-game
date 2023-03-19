@@ -2,7 +2,11 @@
   <div class="game">
     <div class="game_container">
       <div class="game_container--players">
-        <PlayerCard v-for="player in game.players" :player="player" />
+        <PlayerCard
+          v-for="player in game.players"
+          :key="player.id"
+          :player="player"
+        />
       </div>
       <div class="game_container--board">
         <GameBoard />
@@ -59,4 +63,5 @@ const { game } = useGame();
       margin: 20px 0;
     }
   }
-}</style>
+}
+</style>

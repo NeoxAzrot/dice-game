@@ -17,7 +17,7 @@ export const getRanksService = async () => {
       };
     }
 
-    const wins = games.filter((game: RankTypes.Game.Props) => game.winner === user.id).length;
+    const wins = games.filter((game: RankTypes.Game.Props) => game.isWinner).length;
     const allGames = games.length;
 
     const winRate = (wins / allGames || 0) * 100;
