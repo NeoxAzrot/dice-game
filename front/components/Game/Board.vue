@@ -9,7 +9,7 @@
       <button
         :disabled="disabledLaunch || launch"
         class="btn--secondary"
-        :class="{ disabled: disabledLaunch || launch }"
+        :class="{ disabled: disabledLaunch, waiting: launch }"
         @click="launchDices"
       >
         Lancer les dés
@@ -17,7 +17,7 @@
       <button
         :disabled="disabledKeep || keep"
         class="btn--secondary"
-        :class="{ disabled: disabledKeep || keep }"
+        :class="{ disabled: disabledKeep, waiting: keep }"
         @click="keepDices"
       >
         Garder le score
