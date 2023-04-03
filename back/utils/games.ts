@@ -13,11 +13,39 @@ import {
 } from './constants';
 
 export namespace Games {
+  const getPairNumbers = (dices: number[]) => {
+    let count = 0;
+    const set = new Set();
+
+    dices.forEach((dice) => {
+      if (set.delete(dice)) {
+        count += 1;
+      } else {
+        set.add(dice);
+      }
+    });
+
+    return count;
+  };
+
   export const getCombinations = (dices: number[]) => {
     const response: GlobalTypes.CombinationsResponse = {
       dices: [],
       combinations: [],
     };
+
+    if (getPairNumbers(dices) === 3) {
+      response.dices = dices.map((dice) => ({
+        value: dice,
+        isLocked: false,
+      }));
+
+      response.combinations.push({
+        name: 'Three pairs',
+        values: dices.map((dice) => dice),
+        score: DICE_VALUE_TO_POINTS_WITH_THREE_PAIRS_BONUS,
+      });
+    }
 
     if (
       dices.includes(1) &&

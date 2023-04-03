@@ -65,18 +65,20 @@ const disabledLaunch = computed(() => {
   )
     return true;
 
+  const newBank = game.value.bank.filter((e: any) => !e.isLocked);
+
+  if (getPairNumbers(newBank.map((e: any) => e.value)) === 3) return false;
+
   if (
-    game.value.bank.filter((e: any) => !e.isLocked).length === 6 &&
-    game.value.bank.find((e: any) => e.value === 1) &&
-    game.value.bank.find((e: any) => e.value === 2) &&
-    game.value.bank.find((e: any) => e.value === 3) &&
-    game.value.bank.find((e: any) => e.value === 4) &&
-    game.value.bank.find((e: any) => e.value === 5) &&
-    game.value.bank.find((e: any) => e.value === 6)
+    newBank.find((e: any) => e.value === 1) &&
+    newBank.find((e: any) => e.value === 2) &&
+    newBank.find((e: any) => e.value === 3) &&
+    newBank.find((e: any) => e.value === 4) &&
+    newBank.find((e: any) => e.value === 5) &&
+    newBank.find((e: any) => e.value === 6)
   )
     return false;
 
-  const newBank = game.value.bank.filter((e: any) => !e.isLocked);
   for (let i = 1; i <= 6; i++) {
     const newDices = newBank
       .filter((dice: any) => dice.value === i)
