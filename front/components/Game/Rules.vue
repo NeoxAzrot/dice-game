@@ -1,8 +1,8 @@
 <template>
   <div class="rule">
     <transition>
-      <div v-if="open" class="rule_modal">
-        <div class="rule_modal--header">
+      <div v-if="open" class="rule__modal">
+        <div class="rule__modal--header">
           <h3>Possible combinations</h3>
         </div>
         <ul>
@@ -39,7 +39,7 @@ const rules = {
 
 <style lang="scss">
 .rule {
-  &_modal {
+  &__modal {
     --color--tr: rgba(28, 28, 29, 0.3);
     --color--bl: #353661;
     display: flex;

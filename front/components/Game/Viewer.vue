@@ -13,6 +13,7 @@
       </div>
       <div class="game_container--infos">
         <GameRules />
+        <GameHistory />
       </div>
     </div>
   </div>

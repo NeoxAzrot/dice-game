@@ -54,5 +54,12 @@ export default function useRoom() {
       method: 'GET',
     });
   };
-  return { room, join, create, verify, leave, listAll };
+
+  const getGames: () => Promise<any> = () => {
+    return $fetch(endpoint + `/rooms/${useRoute().params.room}/games`, {
+      method: 'GET',
+    });
+  };
+
+  return { room, join, create, verify, leave, listAll, getGames };
 }
