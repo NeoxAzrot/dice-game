@@ -1,7 +1,7 @@
 <template>
-  <div class="history">
+  <div class="history" v-if="data.games && data.games > 0">
     <transition>
-      <div v-if="data.games" class="history__modal">
+      <div class="history__modal">
         <div class="history__modal--header">
           <h3>Dernières parties</h3>
         </div>
