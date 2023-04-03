@@ -16,6 +16,9 @@
         </li>
       </ul>
     </div>
+    <footer class="ranking__footer">
+      <NuxtLink class="ranking__playbutton" to="/" clas>Play a game</NuxtLink>
+    </footer>
   </div>
 </template>
 
@@ -34,6 +37,8 @@ const { data: users } = useAsyncData('users', async () => {
 <style lang="scss" scoped>
 .layout {
   display: flex;
+  flex-direction: column;
+  align-items: center;
 
   &__container {
     max-width: var(--container--max-width--small);
@@ -86,6 +91,25 @@ const { data: users } = useAsyncData('users', async () => {
           font-weight: bold;
         }
       }
+    }
+  }
+
+  &__footer {
+    width: 100%;
+    max-width: var(--container--max-width--small);
+    margin: 0 0 0 0;
+    position: fixed;
+    bottom: 0;
+    padding: 2rem 0;
+    display: flex;
+    justify-content: center;
+
+    a {
+      margin: 2rem auto;
+      font-size: 1.4rem;
+      text-decoration: none;
+      color: var(--color--third);
+      opacity: 0.6;
     }
   }
 }

@@ -36,7 +36,6 @@ onBeforeMount(async () => {
 onMounted(() => {
   window.addEventListener('beforeunload', () => {
     useRoom().leave();
-    // Add a timer in case the user is not leaving the room
   });
 });
 

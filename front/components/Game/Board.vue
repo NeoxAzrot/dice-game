@@ -9,7 +9,7 @@
       <button
         :disabled="disabledLaunch"
         class="btn--secondary"
-        :class="{ disabled: disabledLaunch }"
+        :class="{ disabled: disabledLaunch, waiting: waiting.launch }"
         @click="launchDices"
       >
         Lancer les dés
@@ -17,7 +17,7 @@
       <button
         :disabled="disabledKeep"
         class="btn--secondary"
-        :class="{ disabled: disabledKeep }"
+        :class="{ disabled: disabledKeep, waiting: waiting.keep }"
         @click="keepDices"
       >
         Garder le score
@@ -43,7 +43,21 @@ const message: Ref<string | undefined> = ref();
 const { userID } = useStore();
 const { game, play } = useGame();
 
+const waiting = {
+  launch: ref(false),
+  keep: ref(false)
+}
+
 let oldRoundScore = 0;
+
+watch(
+  () => message.value,
+  () => {
+    setTimeout(() => {
+      message.value = undefined;
+    }, 3000);
+  }
+);
 
 const disabledLaunch = computed(() => {
   if (game.value.state.turn !== userID.value) return true;
@@ -66,26 +80,55 @@ const disabledLaunch = computed(() => {
 });
 
 const disabledKeep = computed(() => {
-  return (
-    game.value.state.turn !== userID.value || game.value.dices.length === 0
-  );
+  return game.value.state.turn !== userID.value;
 });
 
 const launchDices = async () => {
   oldRoundScore = game.value.roundScore;
 
-  play(
-    'roll',
-    game.value.bank.map((e: any) => e.value)
-  ).catch((err) => (message.value = err.response._data.message));
+  const newDices = game.value.dices;
+
+  if (newDices.length > 0) {
+    play(
+      'roll',
+      game.value.bank.map((e: any) => e.value)
+    ).catch((err) => (message.value = err.response._data.message));
+  } else {
+    await useFirebase().update('games', game.value.id, {
+      bank: [],
+    });
+
+    play(
+      'roll',
+      game.value.bank.map((e: any) => e.value)
+    ).catch((err) => (message.value = err.response._data.message));
+  }
 };
 
 const keepDices = async () => {
-  oldRoundScore = 0;
+  oldRoundScore = game.value.roundScore;
 
-  //calculer la meilleur combinaison de des et update roundScore
+  const newBank = game.value.bank.filter((e: any) => !e.isLocked);
 
-  play('hold').catch((err) => (message.value = err.response._data.message));
+  if (newBank.length === 0) {
+    const newBoard = game.value.dices.filter((e: any) => e.isLocked);
+    const playableDices = game.value.dices.filter((e: any) => !e.isLocked);
+
+    const score = getBankScore(
+      playableDices.filter((e: any) => !e.isLocked).map((e: any) => e.value),
+      game.value.combinations
+    );
+
+    await useFirebase().update('games', game.value.id, {
+      roundScore: oldRoundScore + score,
+      dices: newBoard,
+      bank: [...game.value.bank, ...playableDices],
+    });
+
+    play('hold').catch((err) => (message.value = err.response._data.message));
+  } else {
+    play('hold').catch((err) => (message.value = err.response._data.message));
+  }
 };
 
 const updateDices = (number: number, type: 'stock' | 'remove') => {

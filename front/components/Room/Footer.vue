@@ -2,7 +2,10 @@
   <div class="room__footer" v-if="room">
     <div class="room__footer__container">
       <div>
-        <label>Room</label>
+        <label>
+          Room
+          <span v-if="room.settings.isPrivate">🔒</span>
+        </label>
         <RoomCopyLink />
       </div>
       <div>
@@ -106,6 +109,7 @@ const handleReadyGame = async () => {
         label {
           font-size: 1.2rem;
           font-weight: 600;
+          display: block;
           margin-bottom: 0.5rem;
         }
       }
