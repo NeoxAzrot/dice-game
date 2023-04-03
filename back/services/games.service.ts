@@ -105,7 +105,13 @@ export const getGamesByRoomIdService = async (games: GameTypes.GamesByRoomId.Pro
 
       newGames.push({
         id: newGame.id,
-        winner: newGame.data()?.winner,
+        winner: {
+          id: newGame.data()?.winner,
+          username: newGame
+            .data()
+            ?.players.find((player: GlobalTypes.Player) => player.id === newGame.data()?.winner)
+            ?.username,
+        },
       });
     }
   }
