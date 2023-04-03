@@ -33,10 +33,10 @@ onBeforeMount(async () => {
     .catch((): any => navigateTo('/'));
 });
 
-onMounted(() => {
+onMounted(async () => {
+  console.log(await useRoom().getGames())
   window.addEventListener('beforeunload', () => {
     useRoom().leave();
-    // Add a timer in case the user is not leaving the room
   });
 });
 

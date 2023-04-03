@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 
+import { getGamesByRoomIdService } from 'services/games.service';
 import {
   createRoomService,
   getRoomByIdService,
@@ -121,6 +122,25 @@ export const getRoomById = async (req: Request, res: Response) => {
       id: room.id,
       players: room.data()?.players,
       settings: room.data()?.settings,
+    },
+  });
+};
+
+export const getGamesByRoomId = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const room = await getRoomByIdService(id);
+
+  if (!room.exists) {
+    return res.status(400).json({ success: false, message: 'Room not found' });
+  }
+
+  const games = await getGamesByRoomIdService(room.data()?.games);
+
+  return res.status(200).json({
+    success: true,
+    data: {
+      id: room.id,
+      games,
     },
   });
 };

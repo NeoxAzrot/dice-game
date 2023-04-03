@@ -21,4 +21,20 @@ export namespace GameTypes {
       dicesKept?: number[];
     }
   }
+
+  export namespace GamesByRoomId {
+    export interface Props {
+      id: string;
+      gameStatus: string;
+      winner: string;
+    }
+
+    export interface Response {
+      id: string;
+      winner: {
+        id: string;
+        username: string;
+      };
+    }
+  }
 }

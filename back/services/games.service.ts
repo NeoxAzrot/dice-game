@@ -96,6 +96,29 @@ export const getGameByIdService = async (id: string) => {
   return game;
 };
 
+export const getGamesByRoomIdService = async (games: GameTypes.GamesByRoomId.Props[]) => {
+  const newGames: GameTypes.GamesByRoomId.Response[] = [];
+
+  for (const game of games) {
+    if (game.gameStatus === GAME_STATUS.FINISHED) {
+      const newGame = await getGameByIdService(game.id);
+
+      newGames.push({
+        id: newGame.id,
+        winner: {
+          id: newGame.data()?.winner,
+          username: newGame
+            .data()
+            ?.players.find((player: GlobalTypes.Player) => player.id === newGame.data()?.winner)
+            ?.username,
+        },
+      });
+    }
+  }
+
+  return newGames;
+};
+
 export const rollDicesService = async (dices: number) => {
   const newDices = [];
 
