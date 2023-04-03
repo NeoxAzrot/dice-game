@@ -45,8 +45,8 @@ const { game, play } = useGame();
 
 const waiting = {
   launch: ref(false),
-  keep: ref(false)
-}
+  keep: ref(false),
+};
 
 let oldRoundScore = 0;
 
@@ -80,7 +80,10 @@ const disabledLaunch = computed(() => {
 });
 
 const disabledKeep = computed(() => {
-  return game.value.state.turn !== userID.value;
+  return (
+    game.value.state.turn !== userID.value ||
+    (game.value.dices.length === 0 && game.value.roundScore === 0)
+  );
 });
 
 const launchDices = async () => {

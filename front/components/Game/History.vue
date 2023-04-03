@@ -6,10 +6,16 @@
           <h3>Dernières parties</h3>
         </div>
         <ul>
-          <li v-for="(game, index) in data.games.slice(data.games.length - 5, data.games.length)" :key="index">
+          <li
+            v-for="(game, index) in data.games.slice(
+              data.games.length - 5,
+              data.games.length
+            )"
+            :key="index"
+          >
             <p class="index">Game {{ index + 1 }}</p>
             <p class="winner">{{ game.winner.username }}</p>
-            <p class="result">{{ userID === game.winner.id ? 'win' : 'lose' }}</p>
+            <p class="result">{{ userID === game.winner.id ? '🏆' : '💀' }}</p>
           </li>
         </ul>
       </div>
@@ -20,11 +26,11 @@
 <script setup lang="ts">
 const { userID } = useStore();
 
-console.log(userID)
+console.log(userID);
 
-const { data } = await useRoom().getGames()
+const { data } = await useRoom().getGames();
 
-console.log(data)
+console.log(data);
 </script>
 
 <style lang="scss">
@@ -56,23 +62,25 @@ console.log(data)
         gap: 0.4rem;
         justify-content: space-between;
         position: relative;
-        grid-template-areas: "index result"
-                             "winner result";
+        grid-template-areas:
+          'index result'
+          'winner result';
 
         .index {
           grid-area: index;
         }
-        
+
         .winner {
           grid-area: winner;
-          font-size: 1.2rem;          
+          font-size: 1.2rem;
           opacity: 0.6;
         }
-        
+
         .result {
           grid-area: result;
         }
       }
     }
   }
-}</style>
+}
+</style>
