@@ -3,6 +3,19 @@ import { Combinaison } from '../interfaces/game';
 export const getBankScore = (dices: number[], combinations: Combinaison[]) => {
   let score = 0;
 
+  if (
+    dices.includes(1) &&
+    dices.includes(2) &&
+    dices.includes(3) &&
+    dices.includes(4) &&
+    dices.includes(5) &&
+    dices.includes(6)
+  ) {
+    score += getCombinationScore(dices, combinations);
+
+    return score;
+  }
+
   for (let i = 1; i <= 6; i++) {
     const newDices = dices.filter((dice) => dice === i);
 

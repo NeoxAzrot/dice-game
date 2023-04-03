@@ -26,11 +26,7 @@
 <script setup lang="ts">
 const { userID } = useStore();
 
-console.log(userID);
-
 const { data } = await useRoom().getGames();
-
-console.log(data);
 </script>
 
 <style lang="scss">

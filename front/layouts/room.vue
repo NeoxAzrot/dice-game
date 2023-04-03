@@ -34,7 +34,6 @@ onBeforeMount(async () => {
 });
 
 onMounted(async () => {
-  console.log(await useRoom().getGames())
   window.addEventListener('beforeunload', () => {
     useRoom().leave();
   });
