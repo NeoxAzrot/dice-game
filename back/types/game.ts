@@ -1,3 +1,5 @@
+import { GAME_STATUS } from './../utils/constants';
+
 export namespace GameTypes {
   export namespace Create {
     export interface Props {
@@ -19,6 +21,19 @@ export namespace GameTypes {
       move: 'roll' | 'hold';
       userId: string;
       dicesKept?: number[];
+    }
+  }
+
+  export namespace GamesByRoomId {
+    export interface Props {
+      id: string;
+      gameStatus: string;
+      winner: string;
+    }
+
+    export interface Response {
+      id: string;
+      winner: string;
     }
   }
 }
