@@ -45,6 +45,15 @@ const { game, play } = useGame();
 
 let oldRoundScore = 0;
 
+watch(
+  () => message.value,
+  () => {
+    setTimeout(() => {
+      message.value = undefined;
+    }, 3000);
+  }
+);
+
 const disabledLaunch = computed(() => {
   if (game.value.state.turn !== userID.value) return true;
   if (
@@ -66,18 +75,29 @@ const disabledLaunch = computed(() => {
 });
 
 const disabledKeep = computed(() => {
-  return (
-    game.value.state.turn !== userID.value || game.value.dices.length === 0
-  );
+  return game.value.state.turn !== userID.value;
 });
 
 const launchDices = async () => {
   oldRoundScore = game.value.roundScore;
 
-  play(
-    'roll',
-    game.value.bank.map((e: any) => e.value)
-  ).catch((err) => (message.value = err.response._data.message));
+  const newDices = game.value.dices;
+
+  if (newDices.length > 0) {
+    play(
+      'roll',
+      game.value.bank.map((e: any) => e.value)
+    ).catch((err) => (message.value = err.response._data.message));
+  } else {
+    await useFirebase().update('games', game.value.id, {
+      bank: [],
+    });
+
+    play(
+      'roll',
+      game.value.bank.map((e: any) => e.value)
+    ).catch((err) => (message.value = err.response._data.message));
+  }
 };
 
 const keepDices = async () => {
@@ -100,6 +120,8 @@ const keepDices = async () => {
       bank: [...game.value.bank, ...playableDices],
     });
 
+    play('hold').catch((err) => (message.value = err.response._data.message));
+  } else {
     play('hold').catch((err) => (message.value = err.response._data.message));
   }
 };
