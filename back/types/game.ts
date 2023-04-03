@@ -33,7 +33,10 @@ export namespace GameTypes {
 
     export interface Response {
       id: string;
-      winner: string;
+      winner: {
+        id: string;
+        username: string;
+      };
     }
   }
 }
