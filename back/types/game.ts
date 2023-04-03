@@ -27,6 +27,7 @@ export namespace GameTypes {
       id: string;
       gameStatus: string;
       winner: string;
+      createdAt: number;
     }
 
     export interface Response {

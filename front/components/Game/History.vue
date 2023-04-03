@@ -1,9 +1,9 @@
 <template>
-  <div class="history" v-if="data.games && data.games > 0">
+  <div class="history" v-if="data.games && data.games.length > 0">
     <transition>
       <div class="history__modal">
         <div class="history__modal--header">
-          <h3>Dernières parties</h3>
+          <h3>Last 5 games</h3>
         </div>
         <ul>
           <li
@@ -11,9 +11,9 @@
               data.games.length - 5,
               data.games.length
             )"
-            :key="index"
+            :key="game.id"
           >
-            <p class="index">Game {{ index + 1 }}</p>
+            <p class="index">Game {{ data.games.length - 5 + index + 1 }}</p>
             <p class="winner">{{ game.winner.username }}</p>
             <p class="result">{{ userID === game.winner.id ? '🏆' : '💀' }}</p>
           </li>

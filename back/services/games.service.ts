@@ -5,6 +5,7 @@ import {
   GAME_STATUS,
   MAX_DICE,
   MAX_DICE_VALUE,
+  MAX_PLAYERS,
   MAX_SCORE,
   MIN_DICE_VALUE,
   MIN_PLAYERS,
@@ -15,7 +16,6 @@ import { Players } from 'utils/players';
 
 import { database } from '../firebase';
 import { getRoomByIdService } from './rooms.service';
-import { getUserByIdService } from './users.service';
 
 export const createGameService = async ({ roomId, userId }: GameTypes.Create.Props) => {
   const createdAt = new Date().getTime();
@@ -57,29 +57,31 @@ export const createGameService = async ({ roomId, userId }: GameTypes.Create.Pro
       ],
     });
 
-  const users = await database
+  await database
     .collection('users')
     .where(
       'username',
       'in',
       room.data()?.players.map((player: GlobalTypes.Player) => player.username),
     )
-    .get();
-
-  users.forEach(async (user) => {
-    database
-      .collection('users')
-      .doc(user.id)
-      .update({
-        games: [
-          ...user.data()?.games,
-          {
-            id: game.id,
-            isWinner: false,
-          },
-        ],
-      });
-  });
+    .get()
+    .then((querySnapshot) =>
+      querySnapshot.forEach((doc) => {
+        database
+          .collection('users')
+          .doc(doc.id)
+          .update({
+            games: [
+              ...doc.data()?.games,
+              {
+                id: game.id,
+                isWinner: false,
+                gameStatus: GAME_STATUS.WAITING,
+              },
+            ],
+          });
+      }),
+    );
 
   return game;
 };
@@ -97,23 +99,25 @@ export const getGameByIdService = async (id: string) => {
 };
 
 export const getGamesByRoomIdService = async (games: GameTypes.GamesByRoomId.Props[]) => {
+  const sortableGames = games
+    .filter((game) => game.gameStatus === GAME_STATUS.FINISHED)
+    .sort((a, b) => a.createdAt - b.createdAt);
+
   const newGames: GameTypes.GamesByRoomId.Response[] = [];
 
-  for (const game of games) {
-    if (game.gameStatus === GAME_STATUS.FINISHED) {
-      const newGame = await getGameByIdService(game.id);
+  for (const game of sortableGames) {
+    const newGame = await getGameByIdService(game.id);
 
-      newGames.push({
-        id: newGame.id,
-        winner: {
-          id: newGame.data()?.winner,
-          username: newGame
-            .data()
-            ?.players.find((player: GlobalTypes.Player) => player.id === newGame.data()?.winner)
-            ?.username,
-        },
-      });
-    }
+    newGames.push({
+      id: newGame.id,
+      winner: {
+        id: newGame.data()?.winner,
+        username: newGame
+          .data()
+          ?.players.find((player: GlobalTypes.Player) => player.id === newGame.data()?.winner)
+          ?.username,
+      },
+    });
   }
 
   return newGames;
@@ -264,22 +268,33 @@ export const playRoundService = async ({
           }),
         });
 
-      const user = await getUserByIdService(userId);
-
       await database
         .collection('users')
-        .doc(userId)
-        .update({
-          games: user.data()?.games.map((item: { id: string }) => {
-            if (item.id === gameId) {
-              return {
-                ...item,
-                isWinner: true,
-              };
-            }
+        .where('games', 'array-contains', {
+          gameStatus: GAME_STATUS.PLAYING,
+          id: gameId,
+          isWinner: false,
+        })
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            database
+              .collection('users')
+              .doc(doc.id)
+              .update({
+                games: doc.data()?.games.map((item: { id: string }) => {
+                  if (item.id === gameId) {
+                    return {
+                      ...item,
+                      isWinner: doc.id === userId,
+                      gameStatus: GAME_STATUS.FINISHED,
+                    };
+                  }
 
-            return item;
-          }),
+                  return item;
+                }),
+              });
+          });
         });
     }
 
@@ -330,7 +345,14 @@ export const changePlayerReadyStatusService = async ({
   if (players.length < MIN_PLAYERS) {
     return {
       success: false,
-      message: 'Minimum 2 players required',
+      message: `Minimum ${MIN_PLAYERS} players required`,
+    };
+  }
+
+  if (players.length > MAX_PLAYERS) {
+    return {
+      success: false,
+      message: `Maximum ${MAX_PLAYERS} players allowed`,
     };
   }
 
@@ -378,6 +400,34 @@ export const changePlayerReadyStatusService = async ({
           ...room.data()?.state,
           isPlaying: true,
         },
+      });
+
+    await database
+      .collection('users')
+      .where('games', 'array-contains', {
+        gameStatus: GAME_STATUS.WAITING,
+        id: gameId,
+        isWinner: false,
+      })
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          database
+            .collection('users')
+            .doc(doc.id)
+            .update({
+              games: doc.data()?.games.map((item: { id: string }) => {
+                if (item.id === gameId) {
+                  return {
+                    ...item,
+                    gameStatus: GAME_STATUS.PLAYING,
+                  };
+                }
+
+                return item;
+              }),
+            });
+        });
       });
 
     return {

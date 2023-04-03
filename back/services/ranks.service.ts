@@ -1,5 +1,7 @@
 import { RankTypes } from 'types/rank';
 
+import { GAME_STATUS } from 'utils/constants';
+
 import { getUsersService } from './users.service';
 
 export const getRanksService = async () => {
@@ -8,7 +10,11 @@ export const getRanksService = async () => {
   const ranks = users.docs.map((user) => {
     const { username, games } = user.data();
 
-    if (!games) {
+    const gamesFiltered = games.filter(
+      (game: RankTypes.Game.Props) => game.gameStatus === GAME_STATUS.FINISHED,
+    );
+
+    if (!gamesFiltered) {
       return {
         username,
         wins: 0,
@@ -17,8 +23,8 @@ export const getRanksService = async () => {
       };
     }
 
-    const wins = games.filter((game: RankTypes.Game.Props) => game.isWinner).length;
-    const allGames = games.length;
+    const wins = gamesFiltered.filter((game: RankTypes.Game.Props) => game.isWinner).length;
+    const allGames = gamesFiltered.length;
 
     const winRate = (wins / allGames || 0) * 100;
 
