@@ -7,7 +7,7 @@ import {
   joinRoomService,
   removeUserFromRoomService,
 } from 'services/rooms.service';
-import { getUserByUsernameService } from 'services/users.service';
+import { getUserByUsernameService, getUsersWinByRoomIdService } from 'services/users.service';
 
 export const createRoom = async (req: Request, res: Response) => {
   const { username, isPrivate } = req.body;
@@ -121,6 +121,25 @@ export const getRoomById = async (req: Request, res: Response) => {
       id: room.id,
       players: room.data()?.players,
       settings: room.data()?.settings,
+    },
+  });
+};
+
+export const getRoomByIdGames = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const room = await getRoomByIdService(id);
+
+  if (!room.exists) {
+    return res.status(400).json({ success: false, message: 'Room not found' });
+  }
+
+  const players = await getUsersWinByRoomIdService(room);
+
+  return res.status(200).json({
+    success: true,
+    data: {
+      id: room.id,
+      players,
     },
   });
 };
