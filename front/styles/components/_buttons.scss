@@ -27,15 +27,20 @@
 
   &.waiting {
     cursor: default;
-    opacity: 0.2;
+    position: relative;
+    padding-right: calc(3rem + 15px);
     &::after {
       content: "";
-      width: 16px;
-      height: 16px;
+      display: block;
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
-      background-color: #fff;
-      box-shadow: 32px 0 #fff, -32px 0 #fff;
-      position: relative;
+      background-color: #000;
+      box-shadow: 7px 0 #000, -7px 0 #000;
       animation: flash 0.5s ease-out infinite alternate;
     }
   }
@@ -48,15 +53,15 @@ input[type="submit"] {
 
 @keyframes flash {
   0% {
-    background-color: #FFF2;
-    box-shadow: 32px 0 #FFF2, -32px 0 #FFF;
+    background-color: var(--color--fourth);
+    box-shadow: 7px 0 var(--color--fourth), -7px 0 var(--color--second);
   }
   50% {
-    background-color: #FFF;
-    box-shadow: 32px 0 #FFF2, -32px 0 #FFF2;
+    background-color: var(--color--second);
+    box-shadow: 7px 0 var(--color--fourth), -7px 0 var(--color--fourth);
   }
   100% {
-    background-color: #FFF2;
-    box-shadow: 32px 0 #FFF, -32px 0 #FFF2;
+    background-color: var(--color--fourth);
+    box-shadow: 7px 0 var(--color--second), -7px 0 var(--color--fourth);
   }
 }
