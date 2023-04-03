@@ -9,7 +9,7 @@
       <button
         :disabled="disabledLaunch"
         class="btn--secondary"
-        :class="{ disabled: disabledLaunch }"
+        :class="{ disabled: disabledLaunch, waiting: waiting.launch }"
         @click="launchDices"
       >
         Lancer les dés
@@ -17,7 +17,7 @@
       <button
         :disabled="disabledKeep"
         class="btn--secondary"
-        :class="{ disabled: disabledKeep }"
+        :class="{ disabled: disabledKeep, waiting: waiting.keep }"
         @click="keepDices"
       >
         Garder le score
@@ -42,6 +42,11 @@ const message: Ref<string | undefined> = ref();
 
 const { userID } = useStore();
 const { game, play } = useGame();
+
+const waiting = {
+  launch: ref(false),
+  keep: ref(false)
+}
 
 let oldRoundScore = 0;
 
