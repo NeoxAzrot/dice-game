@@ -81,11 +81,27 @@ const launchDices = async () => {
 };
 
 const keepDices = async () => {
-  oldRoundScore = 0;
+  oldRoundScore = game.value.roundScore;
 
-  //calculer la meilleur combinaison de des et update roundScore
+  const newBank = game.value.bank.filter((e: any) => !e.isLocked);
 
-  play('hold').catch((err) => (message.value = err.response._data.message));
+  if (newBank.length === 0) {
+    const newBoard = game.value.dices.filter((e: any) => e.isLocked);
+    const playableDices = game.value.dices.filter((e: any) => !e.isLocked);
+
+    const score = getBankScore(
+      playableDices.filter((e: any) => !e.isLocked).map((e: any) => e.value),
+      game.value.combinations
+    );
+
+    await useFirebase().update('games', game.value.id, {
+      roundScore: oldRoundScore + score,
+      dices: newBoard,
+      bank: [...game.value.bank, ...playableDices],
+    });
+
+    play('hold').catch((err) => (message.value = err.response._data.message));
+  }
 };
 
 const updateDices = (number: number, type: 'stock' | 'remove') => {

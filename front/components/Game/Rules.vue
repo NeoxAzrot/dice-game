@@ -32,6 +32,8 @@ const rules = {
   'Quadruple of a kind': 1000,
   'Quintuple of a kind': 2000,
   'Sextuple of a kind': 3000,
+  // 'Three pairs': 1500,
+  // 'Full run': 2500,
 };
 </script>
 

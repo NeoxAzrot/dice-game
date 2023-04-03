@@ -29,7 +29,6 @@ const removeDice = (dice: Dice, index: number) => {
 .bank_container {
   display: flex;
   padding: 30px 50px;
-  // min-width: clamp(300px, 60vw, 700px);
   justify-content: center;
 }
 </style>

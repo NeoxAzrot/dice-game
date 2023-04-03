@@ -51,9 +51,7 @@ export default defineNuxtPlugin(() => {
   };
 
   const update = async (collection: string, document: string, data: any) => {
-    //const oldData = await getDoc(doc(db, collection, document));
-
-    updateDoc(doc(db, collection, document), data);
+    await updateDoc(doc(db, collection, document), data);
   };
 
   return {

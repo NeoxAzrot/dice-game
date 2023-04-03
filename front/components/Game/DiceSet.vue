@@ -1,5 +1,6 @@
 <template>
   <div class="set_container">
+    <!-- TODO: Revoir les isLocked des dés avec la box shadow (:key list) -->
     <GameDice
       v-for="(dice, index) in dices"
       :key="`${dice.value}-${index}`"
@@ -29,7 +30,6 @@ const stockDice = (dice: Dice, index: number) => {
 .set_container {
   display: flex;
   padding: 30px 50px;
-  // min-width: clamp(300px, 60vw, 700px);
   justify-content: center;
 }
 </style>

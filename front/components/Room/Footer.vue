@@ -109,6 +109,7 @@ const handleReadyGame = async () => {
         label {
           font-size: 1.2rem;
           font-weight: 600;
+          display: block;
           margin-bottom: 0.5rem;
         }
       }
