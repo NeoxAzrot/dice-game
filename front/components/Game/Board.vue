@@ -7,17 +7,17 @@
     />
     <div class="board_container--control">
       <button
-        :disabled="disabledLaunch"
+        :disabled="disabledLaunch || launch"
         class="btn--secondary"
-        :class="{ disabled: disabledLaunch, waiting: waiting.launch }"
+        :class="{ disabled: disabledLaunch || launch }"
         @click="launchDices"
       >
         Lancer les dés
       </button>
       <button
-        :disabled="disabledKeep"
+        :disabled="disabledKeep || keep"
         class="btn--secondary"
-        :class="{ disabled: disabledKeep, waiting: waiting.keep }"
+        :class="{ disabled: disabledKeep || keep }"
         @click="keepDices"
       >
         Garder le score
@@ -43,10 +43,8 @@ const message: Ref<string | undefined> = ref();
 const { userID } = useStore();
 const { game, play } = useGame();
 
-const waiting = {
-  launch: ref(false),
-  keep: ref(false),
-};
+const launch = ref<boolean>(false);
+const keep = ref<boolean>(false);
 
 let oldRoundScore = 0;
 
@@ -87,6 +85,7 @@ const disabledKeep = computed(() => {
 });
 
 const launchDices = async () => {
+  launch.value = true;
   oldRoundScore = game.value.roundScore;
 
   const newDices = game.value.dices;
@@ -106,9 +105,13 @@ const launchDices = async () => {
       game.value.bank.map((e: any) => e.value)
     ).catch((err) => (message.value = err.response._data.message));
   }
+
+  launch.value = false;
 };
 
 const keepDices = async () => {
+  keep.value = true;
+
   oldRoundScore = game.value.roundScore;
 
   const newBank = game.value.bank.filter((e: any) => !e.isLocked);
@@ -132,6 +135,8 @@ const keepDices = async () => {
   } else {
     play('hold').catch((err) => (message.value = err.response._data.message));
   }
+
+  keep.value = false;
 };
 
 const updateDices = (number: number, type: 'stock' | 'remove') => {
