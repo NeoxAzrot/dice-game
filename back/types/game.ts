@@ -1,5 +1,3 @@
-import { GAME_STATUS } from './../utils/constants';
-
 export namespace GameTypes {
   export namespace Create {
     export interface Props {
