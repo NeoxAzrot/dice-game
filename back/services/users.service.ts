@@ -1,7 +1,6 @@
 import { UserTypes } from 'types/user';
 
 import { database } from '../firebase';
-import { getGameByIdService } from './games.service';
 
 export const createUserService = async ({ username }: UserTypes.Create.Props) => {
   const user = await database.collection('users').add({
@@ -36,30 +35,4 @@ export const getUserByIdService = async (id: string) => {
   const user = await database.collection('users').doc(id).get();
 
   return user;
-};
-
-export const getUsersWinByRoomIdService = async (room: any) => {
-  const games: any[] = [];
-
-  for (const game of room.data()?.games) {
-    if (game.gameStatus === 'finished') {
-      const newGame = await getGameByIdService(game.id);
-
-      for (const player of newGame.data()?.players) {
-        if (player.id === newGame.data()?.winner) {
-          if (games.find((g) => g.id === player.id)) {
-            games.find((g) => g.id === player.id).wins += 1;
-          } else {
-            games.push({
-              id: player.id,
-              username: player.username,
-              wins: 1,
-            });
-          }
-        }
-      }
-    }
-  }
-
-  return games;
 };

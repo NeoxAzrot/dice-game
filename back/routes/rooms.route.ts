@@ -2,8 +2,8 @@ import express from 'express';
 
 import {
   createRoom,
+  getGamesByRoomId,
   getRoomById,
-  getRoomByIdGames,
   getRooms,
   joinRoom,
   removeUserFromRoom,
@@ -15,4 +15,4 @@ router.route('/').get(getRooms).post(createRoom);
 router.route('/:id').get(getRoomById).delete(removeUserFromRoom);
 router.route('/:id/join').post(joinRoom);
 
-router.route('/:id/games').get(getRoomByIdGames);
+router.route('/:id/games').get(getGamesByRoomId);
