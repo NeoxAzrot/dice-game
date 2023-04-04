@@ -51,9 +51,11 @@ let oldRoundScore = 0;
 watch(
   () => message.value,
   () => {
-    setTimeout(() => {
-      message.value = undefined;
-    }, 3000);
+    if (message.value) {
+      setTimeout(() => {
+        message.value = undefined;
+      }, 3000);
+    }
   }
 );
 
@@ -108,7 +110,9 @@ const launchDices = async () => {
     play(
       'roll',
       game.value.bank.map((e: any) => e.value)
-    ).catch((err) => (message.value = err.response._data.message));
+    )
+      .then((res) => (message.value = res.message))
+      .catch((err) => (message.value = err.response._data.message));
   } else {
     await useFirebase().update('games', game.value.id, {
       bank: [],
@@ -117,7 +121,9 @@ const launchDices = async () => {
     play(
       'roll',
       game.value.bank.map((e: any) => e.value)
-    ).catch((err) => (message.value = err.response._data.message));
+    )
+      .then((res) => (message.value = res.message))
+      .catch((err) => (message.value = err.response._data.message));
   }
 
   launch.value = false;

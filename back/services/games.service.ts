@@ -196,6 +196,7 @@ export const playRoundService = async ({
 
     return {
       success: true,
+      message: !canPlay && 'No more moves',
       data: newGame.data(),
     };
   } else if (move === 'hold') {
