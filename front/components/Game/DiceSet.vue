@@ -1,6 +1,5 @@
 <template>
   <div class="set_container">
-    <!-- TODO: Revoir les isLocked des dés avec la box shadow (:key list) -->
     <GameDice
       v-for="(dice, index) in dices"
       :key="`${dice.value}-${index}`"

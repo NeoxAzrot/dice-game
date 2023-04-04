@@ -8,12 +8,11 @@
         <ul>
           <li
             v-for="(game, index) in data.games.slice(
-              data.games.length - 5,
-              data.games.length
+              Math.max(data.games.length - 5, 0)
             )"
             :key="game.id"
           >
-            <p class="index">Game {{ data.games.length - 5 + index + 1 }}</p>
+            <p class="index">Game {{ getGameNumber(index) }}</p>
             <p class="winner">{{ game.winner.username }}</p>
             <p class="result">{{ userID === game.winner.id ? '🏆' : '💀' }}</p>
           </li>
@@ -27,6 +26,12 @@
 const { userID } = useStore();
 
 const { data } = await useRoom().getGames();
+
+const getGameNumber = (index: number) => {
+  if (data.games.length < 5) return index + 1;
+
+  return data.games.length - 5 + index + 1;
+};
 </script>
 
 <style lang="scss">

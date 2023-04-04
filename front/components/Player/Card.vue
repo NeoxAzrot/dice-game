@@ -11,7 +11,10 @@
         </h2>
         <div class="card__color" :style="{ background: colorName.color }"></div>
       </div>
-      <h2 class="card__score">{{ player.score }}</h2>
+      <h2 class="card__score">
+        {{ player.score }} <span class="card__score--max"> / 10000</span>
+      </h2>
+      <!-- TODO: change it with max score value in firebase -->
     </div>
     <PlayerEmojis :player="player" />
   </div>
@@ -69,6 +72,11 @@ const colorName: Ref<{ color: string; isLight: boolean }> = ref(
   &__score {
     font-size: 1.4rem;
     opacity: 0.7;
+
+    &--max {
+      font-size: 1.2rem;
+      opacity: 0.5;
+    }
   }
 
   &__turn {

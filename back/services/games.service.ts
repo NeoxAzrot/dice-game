@@ -196,7 +196,7 @@ export const playRoundService = async ({
 
     return {
       success: true,
-      message: !canPlay && 'No more moves',
+      message: !canPlay && 'No more moves, you lost your turn',
       data: newGame.data(),
     };
   } else if (move === 'hold') {
@@ -215,7 +215,9 @@ export const playRoundService = async ({
     })?.score;
 
     const newScore = userScore + roundScore;
-    const isWinner = newScore >= MAX_SCORE;
+
+    const isWinner = newScore === MAX_SCORE;
+    const differenceScore = newScore - MAX_SCORE;
 
     const nextPlayer = Players.getNext({
       players: game.data()?.players,
@@ -230,7 +232,7 @@ export const playRoundService = async ({
           if (player.id === userId) {
             return {
               ...player,
-              score: newScore,
+              score: differenceScore > 0 ? player.score : newScore,
             };
           }
 
@@ -305,6 +307,9 @@ export const playRoundService = async ({
 
     return {
       success: true,
+      message:
+        differenceScore > 0 &&
+        `You exceeded the maximum score by ${differenceScore} points, you lost your turn`,
       data: newGame.data(),
     };
   } else {
