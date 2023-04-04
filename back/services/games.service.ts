@@ -256,6 +256,10 @@ export const playRoundService = async ({
         .collection('rooms')
         .doc(newGame.data()?.roomId)
         .update({
+          state: {
+            ...room.data()?.state,
+            isPlaying: false,
+          },
           games: room.data()?.games.map((item: { id: string }) => {
             if (item.id === gameId) {
               return {
