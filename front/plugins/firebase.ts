@@ -29,17 +29,18 @@ export default defineNuxtPlugin(() => {
         if (type === 'room') {
           useRoom().room.value = req.data();
           if (firstTime) {
-            if (
-              !req
-                .data()
-                .players.some(
-                  (player: any) =>
-                    player.id === useCookie('dice-game-user-id').value
-                )
-            ) {
-              navigateTo('/');
+            const isUserInRoom = req
+              .data()
+              .players.some(
+                (player: any) =>
+                  player.id === useCookie('dice-game-user-id').value
+              );
+
+            if (!isUserInRoom) {
+              navigateTo(`/?room=${req.id}`);
+            } else {
+              firstTime = false;
             }
-            firstTime = false;
           }
         }
         if (type === 'game')

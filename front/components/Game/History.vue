@@ -1,19 +1,18 @@
 <template>
-  <div class="history" v-if="data.games && data.games > 0">
+  <div class="history" v-if="data.games && data.games.length > 0">
     <transition>
       <div class="history__modal">
         <div class="history__modal--header">
-          <h3>Dernières parties</h3>
+          <h3>Last 5 games</h3>
         </div>
         <ul>
           <li
             v-for="(game, index) in data.games.slice(
-              data.games.length - 5,
-              data.games.length
+              Math.max(data.games.length - 5, 0)
             )"
-            :key="index"
+            :key="game.id"
           >
-            <p class="index">Game {{ index + 1 }}</p>
+            <p class="index">Game {{ getGameNumber(index) }}</p>
             <p class="winner">{{ game.winner.username }}</p>
             <p class="result">{{ userID === game.winner.id ? '🏆' : '💀' }}</p>
           </li>
@@ -27,6 +26,12 @@
 const { userID } = useStore();
 
 const { data } = await useRoom().getGames();
+
+const getGameNumber = (index: number) => {
+  if (data.games.length < 5) return index + 1;
+
+  return data.games.length - 5 + index + 1;
+};
 </script>
 
 <style lang="scss">

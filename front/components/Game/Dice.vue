@@ -1,31 +1,31 @@
 <template>
   <div :class="['dice_container', isLocked ? 'disabled' : '']">
-    <span v-if="dice.value === 1" class="dice">
+    <span v-if="props.dice.value === 1" class="dice">
       <span class="dot grid-five"></span>
     </span>
-    <span v-if="dice.value === 2" class="dice">
+    <span v-if="props.dice.value === 2" class="dice">
       <span class="dot grid-one"></span>
       <span class="dot grid-nine"></span>
     </span>
-    <span v-if="dice.value === 3" class="dice">
+    <span v-if="props.dice.value === 3" class="dice">
       <span class="dot grid-one"></span>
       <span class="dot grid-five"></span>
       <span class="dot grid-nine"></span>
     </span>
-    <span v-if="dice.value === 4" class="dice">
+    <span v-if="props.dice.value === 4" class="dice">
       <span class="dot grid-one"></span>
       <span class="dot grid-seven"></span>
       <span class="dot grid-three"></span>
       <span class="dot grid-nine"></span>
     </span>
-    <span v-if="dice.value === 5" class="dice">
+    <span v-if="props.dice.value === 5" class="dice">
       <span class="dot grid-one"></span>
       <span class="dot grid-seven"></span>
       <span class="dot grid-five"></span>
       <span class="dot grid-three"></span>
       <span class="dot grid-nine"></span>
     </span>
-    <span v-if="dice.value === 6" class="dice">
+    <span v-if="props.dice.value === 6" class="dice">
       <span class="dot grid-one"></span>
       <span class="dot grid-four"></span>
       <span class="dot grid-three"></span>
@@ -37,13 +37,13 @@
 </template>
 
 <script setup lang="ts">
-const { dice } = defineProps(['dice']);
+const props = defineProps(['dice']);
 
 const { game } = useGame();
 const { userID } = useStore();
 
 const isLocked = computed(() => {
-  return dice.isLocked || game.value.state.turn !== userID.value;
+  return props.dice.isLocked || game.value.state.turn !== userID.value;
 });
 </script>
 

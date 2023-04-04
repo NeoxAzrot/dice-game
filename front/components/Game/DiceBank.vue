@@ -1,7 +1,7 @@
 <template>
   <div class="bank_container">
     <GameDice
-      v-for="(dice, index) in dices"
+      v-for="(dice, index) in game.bank"
       :key="`${dice.value}-${index}`"
       @click="removeDice(dice, index)"
       :dice="dice"
@@ -11,7 +11,6 @@
 
 <script setup lang="ts">
 import { Dice } from '~~/interfaces/game';
-const { dices } = defineProps(['dices']);
 
 const { game } = useGame();
 const { userID } = useStore();

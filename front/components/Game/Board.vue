@@ -24,10 +24,7 @@
       </button>
     </div>
     <div>
-      <GameDiceBank
-        @removeDice="(e) => updateDices(e, 'remove')"
-        :dices="game.bank"
-      />
+      <GameDiceBank @removeDice="(e) => updateDices(e, 'remove')" />
     </div>
     <div class="board_container--infos" v-if="message">
       <p class="board_container--infos-error"><WarningIcon />{{ message }}</p>
@@ -51,9 +48,11 @@ let oldRoundScore = 0;
 watch(
   () => message.value,
   () => {
-    setTimeout(() => {
-      message.value = undefined;
-    }, 3000);
+    if (message.value) {
+      setTimeout(() => {
+        message.value = undefined;
+      }, 3000);
+    }
   }
 );
 
@@ -108,7 +107,9 @@ const launchDices = async () => {
     play(
       'roll',
       game.value.bank.map((e: any) => e.value)
-    ).catch((err) => (message.value = err.response._data.message));
+    )
+      .then((res) => (message.value = res.message))
+      .catch((err) => (message.value = err.response._data.message));
   } else {
     await useFirebase().update('games', game.value.id, {
       bank: [],
@@ -117,7 +118,9 @@ const launchDices = async () => {
     play(
       'roll',
       game.value.bank.map((e: any) => e.value)
-    ).catch((err) => (message.value = err.response._data.message));
+    )
+      .then((res) => (message.value = res.message))
+      .catch((err) => (message.value = err.response._data.message));
   }
 
   launch.value = false;
@@ -145,9 +148,13 @@ const keepDices = async () => {
       bank: [...game.value.bank, ...playableDices],
     });
 
-    play('hold').catch((err) => (message.value = err.response._data.message));
+    play('hold')
+      .then((res) => (message.value = res.message))
+      .catch((err) => (message.value = err.response._data.message));
   } else {
-    play('hold').catch((err) => (message.value = err.response._data.message));
+    play('hold')
+      .then((res) => (message.value = res.message))
+      .catch((err) => (message.value = err.response._data.message));
   }
 
   keep.value = false;
